@@ -1,0 +1,131 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: aknode31
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  host_profile: MyControlPlane_HP
+#/new/notused/aic-clcp-manifests/site/clcp-seaworthy/profiles/host/cp_rack.yaml
+  addressing:
+    - network: oob
+      address: 192.168.41.131
+    - network: pxe
+      address: 172.30.1.31
+    - network: oam
+      address: 192.168.2.31
+    - network: storage
+      address: 172.31.1.31
+    - network: overlay
+      address: 10.0.101.31
+    - network: calico
+      address: 172.29.1.31
+  metadata:
+    rack: RACK01
+    tags:
+      - 'masters'
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: aknode32
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  host_profile: MyControlPlane_HP
+#/new/notused/aic-clcp-manifests/site/clcp-seaworthy/profiles/host/cp_rack.yaml
+  addressing:
+    - network: oob
+      address: 192.168.41.132
+    - network: pxe
+      address: 172.30.1.32
+    - network: oam
+      address: 192.168.2.32
+    - network: storage
+      address: 172.31.1.32
+    - network: overlay
+      address: 10.0.101.32
+    - network: calico
+      address: 172.29.1.32
+  metadata:
+    rack: RACK01
+    tags:
+      - 'masters'
+---
+schema: 'drydock/BaremetalNode/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: aknode33
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  host_profile: MyComputePlane_HP
+  addressing:
+    - network: oob
+      address: 192.168.41.133
+    - network: pxe
+      address: 172.30.1.33
+    - network: oam
+      address: 192.168.2.33
+    - network: storage
+      address: 172.31.1.33
+    - network: overlay
+      address: 10.0.101.33
+    - network: calico
+      address: 172.29.1.33
+  metadata:
+    rack: RACK01
+    tags:
+      - 'workers'
+#---
+#schema: 'drydock/BaremetalNode/v1'
+#metadata:
+#  schema: 'metadata/Document/v1'
+#  name: aknode34
+#  layeringDefinition:
+#    abstract: false
+#    layer: site
+#  storagePolicy: cleartext
+#data:
+#  host_profile: MyComputePlane_HP
+#  addressing:
+#    - network: oob
+#      address: 192.168.41.134
+#    - network: pxe
+#      address: 172.30.1.34
+#    - network: oam
+#      address: 192.168.2.34
+#    - network: storage
+#      address: 172.31.1.34
+#    - network: overlay
+#      address: 10.0.101.34
+#    - network: calico
+#      address: 172.29.1.34
+#  metadata:
+#    rack: RACK01
+#    tags:
+#      - 'workers'
+...

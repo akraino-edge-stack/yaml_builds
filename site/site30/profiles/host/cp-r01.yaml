@@ -1,0 +1,156 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: MyControlPlane_HP 
+  storagePolicy: cleartext
+  labels:
+    hosttype: MyControlPlane_HP
+  layeringDefinition:
+    abstract: false
+    layer: site
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+data:
+  oob:
+    type: 'ipmi'
+    network: 'oob'
+    account: 'Administrator'
+  primary_network: 'oam'
+  hardware_profile: DELL_HP_Generic 
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - 'eno1'
+      networks:
+        - 'pxe'
+    bond0:
+      device_link: bond0
+      slaves:
+        - 'ens3f0'
+        - 'ens3f1'
+      networks:
+        - 'oam'
+        - 'storage'
+        - 'overlay'
+        - 'calico'
+  storage:
+    physical_devices:
+      sdj:
+        labels:
+          bootdrive: 'true'
+        partitions:
+          - name: 'root'
+            size: '20g'
+            bootable: true
+            filesystem:
+              mountpoint: '/'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'boot'
+            size: '1g'
+            filesystem:
+              mountpoint: '/boot'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+          - name: 'var'
+            size: '>300g'
+            filesystem:
+              mountpoint: '/var'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      sdk:
+        partitions:
+          - name: 'cephj'
+            size: '300g'
+            filesystem:
+              mountpoint: '/var/lib/ceph/journal'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+  platform:
+    image: 'xenial'
+    kernel: 'hwe-16.04'
+#    kernel_params:
+#      console: 'ttyS1,115200n8'
+  metadata:
+    owner_data:
+      control-plane: enabled
+      ucp-control-plane: enabled
+      openstack-control-plane: enabled
+      openstack-heat: enabled
+      openstack-keystone: enabled
+      openstack-rabbitmq: enabled
+      openstack-dns-helper: enabled
+      openstack-mariadb: enabled
+      openstack-nova-control: enabled
+      openstack-etcd: enabled
+      openstack-mistral: enabled
+      openstack-memcached: enabled
+      openstack-glance: enabled
+      openstack-horizon: enabled
+      openstack-cinder-control: enabled
+      openstack-cinder-volume: control
+      openstack-neutron: enabled
+      openvswitch: enabled
+      sriov: enabled
+      ucp-barbican: enabled
+      ceph-bootstrap: enabled
+      ceph-mon: enabled
+      ceph-osd: enabled
+      ceph-mds: enabled
+      ceph-rgw: enabled
+      ucp-maas: enabled
+      kube-dns: enabled
+      kubernetes-apiserver: enabled
+      kubernetes-controller-manager: enabled
+      kubernetes-etcd: enabled
+      kubernetes-scheduler: enabled
+      tiller-helm: enabled
+      kube-etcd: enabled
+      calico-policy: enabled
+      calico-node: enabled
+      calico-etcd: enabled
+      ucp-armada: enabled
+      ucp-drydock: enabled
+      ucp-deckhand: enabled
+      ucp-shipyard: enabled
+      IAM: enabled
+      ucp-promenade: enabled
+      prometheus-server: enabled
+      prometheus-client: enabled
+      fluentd: enabled
+      influxdb: enabled
+      kibana: enabled
+      elasticsearch-client: enabled
+      elasticsearch-master: enabled
+      elasticsearch-data: enabled
+      postgresql: enabled
+      kube-ingress: enabled
+      sriov: enabled
+      openstack-nova-compute: enabled
+      openstack-libvirt: kernel
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+...
+

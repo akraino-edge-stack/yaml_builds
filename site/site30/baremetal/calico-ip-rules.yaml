@@ -1,0 +1,164 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico-ip-rules
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: site
+  labels:
+    application: 'drydock'
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .assets[0].data
+        pattern: DH_SUB_POD_CIDR
+data:
+  signaling: false
+  assets:
+    - path: /etc/systemd/system/configure-ip-rules.service
+      type: unit
+      permissions: '444'
+      data: |-
+        [Unit]
+        Description=IP Rules Initialization Service
+        After=network-online.target local-fs.target
+
+        [Service]
+        Type=simple
+        #ExecStart=/opt/configure-ip-rules.sh -i bond1.2406 -c DH_SUB_POD_CIDR -o 10.34.0.0/15 -s 135.21.157.32/29
+        #ExecStart=/opt/configure-ip-rules.sh -i bond0.44 -c DH_SUB_POD_CIDR -o 10.99.0.0/16 -s 172.29.1.0/24
+        ExecStart=/opt/configure-ip-rules.sh -g 172.29.1.1 -c 10.99.0.0/16 -s 172.29.1.136/29
+
+
+
+        [Install]
+        WantedBy=multi-user.target
+      data_pipeline:
+        - utf8_decode
+    - path: /opt/configure-ip-rules.sh
+      type: file
+      permissions: '700'
+      data_pipeline:
+        - utf8_decode
+      data: |-
+        #!/bin/bash
+        set -ex
+
+        function usage() {
+            cat <<EOU
+        Options are:
+
+          -c POD_CIDR     The pod CIDR for the Kubernetes cluster, e.g. 10.97.0.0/16
+          -i INTERFACE    The interface for internal pod traffic, e.g. bond1.2006
+          -o OVERLAP_CIDR (optional) This CIDR will be routed via the VRRP IP on
+                          INTERFACE.  It is used to provide a work around when
+                          complete Calico routes cannot be received via BGP.
+                          e.g. 10.96.0.0/15.  NOTE: This must include the POD_CIDR.
+          -s SERVICE_CIDR (optional) A routable CIDR to configure for ingress, maas,
+                          e.g. 135.21.99.192/29
+        EOU
+        }
+
+        SERVICE_CIDR=
+        OVERLAP_CIDR=
+
+        while getopts ":c:hi:o:s:" o; do
+            case "${o}" in
+                c)
+                    POD_CIDR=${OPTARG}
+                    ;;
+                h)
+                    usage
+                    exit 0
+                    ;;
+                i)
+                    INTERFACE=${OPTARG}
+                    ;;
+                o)
+                    OVERLAP_CIDR=${OPTARG}
+                    ;;
+                s)
+                    SERVICE_CIDR=${OPTARG}
+                    ;;
+                \?)
+                    echo "Unknown option: -${OPTARG}" >&2
+                    exit 1
+                    ;;
+                :)
+                    echo "Missing argument for option: -${OPTARG}" >&2
+                    exit 1
+                    ;;
+                *)
+                    echo "Unimplemented option: -${OPTARG}" >&2
+                    exit 1
+                    ;;
+            esac
+        done
+        shift $((OPTIND-1))
+
+        if [ "x$POD_CIDR" == "x" ]; then
+            echo "Missing pod CIDR, e.g -c 10.97.0.0/16" >&2
+            usage
+            exit 1
+        fi
+
+        if [ "x$INTERFACE" == "x" ]; then
+            echo "Missing interface, e.g. -i bond1.2006" >&2
+            usage
+            exit 1
+        fi
+
+        while ! ip route list dev "${INTERFACE}" > /dev/null; do
+            echo Waiting for device "${INTERFACE}" to be ready. >&2
+            sleep 5
+        done
+
+        intra_vrrp_ip=$(ip route list dev "${INTERFACE}" | awk '($2~/via/){print $3}' | head -n 1)
+
+        TABLE="1500"
+
+        # Setup a routing table for traffic from service IPs
+        ip route flush table "${TABLE}"
+        ip route add default via "${intra_vrrp_ip}" table "${TABLE}"
+
+        if [ "x$OVERLAP_CIDR" != "x" ]; then
+            # NOTE(mb874d): This is a work-around for nodes not receiving complete
+            # routes via BGP.  It may also be required for brownfield large sites.
+            ip route add "${OVERLAP_CIDR}" via "${intra_vrrp_ip}"
+        fi
+
+        if [ "x$SERVICE_CIDR" != "x" ]; then
+            # Traffic from the service IPs to pods should use the pod network.
+            ip rule add \
+                from "${SERVICE_CIDR}" \
+                to "${POD_CIDR}" \
+                lookup main \
+                pref 10000
+            # Other traffic from service IPs should only use the VRRP IP
+            ip rule add \
+                from "${SERVICE_CIDR}" \
+                lookup "${TABLE}" \
+                pref 10100
+        fi
+...

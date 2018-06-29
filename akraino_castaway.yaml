@@ -1,0 +1,294 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+site_name: akraino
+ipmi_admin_password: Admin123
+networks:
+  bonded: yes
+  primary: bond0
+  slaves:
+    - name: ens4f0
+    - name: end4f1
+  oob:
+    vlan: 40
+    interface: bond0.40
+    cidr: 192.168.41.0/24
+    routes:
+      gateway: 192.168.41.1
+    ranges:
+      static:
+        start: 192.168.41.1
+        end: 192.168.41.254
+  host:
+    vlan: 41
+    interface: bond0.41
+    cidr: 192.168.2.0/24
+    ranges:
+      static:
+        start: 192.168.2.2
+        end: 192.168.2.254
+  storage:
+    vlan: 42
+    interface: bond0.42
+    cidr: 172.31.1.0/24
+    ranges:
+      static:
+        start: 172.31.1.2
+        end: 172.31.1.254
+  pxe:
+    vlan: 43
+    interface: eno1
+    cidr: 172.30.1.0/24
+    ranges:
+      static:
+        start: 172.30.1.11
+        end: 172.30.1.200
+  ksn:
+    vlan: 44
+    interface: bond0.44
+    cidr: 172.29.1.0/24
+    ranges:
+      static:
+        start: 172.29.1.5
+        end: 172.29.1.254
+    peers:
+    - ip: 172.29.1.3
+    - ip: 172.29.1.4
+  neutron:
+    vlan: 45
+    interface: bond0.45
+    cidr: 10.0.101.0/24
+    ranges:
+      static:
+        start: 10.0.101.2
+        end: 10.0.101.254
+sriovnets:
+  - physical: sriovnet1
+    interface: ens6f0
+    vlan_start: 100
+    vlan_end: 4000
+    whitelists:
+    - "address": "0000:af:02.0"
+    - "address": "0000:af:02.1"
+    - "address": "0000:af:03.2"
+    - "address": "0000:af:03.3"
+    - "address": "0000:af:03.4"
+    - "address": "0000:af:03.5"
+    - "address": "0000:af:03.6"
+    - "address": "0000:af:03.7"
+    - "address": "0000:af:04.0"
+    - "address": "0000:af:04.1"
+    - "address": "0000:af:04.2"
+    - "address": "0000:af:04.3"
+    - "address": "0000:af:02.2"
+    - "address": "0000:af:04.4"
+    - "address": "0000:af:04.5"
+    - "address": "0000:af:04.6"
+    - "address": "0000:af:04.7"
+    - "address": "0000:af:05.0"
+    - "address": "0000:af:05.1"
+    - "address": "0000:af:05.2"
+    - "address": "0000:af:05.3"
+    - "address": "0000:af:05.4"
+    - "address": "0000:af:05.5"
+    - "address": "0000:af:02.3"
+    - "address": "0000:af:05.6"
+    - "address": "0000:af:05.7"
+    - "address": "0000:af:02.4"
+    - "address": "0000:af:02.5"
+    - "address": "0000:af:02.6"
+    - "address": "0000:af:02.7"
+    - "address": "0000:af:03.0"
+    - "address": "0000:af:03.1"
+  - physical: sriovnet2
+    interface: ens6f1
+    vlan_start: 100
+    vlan_end: 4000
+    whitelists:
+    - "address": "0000:af:0a.0"
+    - "address": "0000:af:0a.1"
+    - "address": "0000:af:0b.2"
+    - "address": "0000:af:0b.3"
+    - "address": "0000:af:0b.4"
+    - "address": "0000:af:0b.5"
+    - "address": "0000:af:0b.6"
+    - "address": "0000:af:0b.7"
+    - "address": "0000:af:0c.0"
+    - "address": "0000:af:0c.1"
+    - "address": "0000:af:0c.2"
+    - "address": "0000:af:0c.3"
+    - "address": "0000:af:0a.2"
+    - "address": "0000:af:0c.4"
+    - "address": "0000:af:0c.5"
+    - "address": "0000:af:0c.6"
+    - "address": "0000:af:0c.7"
+    - "address": "0000:af:0d.0"
+    - "address": "0000:af:0d.1"
+    - "address": "0000:af:0d.2"
+    - "address": "0000:af:0d.3"
+    - "address": "0000:af:0d.4"
+    - "address": "0000:af:0d.5"
+    - "address": "0000:af:0a.3"
+    - "address": "0000:af:0d.6"
+    - "address": "0000:af:0d.7"
+    - "address": "0000:af:0a.4"
+    - "address": "0000:af:0a.5"
+    - "address": "0000:af:0a.6"
+    - "address": "0000:af:0a.7"
+    - "address": "0000:af:0b.0"
+    - "address": "0000:af:0b.1"
+storage:
+  osds:
+    - data: /dev/sdb
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdb
+    - data: /dev/sdc
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdc
+    - data: /dev/sdd
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdd
+    - data: /dev/sde
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sde
+    - data: /dev/sdf
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdf
+    - data: /dev/sdg
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdg
+    - data: /dev/sdh
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdh
+    - data: /dev/sdi
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdi
+    - data: /dev/sdj
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdj
+  osd_count: 9
+genesis:
+  name: csonjrsv30
+  oob: 192.168.41.30
+  host: 192.168.2.30
+  storage: 172.31.1.30
+  pxe: 172.30.1.30
+  ksn: 172.29.1.30
+  neutron: 10.0.101.30
+masters:
+  - name : csonjrsv31
+  - name : csonjrsv32
+  - name : csonjrsv33
+workers:
+  - name : csonjrsv34
+  - name : csonjrsv35
+servers:
+  - name : csonjrsv31
+    oob: 192.168.41.31
+    host: 192.168.2.31
+    storage: 172.31.1.31
+    pxe: 172.30.1.31
+    ksn: 172.29.1.31
+    neutron: 10.0.101.31
+  - name : csonjrsv32
+    oob: 192.168.41.32
+    host: 192.168.2.32
+    storage: 172.31.1.32
+    pxe: 172.30.1.32
+    ksn: 172.29.1.32
+    neutron: 10.0.101.32
+  - name : csonjrsv33
+    oob: 192.168.41.33
+    host: 192.168.2.33
+    storage: 172.31.1.33
+    pxe: 172.30.1.33
+    ksn: 172.29.1.33
+    neutron: 10.0.101.33
+  - name : csonjrsv34
+    oob: 192.168.41.34
+    host: 192.168.2.34
+    storage: 172.31.1.34
+    pxe: 172.30.1.34
+    ksn: 172.29.1.34
+    neutron: 10.0.101.34
+  - name : csonjrsv35
+    oob: 192.168.41.35
+    host: 192.168.2.35
+    storage: 172.31.1.35
+    pxe: 172.30.1.35
+    ksn: 172.29.1.35
+    neutron: 10.0.101.35
+hardware:
+  vendor: HPE
+  generation: '10'
+  hw_version: ''
+  bios_version: 'U30'
+disks:
+  - name : sdb
+    partitions:
+      - name: root
+        size: 200g
+        mountpoint: /
+      - name: boot
+        size: 20g
+        mountpoint: /boot
+      - name: var
+        size: 200g
+        mountpoint: /var
+  - name : sdc
+    partitions:
+      - name: cephj0
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal0
+  - name : sdd
+    partitions:
+      - name: cephj1
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal1
+  - name : sde
+    partitions:
+      - name: cephj2
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal2
+  - name : sdf
+    partitions:
+      - name: cephj3
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal3
+  - name : sdg
+    partitions:
+      - name: cephj4
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal4
+  - name : sdh
+    partitions:
+      - name: cephj5
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal5
+  - name : sdi
+    partitions:
+      - name: cephj6
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal6
+  - name : sdj
+    partitions:
+      - name: cephj7
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal7
+  - name : sdk
+    partitions:
+      - name: cephj8
+        size: 300g
+        mountpoint: /var/lib/openstack-helm/ceph/journal8
+genesis_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDO5oCPyXiGlRr931oQBESpseGRh7Cf+xWXgH0q90ogjLyW1aS3ZUGCwjN/KWLKx/rE1j7YMDK2VUaFvZY+4ePmnTao7qFBaoUVOakI+35IsfwWWzMC7kxXSgna4iKf8NAwS4hFLzj3Kt1kAdmXw3bJCLN8DTaaDvBC+lxn3FueNwyQDsSjaKW1x2OfybZToq2/PPl9yeK4s2o6l60ChgE/pY1v01AzpkgJcJEHF0YXZnti3xurggV9SIZv1XvqhOy+P50EuljqQtysH7zczZ7gc9HbV71W6k8Ng++7vYyWAWt2HKNl+FDtVCYXjHZJOKNMN9qrJAxAb1ur/DPXwwgl root@csoaiclab01-85"
+kubernetes:
+  api_service_ip: 10.96.0.1
+  etcd_service_ip: 10.96.0.2
+  pod_cidr: 10.97.0.0/16
+  service_cidr: 10.96.0.0/16
+...

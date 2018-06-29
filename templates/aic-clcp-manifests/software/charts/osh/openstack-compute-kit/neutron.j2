@@ -1,0 +1,66 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: neutron
+  labels:
+    component: neutron
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: neutron-5ec
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    network:
+      auto_bridge_add:
+        br-bond0: bond0
+      interface:
+        sriov:
+{% for sriovnet in yaml.sriovnets %}
+          - device: {{sriovnet.interface}}
+            num_vfs: 32
+            promisc: false
+{% endfor %}
+    conf:
+      plugins:
+        openvswitch_agent:
+          ovs:
+            bridge_mappings: oam:br-bond0
+        sriov_agent:
+          sriov_nic:
+            physical_device_mappings: ' 
+{%- for sriovnet in yaml.sriovnets -%}
+{%- if loop.index > 1 -%}
+,
+{%- endif -%}
+{{sriovnet.physical}}:{{sriovnet.interface}}
+{%- endfor %}'
+        ml2_conf:
+          ml2_type_vlan:
+            network_vlan_ranges: oam:100:4000
+{%- for sriovnet in yaml.sriovnets -%}
+,{{sriovnet.physical}}:{{sriovnet.vlan_start}}:{{sriovnet.vlan_end}}
+{%- endfor %}
+
+...

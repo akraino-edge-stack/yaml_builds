@@ -1,0 +1,251 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+site_name: site80
+ipmi_admin_password: Admin123
+networks:
+  bonded: no
+  primary: eno49
+  slaves:
+    - name: eno49
+  oob:
+    vlan: 199
+    interface: eno49.40
+    cidr: 192.168.14.0/24
+    routes:
+      gateway: 192.168.14.11
+    ranges:
+      reserved:
+        start: 192.168.14.1
+        end: 192.168.14.11
+      static:
+        start: 192.168.14.12
+        end: 192.168.14.254
+  host:
+    vlan: 136
+    interface: eno49.136
+    cidr: 135.16.101.0/25
+    routes:
+       gateway: 135.16.101.8
+    ranges:
+      reserved:
+        start: 135.16.101.1
+        end: 135.16.101.10
+      static:
+        start: 135.16.101.11
+        end: 135.16.101.126
+  storage:
+    vlan: 1320
+    interface: eno49.1320
+    cidr: 192.168.110.0/24
+    ranges:
+      reserved:
+        start: 192.168.110.1
+        end: 192.168.110.10
+      static:
+        start: 192.168.110.11
+        end: 192.168.110.254
+  pxe:
+    vlan: 198
+    interface: eno1
+    cidr: 192.168.13.0/24
+    gateway: 192.168.13.11
+    ranges:
+      reserved:
+        start: 192.168.13.1
+        end: 192.168.13.10
+      static:
+        start: 192.168.13.11
+        end: 192.168.13.100
+      dhcp:
+        start: 192.168.13.201
+        end: 192.168.13.254
+  ksn:
+    vlan: 44
+    interface: eno49.44
+    cidr: 172.29.1.0/24
+    local_asnumber: 65531
+    ranges:
+      static:
+        start: 172.29.1.5
+        end: 172.29.1.254
+    additional_cidrs:
+      -  172.29.1.144/29
+    ingress_cidr: 172.29.1.145/32
+    peers:
+    - ip: 172.29.1.1
+      scope: global
+      asnumber: 65001
+    vrrp_ip: 172.29.1.1 # keep peers ip address in case of only peer.
+  neutron:
+    vlan: 126
+    interface: eno49.45
+    cidr: 135.25.50.128/25
+    ranges:
+      reserved:
+        start: 135.25.50.129
+        end: 135.25.50.139
+      static:
+        start: 135.25.50.140
+        end: 135.25.50.254
+sriovnets:
+- physical: sriovnet1
+  interface: ens6f0
+  vlan_start: 100
+  vlan_end: 4000
+  whitelists:
+      "0000:81:10.2":  "enp129s16f2"
+      "0000:81:12.4":  "enp129s18f4"
+      "0000:81:12.6":  "enp129s18f6"
+      "0000:81:13.0":  "enp129s19"
+      "0000:81:13.2":  "enp129s19f2"
+      "0000:81:13.4":  "enp129s19f4"
+      "0000:81:13.6":  "enp129s19f6"
+      "0000:81:14.0":  "enp129s20"
+      "0000:81:14.2":  "enp129s20f2"
+      "0000:81:14.4":  "enp129s20f4"
+      "0000:81:14.6":  "enp129s20f6"
+      "0000:81:10.4":  "enp129s16f4"
+      "0000:81:15.0":  "enp129s21"
+      "0000:81:15.2":  "enp129s21f2"
+      "0000:81:15.4":  "enp129s21f4"
+      "0000:81:15.6":  "enp129s21f6"
+      "0000:81:16.0":  "enp129s22"
+      "0000:81:16.2":  "enp129s22f2"
+      "0000:81:16.4":  "enp129s22f4"
+      "0000:81:16.6":  "enp129s22f6"
+      "0000:81:17.0":  "enp129s23"
+      "0000:81:17.2":  "enp129s23f2"
+      "0000:81:10.6":  "enp129s16f6"
+      "0000:81:17.4":  "enp129s23f4"
+      "0000:81:17.6":  "enp129s23f6"
+      "0000:81:11.0":  "enp129s17"
+      "0000:81:11.2":  "enp129s17f2"
+      "0000:81:11.4":  "enp129s17f4"
+      "0000:81:11.6":  "enp129s17f6"
+      "0000:81:12.0":  "enp129s18"
+      "0000:81:12.2":  "enp129s18f2"
+- physical: sriovnet2
+  interface: ens6f1
+  vlan_start: 100
+  vlan_end: 4000
+  whitelists:
+      "0000:81:10.1":  "enp129s16f1"
+      "0000:81:10.3":  "enp129s16f3"
+      "0000:81:12.5":  "enp129s18f5"
+      "0000:81:12.7":  "enp129s18f7"
+      "0000:81:13.1":  "enp129s19f1"
+      "0000:81:13.3":  "enp129s19f3"
+      "0000:81:13.5":  "enp129s19f5"
+      "0000:81:13.7":  "enp129s19f7"
+      "0000:81:14.1":  "enp129s20f1"
+      "0000:81:14.3":  "enp129s20f3"
+      "0000:81:14.5":  "enp129s20f5"
+      "0000:81:14.7":  "enp129s20f7"
+      "0000:81:10.5":  "enp129s16f5"
+      "0000:81:15.1":  "enp129s21f1"
+      "0000:81:15.3":  "enp129s21f3"
+      "0000:81:15.5":  "enp129s21f5"
+      "0000:81:15.7":  "enp129s21f7"
+      "0000:81:16.1":  "enp129s22f1"
+      "0000:81:16.3":  "enp129s22f3"
+      "0000:81:16.5":  "enp129s22f5"
+      "0000:81:16.7":  "enp129s22f7"
+      "0000:81:17.1":  "enp129s23f1"
+      "0000:81:17.3":  "enp129s23f3"
+      "0000:81:10.7":  "enp129s16f7"
+      "0000:81:17.5":  "enp129s23f5"
+      "0000:81:17.7":  "enp129s23f7"
+      "0000:81:11.1":  "enp129s17f1"
+      "0000:81:11.3":  "enp129s17f3"
+      "0000:81:11.5":  "enp129s17f5"
+      "0000:81:11.7":  "enp129s17f7"
+      "0000:81:12.1":  "enp129s18f1"
+      "0000:81:12.3":  "enp129s18f3"
+storage:
+  osds:
+    - data: /dev/sdb
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdb
+    - data: /dev/sdc
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdc
+  osd_count: 2
+genesis:
+  name: csoaiclab01-80
+  oob: 192.168.14.90
+  host: 135.16.101.80
+  storage: 192.168.110.80
+  pxe: 192.168.13.80
+  ksn: 172.29.1.80
+  neutron: 135.25.50.190
+masters:
+  - name : csoaiclab01-81
+  - name : csoaiclab01-82
+#workers:
+#  - name : csoaiclab01-83
+servers:
+  - name : csoaiclab01-81
+    oob: 192.168.14.91
+    host: 135.16.101.81
+    storage: 192.168.110.81
+    pxe: 192.168.13.81
+    ksn: 172.29.1.81
+    neutron: 135.25.50.210
+  - name : csoaiclab01-82
+    oob: 192.168.14.92
+    host: 135.16.101.82
+    storage: 192.168.110.82
+    pxe: 192.168.13.82
+    ksn: 172.29.1.82
+    neutron: 135.25.50.209
+hardware:
+  vendor: HPE
+  generation: '9'
+  hw_version: '3'
+  bios_version: '2.8'
+disks:
+  - name : sda
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 20g
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var
+        size: 100g
+        mountpoint: /var
+  - name : sdb
+    partitions:
+      - name: cephj0
+        size: 100g
+        mountpoint: /var/lib/openstack-helm/ceph/journal0
+  - name : sdc
+    partitions:
+      - name: cephj1
+        size: 100g
+        mountpoint: /var/lib/openstack-helm/ceph/journal1
+genesis_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDRx+c0dtn1jjCN1UiZDETe/XApDv13mFsDs4523HStwC9u2fnl/2cREr2KmLzCBXZD+rJv/hTyPElrglQkzTOwtGUasRW7wZKCoxAeqaP/M3z7xARmWzMQKaswZMzYZtvDL29yuATrJbAl+qafu/hLssvyJYsQ4V8TbNGITlIwfGgqk2sAMWdl5+PAvS1AJ1jxsNmcrzBcWbOia/+eiAAA5iy+NDBzMgid0MIfQsPKQ2PbMGJB/cPwZJ523EsSwn0ax1mqmQX9lBv0TRTubqEKLkHUjh5JbElYjED+ez5eEq2iHF8UMbypiiRR+DEROcALuKvsDWgLbiliwwonAOup root@csoaiclab01-80"
+kubernetes:
+  api_service_ip: 10.96.0.1
+  etcd_service_ip: 10.96.0.2
+  pod_cidr: 10.97.0.0/16
+  service_cidr: 10.96.0.0/15
+regional_server:
+  ip: 135.16.101.85
+...

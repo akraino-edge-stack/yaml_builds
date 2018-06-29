@@ -1,0 +1,282 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+site_name: hp_akraino
+ipmi_admin_password: Admin123
+networks:
+  bonded: yes
+  primary: bond0
+  slaves:
+    - name: ens3f0
+    - name: ens3f1
+  oob:
+    vlan: 40
+    interface: 
+    cidr: 192.168.41.0/24
+    routes:
+      gateway: 192.168.41.1
+    ranges:
+      reserved:
+        start: 192.168.41.2
+        end: 192.168.41.4
+      static:
+        start: 192.168.41.5
+        end: 192.168.41.254
+  host:
+    vlan: 41	
+    interface: bond0.41
+    cidr: 192.168.2.0/24
+    routes:
+       gateway: 192.168.2.85
+    ranges:
+      reserved:
+        start: 192.168.2.84
+        end: 192.168.2.86
+      static:
+        start: 192.168.2.1
+        end: 192.168.2.83
+  storage:
+    vlan: 42
+    interface: bond0.42
+    cidr: 172.31.1.0/24
+    ranges:
+      reserved:
+        start: 172.31.1.1
+        end: 172.31.1.10
+      static:
+        start: 172.31.1.11
+        end: 172.31.1.254
+  pxe:
+    vlan: 
+    interface: eno1
+    cidr: 172.30.1.0/24
+    gateway: 172.30.1.1
+    ranges:
+      reserved:
+        start: 172.30.1.2
+        end:  172.30.1.10
+      static:
+        start: 172.30.1.11
+        end: 172.30.1.200
+      dhcp:
+        start: 172.30.1.201
+        end: 172.30.1.254
+  ksn:
+    vlan: 44
+    interface: bond0.44
+    cidr: 172.29.1.0/24
+    local_asnumber: 65531
+    ranges:
+      static:
+        start: 172.29.1.5
+        end: 172.29.1.254
+    additional_cidrs:
+      -  172.29.1.136/29
+    ingress_cidr: 172.29.1.137/32
+    peers:
+    - ip: 172.29.1.1
+      scope: global
+      asnumber: 65001
+    vrrp_ip: 172.29.1.1 # keep peers ip address in case of only peer.
+  neutron:
+    vlan: 45
+    interface: bond0.45
+    cidr: 10.0.101.0/24
+    ranges:
+      reserved:
+        start: 10.0.101.1
+        end: 10.0.101.10
+      static:
+        start: 10.0.101.11
+        end: 10.0.101.254
+sriovnets:
+- physical: sriovnet1
+  interface: ens6f0
+  vlan_start: 100
+  vlan_end: 4000
+  whitelists:
+      "0000:af:02.0":  "enp175s2"
+      "0000:af:02.1":  "enp175s2f1"
+      "0000:af:03.2":  "enp175s3f2"
+      "0000:af:03.3":  "enp175s3f3"
+      "0000:af:03.4":  "enp175s3f4"
+      "0000:af:03.5":  "enp175s3f5"
+      "0000:af:03.6":  "enp175s3f6"
+      "0000:af:03.7":  "enp175s3f7"
+      "0000:af:04.0":  "enp175s4"
+      "0000:af:04.1":  "enp175s4f1"
+      "0000:af:04.2":  "enp175s4f2"
+      "0000:af:04.3":  "enp175s4f3"
+      "0000:af:02.2":  "enp175s2f2"
+      "0000:af:04.4":  "enp175s4f4"
+      "0000:af:04.5":  "enp175s4f5"
+      "0000:af:04.6":  "enp175s4f6"
+      "0000:af:04.7":  "enp175s4f7"
+      "0000:af:05.0":  "enp175s5"
+      "0000:af:05.1":  "enp175s5f1"
+      "0000:af:05.2":  "enp175s5f2"
+      "0000:af:05.3":  "enp175s5f3"
+      "0000:af:05.4":  "enp175s5f4"
+      "0000:af:05.5":  "enp175s5f5"
+      "0000:af:02.3":  "enp175s2f3"
+      "0000:af:05.6":  "enp175s5f6"
+      "0000:af:05.7":  "enp175s5f7"
+      "0000:af:02.4":  "enp175s2f4"
+      "0000:af:02.5":  "enp175s2f5"
+      "0000:af:02.6":  "enp175s2f6"
+      "0000:af:02.7":  "enp175s2f7"
+      "0000:af:03.0":  "enp175s3"
+      "0000:af:03.1":  "enp175s3f1"
+- physical: sriovnet2
+  interface: ens6f1
+  vlan_start: 100
+  vlan_end: 4000
+  whitelists:
+      "0000:af:0a.0":  "enp175s10"
+      "0000:af:0a.1":  "enp175s10f1"
+      "0000:af:0b.2":  "enp175s11f2"
+      "0000:af:0b.3":  "enp175s11f3"
+      "0000:af:0b.4":  "enp175s11f4"
+      "0000:af:0b.5":  "enp175s11f5"
+      "0000:af:0b.6":  "enp175s11f6"
+      "0000:af:0b.7":  "enp175s11f7"
+      "0000:af:0c.0":  "enp175s12"
+      "0000:af:0c.1":  "enp175s12f1"
+      "0000:af:0c.2":  "enp175s12f2"
+      "0000:af:0c.3":  "enp175s12f3"
+      "0000:af:0a.2":  "enp175s10f2"
+      "0000:af:0c.4":  "enp175s12f4"
+      "0000:af:0c.5":  "enp175s12f5"
+      "0000:af:0c.6":  "enp175s12f6"
+      "0000:af:0c.7":  "enp175s12f7"
+      "0000:af:0d.0":  "enp175s13"
+      "0000:af:0d.1":  "enp175s13f1"
+      "0000:af:0d.2":  "enp175s13f2"
+      "0000:af:0d.3":  "enp175s13f3"
+      "0000:af:0d.4":  "enp175s13f4"
+      "0000:af:0d.5":  "enp175s13f5"
+      "0000:af:0a.3":  "enp175s10f3"
+      "0000:af:0d.6":  "enp175s13f6"
+      "0000:af:0d.7":  "enp175s13f7"
+      "0000:af:0a.4":  "enp175s10f4"
+      "0000:af:0a.5":  "enp175s10f5"
+      "0000:af:0a.6":  "enp175s10f6"
+      "0000:af:0a.7":  "enp175s10f7"
+      "0000:af:0b.0":  "enp175s11"
+      "0000:af:0b.1":  "enp175s11f1"
+storage:
+  osds:
+    - data: /dev/sdb
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdb
+    - data: /dev/sdc
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdc
+    - data: /dev/sdd
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdd
+    - data: /dev/sde
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sde
+    - data: /dev/sdf
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdf
+    - data: /dev/sdg
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdg
+    - data: /dev/sdg
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdh
+    - data: /dev/sdi
+      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdi
+    - data: /dev/sdk
+      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdk
+  osd_count: 9
+genesis:
+  name: csonjrsv30
+  oob: 192.168.41.30
+  host: 192.168.2.30
+  storage: 172.31.1.30
+  pxe: 172.30.1.30
+  ksn: 172.29.1.30
+  neutron: 10.0.101.30
+masters:
+  - name : csonjrsv31
+  - name : csonjrsv32
+workers:
+  - name : csonjrsv33
+  - name : csonjrsv34
+servers:
+  - name : csonjrsv31
+    oob: 192.168.41.31
+    host: 192.168.2.31
+    storage: 172.31.1.31
+    pxe: 172.30.1.31
+    ksn: 172.29.1.31
+    neutron: 10.0.101.31
+  - name : csonjrsv32
+    oob: 192.168.41.32
+    host: 192.168.2.32
+    storage: 172.31.1.32
+    pxe: 172.30.1.32
+    ksn: 172.29.1.32
+    neutron: 10.0.101.32
+  - name : csonjrsv33
+    oob: 192.168.41.33
+    host: 192.168.2.33
+    storage: 172.31.1.33
+    pxe: 172.30.1.33
+    ksn: 172.29.1.33
+    neutron: 10.0.101.33
+  - name : csonjrsv34
+    oob: 192.168.41.34
+    host: 192.168.2.34
+    storage: 172.31.1.34
+    pxe: 172.30.1.34
+    ksn: 172.29.1.34
+    neutron: 10.0.101.34
+hardware:
+  vendor: HP
+  generation: '10'
+  hw_version: '3'
+  bios_version: '2.8'
+disks:
+  - name : sdj
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 20g
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var
+        size: 100g
+        mountpoint: /var
+  - name : sdb
+    partitions:
+      - name: cephj0
+        size: 100g
+        mountpoint: /var/lib/openstack-helm/ceph/journal0
+  - name : sdc
+    partitions:
+      - name: cephj1
+        size: 100g
+        mountpoint: /var/lib/openstack-helm/ceph/journal1
+genesis_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/n4mNLAj3XKG2fcm+8eVe0NUlNH0g8DA8KJ53rSLKccm8gm4UgLmGOJyBfUloQZMuOpU6a+hexN4ECCliqI7+KUmgJgsvLkJ3OUMNTEVu9tDX5mdXeffsufaqFkAdmbJ/9PMPiPQ3/UqbbtyEcqoZAwUWf4ggAWSp00SGE1Okg+skPSbDzPVHb4810eXZT1yoIg29HAenJNNrsVxvnMT2kw2OYmLfxgEUh1Ev4c5LnUog4GXBDHQtHAwaIoTu9s/q8VIvGav62RJVFn3U1D0jkiwDLSIFn8ezORQ4YkSidwdSrtqsqa2TJ0E5w/n5h5IVGO9neY8YlXrgynLd4Y+7 root@pocnjrsv132"
+kubernetes:
+  api_service_ip: 10.96.0.1
+  etcd_service_ip: 10.96.0.2
+  pod_cidr: 10.99.0.0/16
+  service_cidr: 10.96.0.0/15
+regional_server:
+  ip: 135.16.101.85
+...

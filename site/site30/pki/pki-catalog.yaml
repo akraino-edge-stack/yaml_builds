@@ -1,0 +1,285 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: promenade/PKICatalog/v1
+metadata:
+  schema: metadata/Document/v1
+  name: cluster-certificates
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  certificate_authorities:
+    kubernetes:
+      description: CA for Kubernetes components
+      certificates:
+        - document_name: apiserver
+          description: Service certificate for Kubernetes apiserver
+          common_name: apiserver
+          hosts:
+            - localhost
+            - 127.0.0.1
+            - 10.96.0.1
+          kubernetes_service_names:
+            - kubernetes.default.svc.cluster.local
+        - document_name: kubelet-genesis
+          common_name: system:node:aknode30
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+          groups:
+            - system:nodes
+        - document_name: kubelet-aknode30
+          common_name: system:node:aknode30
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+          groups:
+            - system:nodes
+        - document_name: kubelet-aknode31
+          common_name: system:node:aknode31
+          hosts:
+            - aknode31
+            - 192.168.2.31
+            - 172.29.1.31
+            - 172.30.1.31
+          groups:
+            - system:nodes
+        - document_name: kubelet-aknode32
+          common_name: system:node:aknode32
+          hosts:
+            - aknode32
+            - 192.168.2.32
+            - 172.29.1.32
+            - 172.30.1.32
+          groups:
+            - system:nodes
+        - document_name: kubelet-aknode33
+          common_name: system:node:aknode33
+          hosts:
+            - aknode33
+            - 192.168.2.33
+            - 172.29.1.33
+            - 172.30.1.33
+          groups:
+            - system:nodes
+        - document_name: kubelet-aknode34
+          common_name: system:node:aknode34
+          hosts:
+            - aknode34
+            - 192.168.2.34
+            - 172.29.1.34
+            - 172.30.1.34
+          groups:
+            - system:nodes
+        - document_name: scheduler
+          description: Service certificate for Kubernetes scheduler
+          common_name: system:kube-scheduler
+        - document_name: controller-manager
+          description: certificate for controller-manager
+          common_name: system:kube-controller-manager
+        - document_name: admin
+          common_name: admin
+          groups:
+            - system:masters
+        - document_name: armada
+          common_name: armada
+          groups:
+            - system:masters
+    kubernetes-etcd:
+      description: Certificates for Kubernetes's etcd servers
+      certificates:
+        - document_name: apiserver-etcd
+          description: etcd client certificate for use by Kubernetes apiserver
+          common_name: apiserver
+          # NOTE(mark-burnett): hosts not required for client certificates
+        - document_name: kubernetes-etcd-anchor
+          description: anchor
+          common_name: anchor
+        - document_name: kubernetes-etcd-genesis
+          common_name: kubernetes-etcd-genesis
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-aknode30
+          common_name: kubernetes-etcd-aknode30
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-aknode31
+          common_name: kubernetes-etcd-aknode31
+          hosts:
+            - aknode31
+            - 192.168.2.31
+            - 172.29.1.31
+            - 172.30.1.31
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-aknode32
+          common_name: kubernetes-etcd-aknode32
+          hosts:
+            - aknode32
+            - 192.168.2.32
+            - 172.29.1.32
+            - 172.30.1.32
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+    kubernetes-etcd-peer:
+      certificates:
+        - document_name: kubernetes-etcd-genesis-peer
+          common_name: kubernetes-etcd-genesis-peer
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-aknode30-peer
+          common_name: kubernetes-etcd-aknode30-peer
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-aknode31-peer
+          common_name: kubernetes-etcd-aknode31-peer
+          hosts:
+            - aknode31
+            - 192.168.2.31
+            - 172.29.1.31
+            - 172.30.1.31
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+        - document_name: kubernetes-etcd-aknode32-peer
+          common_name: kubernetes-etcd-aknode32-peer
+          hosts:
+            - aknode32
+            - 192.168.2.32
+            - 172.29.1.32
+            - 172.30.1.32
+            - 127.0.0.1
+            - localhost
+            - kubernetes-etcd.kube-system.svc.cluster.local
+            - 10.96.0.2
+    calico-etcd:
+      description: Certificates for Calico etcd client traffic
+      certificates:
+        - document_name: calico-etcd-anchor
+          description: anchor
+          common_name: anchor
+        - document_name: calico-etcd-aknode30
+          common_name: calico-etcd-aknode30
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-aknode31
+          common_name: calico-etcd-aknode31
+          hosts:
+            - aknode31
+            - 192.168.2.31
+            - 172.29.1.31
+            - 172.30.1.31
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-aknode32
+          common_name: calico-etcd-aknode32
+          hosts:
+            - aknode32
+            - 192.168.2.32
+            - 172.29.1.32
+            - 172.30.1.32
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-node
+          common_name: calcico-node
+    calico-etcd-peer:
+      description: Certificates for Calico etcd clients
+      certificates:
+        - document_name: calico-etcd-aknode30-peer
+          common_name: calico-etcd-aknode30-peer
+          hosts:
+            - aknode30
+            - 192.168.2.30
+            - 172.29.1.30
+            - 172.30.1.30
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-aknode31-peer
+          common_name: calico-etcd-aknode31-peer
+          hosts:
+            - aknode31
+            - 192.168.2.31
+            - 172.29.1.31
+            - 172.30.1.31
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-etcd-aknode32-peer
+          common_name: calico-etcd-aknode32-peer
+          hosts:
+            - aknode32
+            - 192.168.2.32
+            - 172.29.1.32
+            - 172.30.1.32
+            - 127.0.0.1
+            - localhost
+            - 10.96.232.136
+        - document_name: calico-node-peer
+          common_name: calcico-node-peer
+  keypairs:
+    - name: service-account
+      description: Service account signing key for use by Kubernetes controller-manager.
+...
+

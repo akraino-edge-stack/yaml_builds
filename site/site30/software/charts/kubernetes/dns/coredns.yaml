@@ -1,0 +1,102 @@
+---
+##############################################################################
+# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: coredns
+  replacement: true
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+        name: coredns-global
+    actions:
+        - method: replace
+          path: .values.conf.coredns.corefile
+        - method: merge
+          path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Zones
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.cluster_domain
+      dest:
+        path: .values.conf.coredns.corefile
+        pattern: '(CLUSTER_DOMAIN)'
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.service_cidr
+      dest:
+        path: .values.conf.coredns.corefile
+        pattern: '(SERVICE_CIDR)'
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path:  .values.conf.coredns.corefile
+        pattern: '(POD_CIDR)'
+
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.upstream_servers[0]
+      dest:
+        path: .values.conf.coredns.corefile
+        pattern: '(UPSTREAM1)'
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.upstream_servers[1]
+      dest:
+        path: .values.conf.coredns.corefile
+        pattern: '(UPSTREAM2)'
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .dns.upstream_servers[2]
+      dest:
+        path: .values.conf.coredns.corefile
+        pattern: '(UPSTREAM3)'
+data:
+  values:
+    conf:
+      coredns:
+        # TODO(alanmeadows) this needs to be adjusted to use substition
+        corefile: |
+          .:53 {
+              errors
+              health
+              autopath @kubernetes
+              kubernetes CLUSTER_DOMAIN SERVICE_CIDR POD_CIDR {
+                pods insecure
+                fallthrough in-addr.arpa ip6.arpa
+                upstream UPSTREAM1
+                upstream UPSTREAM2
+                upstream UPSTREAM3
+              }
+              prometheus :9153
+              proxy . UPSTREAM1
+              proxy . UPSTREAM2
+              proxy . UPSTREAM3
+              cache 30
+          }
+...

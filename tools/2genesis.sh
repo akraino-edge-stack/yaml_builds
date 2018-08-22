@@ -1,6 +1,6 @@
 #!/bin/bash
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -20,24 +20,26 @@ source $(dirname $0)/setenv.sh
 
 if [ -z "$1" ]
 then
-  echo "Plese pass site name as command line argument"
+  echo "Please pass site name as command line argument"
   exit -2
 else
   SITE=${SITE:-$1}
   echo "SITE=$SITE"
 fi
 
+if [ -z "$YAML_BUILDS" ]
+then
+  echo "Please set YAML_BUILDS"
+  exit -3
+fi
+
 
 source $(dirname $0)/env_$SITE.sh
 
-scp $AIC_CLCP_MANIFESTS/tools/promenade-bundle.tar $GENESIS_HOST:/tmp/
+scp $YAML_BUILDS/tars/promenade-bundle-$SITE.tar $GENESIS_HOST:/tmp/
 ssh $GENESIS_HOST << EOF
-  mkdir -p /opt/sitename/aic-clcp-manifests/tools
-  cp /tmp/promenade-bundle.tar /opt/sitename/aic-clcp-manifests/tools/
-  cd /opt/sitename/aic-clcp-manifests/tools/
-  tar -xmf promenade-bundle.tar
-  mkdir configs/promenade
-  cp configs/promenade-bundle/*.yaml configs/promenade/
-  bash /opt/sitename/aic-clcp-manifests/tools/configs/promenade-bundle/genesis.sh
+  mkdir -p /root/akraino
+  cp /tmp/promenade-bundle-$SITE.tar /root/akraino/
+  cd /root/akraino/
+  tar -xmf promenade-bundle-$SITE.tar
 EOF
-

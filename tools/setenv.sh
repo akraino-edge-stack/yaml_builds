@@ -1,6 +1,6 @@
 #!/bin/bash
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -16,9 +16,7 @@
 ##############################################################################
 
 
-export YAML_BUILDS=/opt/yaml_builds
+export YAML_BUILDS=/opt/akraino/yaml_builds
 echo YAML_BUILDS=$YAML_BUILDS
-export AIC_CLCP_MANIFESTS=/opt/yaml_builds/aic-clcp-manifests
-echo AIC_CLCP_MANIFESTS=$AIC_CLCP_MANIFESTS
-export AIC_CLCP_SECURITY_MANIFESTS=/opt/yaml_builds/aic-clcp-security-manifests
-echo AIC_CLCP_SECURITY_MANIFESTS=$AIC_CLCP_SECURITY_MANIFESTS
+export AIRSHIP_TREASUREMAP=/root/airship-treasuremap
+echo AIRSHIP_TREASUREMAP=$AIRSHIP_TREASUREMAP

@@ -15,6 +15,7 @@
 # limitations under the License.                                             #
 ##############################################################################
 
+set -x
 
 if [ -z "$1" ]
 then
@@ -44,6 +45,9 @@ then
   echo "Error:Could not bringup the genesis nodes. So stopping here"
   exit 2
 fi
+
+date
+sleep 900;
 
 echo "Deploying the site"
 bash $YAML_BUILDS/tools/3deploy_site.sh $SITE > /var/log/yaml_builds/3deploy-$TIMESTAMP.log 2>&1

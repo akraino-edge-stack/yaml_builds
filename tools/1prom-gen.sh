@@ -24,12 +24,12 @@ source $(dirname $0)/setenv.sh
 
 PROMENADE_IMAGE=quay.io/airshipit/promenade:master
 
-if [ -z "$AIC_CLCP_MANIFESTS" ]
+if [ -z "$AIRSHIP_TREASUREMAP" ]
 then
-  echo "Please follow https://codecloud.web.att.com/projects/ST_CCP/repos/aic-clcp-manifests/browse/docs/source/deployment_blueprint.md to clone aic-clcp-manifests. Also set AIC_CLCP_MANIFESTS to it."
+  echo "Please follow https://codecloud.web.att.com/projects/ST_CCP/repos/aic-clcp-manifests/browse/docs/source/deployment_blueprint.md to clone aic-clcp-manifests. Also set AIRSHIP_TREASUREMAP to it."
   exit -1
 else
-  WORKSPACE=$AIC_CLCP_MANIFESTS
+  WORKSPACE=$YAML_BUILDS
   echo "WORKSPACE=$WORKSPACE"
 fi
 
@@ -41,8 +41,8 @@ else
   SITE=${SITE:-$1}
   echo "SITE=$SITE"
 fi
-
 source $(dirname $0)/env_$SITE.sh
+
 
 # Check that we are root
 if [[ $(whoami) != "root" ]]
@@ -50,7 +50,16 @@ then
   echo "Must be root to run $0"
   exit -1
 fi
-cd $AIC_CLCP_MANIFESTS/tools/
+
+if [ -z "$YAML_BUILDS" ]
+then
+  echo "Please set YAML_BUILDS"
+  exit -3
+else
+  WORKSPACE=$YAML_BUILDS
+  echo "WORKSPACE=$WORKSPACE"
+  cd $YAML_BUILDS
+fi
 
 install_docker() {
    # Configure proxy for Docker daemon
@@ -129,28 +138,50 @@ ENDKEY
 }
 
 cleanup() {
-   rm -rf ./configs/promenade
-   rm -rf ./configs/promenade-bundle
-   mkdir -p ./configs/promenade
-   mkdir -p ./configs/promenade-bundle
+   rm -rf ./tars/$SITE/configs/promenade
+   rm -rf ./tars/$SITE/configs/promenade-bundle
+   mkdir -p ./tars/$SITE/configs/promenade
+   mkdir -p ./tars/$SITE/configs/promenade-bundle
 }
 
 get_site_config(){
-   ./pegleg.sh site -p /workspace collect ${SITE} -s /workspace/tools/configs/promenade
+   $YAML_BUILDS/tools/pegleg.sh site -p /site -a /global collect ${SITE} -s /site/tars/$SITE/configs/promenade
 }
 
 gen_certs() {
-   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade generate-certs -o /target/configs/promenade /target/configs/promenade/*.yaml
+   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade generate-certs -o /target/tars/$SITE/configs/promenade /target/tars/$SITE/configs/promenade/*.yaml
 }
 
 gen_bundle(){
-   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade build-all --validators -o /target/configs/promenade-bundle /target/configs/promenade/*.yaml
+   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade build-all --validators -o /target/tars/$SITE/configs/promenade-bundle /target/tars/$SITE/configs/promenade/*.yaml
+}
+
+create_scripts() {
+  KEYSTONE_IMAGE=$(grep "keystone_db_sync" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
+  SHIPYARD_IMAGE=$(grep "shipyard_db_sync" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
+
+  DRYDOCK_PASSWORD=$(grep "^data:" $YAML_BUILDS/site/$SITE/secrets/passphrases/ucp_drydock_keystone_password.yaml | awk '{print $2}')
+  SHIPYARD_PASSWORD=$(grep "^data:" $YAML_BUILDS/site/$SITE/secrets/passphrases/ucp_shipyard_keystone_password.yaml | awk '{print $2}')
+  REGION_NAME=$SITE
+
+  cp $YAML_BUILDS/tools/deploy_site.sh $YAML_BUILDS/tars/$SITE/
+  sed -i -e "s,KEYSTONE_IMAGE=,KEYSTONE_IMAGE=$KEYSTONE_IMAGE,g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
+  sed -i -e "s,SHIPYARD_IMAGE=,SHIPYARD_IMAGE=$SHIPYARD_IMAGE,g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
+  sed -i -e "s/DRYDOCK_PASSWORD=/DRYDOCK_PASSWORD=$DRYDOCK_PASSWORD/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
+  sed -i -e "s/SHIPYARD_PASSWORD=/SHIPYARD_PASSWORD=$SHIPYARD_PASSWORD/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
+  sed -i -e "s/REGION_NAME=/REGION_NAME=$REGION_NAME/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
+  sed -i -e "s/{{yaml.genesis.host}}/$GENESIS_HOST/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
+
+  cp $YAML_BUILDS/tools/update_iptables.sh $YAML_BUILDS/tars/$SITE/
+  sed -i -e "s,HOST_INTERFACE=,HOST_INTERFACE=$HOST_INTERFACE,g" $YAML_BUILDS/tars/$SITE/update_iptables.sh
+  sed -i -e "s,PXE_INTERFACE=,PXE_INTERFACE=$PXE_INTERFACE,g" $YAML_BUILDS/tars/$SITE/update_iptables.sh
+
+  cp $YAML_BUILDS/tools/cleanup.sh $YAML_BUILDS/tars/$SITE/
 }
 
 prepare_tar(){
-   rm ./promenade-bundle.tar
-   cp ./configs/promenade/*.yaml ./configs/promenade-bundle/
-   tar cvf promenade-bundle.tar ./configs/promenade-bundle/
+   rm ./tars/promenade-bundle-$SITE.tar
+   tar cvf ./tars/promenade-bundle-$SITE.tar -C ./tars/$SITE .
 }
 
 #install_docker
@@ -158,5 +189,5 @@ cleanup
 get_site_config
 gen_certs
 gen_bundle
+create_scripts
 prepare_tar
-

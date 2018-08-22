@@ -1,0 +1,31 @@
+---
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: i40evf_blacklist
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: site
+  labels:
+    application: 'drydock'
+data:
+  signaling: false
+  node_filter:
+    filter_set_type: 'union'
+    filter_set:
+      - filter_type: 'union'
+# TODO if yaml.workers exists
+        node_names:
+{% for worker in yaml.workers %}
+          - '{{worker.name}}'
+{% endfor %}
+  assets:
+    - path: /etc/modprobe.d/sriov_blacklist.conf
+      type: file
+      permissions: '644'
+      data_pipeline:
+        - utf8_decode
+      data: |
+        blacklist i40evf
+...

@@ -15,14 +15,16 @@
 # limitations under the License.                                             #
 ##############################################################################
 
-site_name: dell_akraino
-ipmi_admin_password: calvin
+site_name: dellgen10
+ipmi_admin:
+  username: root
+  password: calvin
 networks:
   bonded: yes
   primary: bond0
   slaves:
-    - name: enp135s0f0
-    - name: enp135s0f1
+    - name: enp94s0f0
+    - name: enp94s0f1
   oob:
     vlan: 40
     interface: 
@@ -32,23 +34,26 @@ networks:
     ranges:
       reserved:
         start: 192.168.41.2
-        end: 192.168.41.4
+        end: 192.168.41.12
       static:
-        start: 192.168.41.5
+        start: 192.168.41.13
         end: 192.168.41.254
   host:
-    vlan: 41	
+    vlan: 41
     interface: bond0.41
     cidr: 192.168.2.0/24
     routes:
-       gateway: 192.168.2.85
+       gateway: 192.168.2.200
     ranges:
       reserved:
         start: 192.168.2.84
         end: 192.168.2.86
       static:
-        start: 192.168.2.1
-        end: 192.168.2.83
+        start: 192.168.2.40
+        end: 192.168.2.45
+    dns:
+      domain: lab.akraino.org
+      servers: '192.168.2.85 8.8.8.8 8.8.4.4'
   storage:
     vlan: 42
     interface: bond0.42
@@ -65,6 +70,8 @@ networks:
     interface: eno3
     cidr: 172.30.2.0/24
     gateway: 172.30.2.1
+    routes:
+      gateway: 172.30.2.40
     ranges:
       reserved:
         start: 172.30.2.2
@@ -75,6 +82,9 @@ networks:
       dhcp:
         start: 172.30.2.201
         end: 172.30.2.254
+    dns:
+      domain: lab.akraino.org
+      servers: '192.168.2.85 8.8.8.8 8.8.4.4'
   ksn:
     vlan: 44
     interface: bond0.44
@@ -103,105 +113,105 @@ networks:
       static:
         start: 10.0.102.11
         end: 10.0.102.254
+dns:
+  upstream_servers:
+    - 192.168.2.85
+    - 8.8.8.8
+    - 8.8.8.8
+  upstream_servers_joined: '192.168.2.85,8.8.8.8'
 sriovnets:
 - physical: sriovnet1
-  interface: enp135s0f
-  vlan_start: 100
-  vlan_end: 4000
+  interface: enp135s0f0
+  vlan_start: 2001
+  vlan_end: 3000
   whitelists:
-      "0000:87:02.0":  "enp135s2"
-      "0000:87:02.1":  "enp135s2f1"
-      "0000:87:03.2":  "enp135s3f2"
-      "0000:87:03.3":  "enp135s3f3"
-      "0000:87:03.4":  "enp135s3f4"
-      "0000:87:03.5":  "enp135s3f5"
-      "0000:87:03.6":  "enp135s3f6"
-      "0000:87:03.7":  "enp135s3f7"
-      "0000:87:04.0":  "enp135s4"
-      "0000:87:04.1":  "enp135s4f1"
-      "0000:87:04.2":  "enp135s4f2"
-      "0000:87:04.3":  "enp135s4f3"
-      "0000:87:02.2":  "enp135s2f2"
-      "0000:87:04.4":  "enp135s4f4"
-      "0000:87:04.5":  "enp135s4f5"
-      "0000:87:04.6":  "enp135s4f6"
-      "0000:87:04.7":  "enp135s4f7"
-      "0000:87:05.0":  "enp135s5"
-      "0000:87:05.1":  "enp135s5f1"
-      "0000:87:05.2":  "enp135s5f2"
-      "0000:87:05.3":  "enp135s5f3"
-      "0000:87:05.4":  "enp135s5f4"
-      "0000:87:05.5":  "enp135s5f5"
-      "0000:87:02.3":  "enp135s2f3"
-      "0000:87:05.6":  "enp135s5f6"
-      "0000:87:05.7":  "enp135s5f7"
-      "0000:87:02.4":  "enp135s2f4"
-      "0000:87:02.5":  "enp135s2f5"
-      "0000:87:02.6":  "enp135s2f6"
-      "0000:87:02.7":  "enp135s2f7"
-      "0000:87:03.0":  "enp135s3"
-      "0000:87:03.1":  "enp135s3f1"
-
+  - "address": "0000:87:02.0"
+  - "address": "0000:87:02.1"
+  - "address": "0000:87:03.2"
+  - "address": "0000:87:03.3"
+  - "address": "0000:87:03.4"
+  - "address": "0000:87:03.5"
+  - "address": "0000:87:03.6"
+  - "address": "0000:87:03.7"
+  - "address": "0000:87:04.0"
+  - "address": "0000:87:04.1"
+  - "address": "0000:87:04.2"
+  - "address": "0000:87:04.3"
+  - "address": "0000:87:02.2"
+  - "address": "0000:87:04.4"
+  - "address": "0000:87:04.5"
+  - "address": "0000:87:04.6"
+  - "address": "0000:87:04.7"
+  - "address": "0000:87:05.0"
+  - "address": "0000:87:05.1"
+  - "address": "0000:87:05.2"
+  - "address": "0000:87:05.3"
+  - "address": "0000:87:05.4"
+  - "address": "0000:87:05.5"
+  - "address": "0000:87:02.3"
+  - "address": "0000:87:05.6"
+  - "address": "0000:87:05.7"
+  - "address": "0000:87:02.4"
+  - "address": "0000:87:02.5"
+  - "address": "0000:87:02.6"
+  - "address": "0000:87:02.7"
+  - "address": "0000:87:03.0"
+  - "address": "0000:87:03.1"
 - physical: sriovnet2
   interface: enp135s0f1
-  vlan_start: 100
-  vlan_end: 4000
+  vlan_start: 2001
+  vlan_end: 3000
   whitelists:
-     "0000:87:0a.0":  "enp135s10i"
-     "0000:87:0a.1":  "enp135s10f1"
-     "0000:87:0b.2":  "enp135s11f2"
-     "0000:87:0b.3":  "enp135s11f3"
-     "0000:87:0b.4":  "enp135s11f4"
-     "0000:87:0b.5":  "enp135s11f5"
-     "0000:87:0b.6":  "enp135s11f6"
-     "0000:87:0b.7":  "enp135s11f7"
-     "0000:87:0c.0":  "enp135s12"
-     "0000:87:0c.1":  "enp135s12f1"
-     "0000:87:0c.2":  "enp135s12f2"
-     "0000:87:0c.3":  "enp135s12f3"
-     "0000:87:0a.2":  "enp135s10f2"
-     "0000:87:0c.4":  "enp135s12f4"
-     "0000:87:0c.5":  "enp135s12f5"
-     "0000:87:0c.6":  "enp135s12f6"
-     "0000:87:0c.7":  "enp135s12f7"
-     "0000:87:0d.0":  "enp135s13"
-     "0000:87:0d.1":  "enp135s13f1"
-     "0000:87:0d.2":  "enp135s13f2"
-     "0000:87:0d.3":  "enp135s13f3"
-     "0000:87:0d.4":  "enp135s13f4"
-     "0000:87:0d.5":  "enp135s13f5"
-     "0000:87:0a.3":  "enp135s10f3"
-     "0000:87:0d.6":  "enp135s13f6"
-     "0000:87:0d.7":  "enp135s13f7"
-     "0000:87:0a.4":  "enp135s10f4"
-     "0000:87:0a.5":  "enp135s10f5"
-     "0000:87:0a.6":  "enp135s10f6"
-     "0000:87:0a.7":  "enp135s10f7"
-     "0000:87:0b.0":  "enp135s11"
-     "0000:87:0b.1":  "enp135s11f1"
+  - "address": "0000:87:0a.0"
+  - "address": "0000:87:0a.1"
+  - "address": "0000:87:0b.2"
+  - "address": "0000:87:0b.3"
+  - "address": "0000:87:0b.4"
+  - "address": "0000:87:0b.5"
+  - "address": "0000:87:0b.6"
+  - "address": "0000:87:0b.7"
+  - "address": "0000:87:0c.0"
+  - "address": "0000:87:0c.1"
+  - "address": "0000:87:0c.2"
+  - "address": "0000:87:0c.3"
+  - "address": "0000:87:0a.2"
+  - "address": "0000:87:0c.4"
+  - "address": "0000:87:0c.5"
+  - "address": "0000:87:0c.6"
+  - "address": "0000:87:0c.7"
+  - "address": "0000:87:0d.0"
+  - "address": "0000:87:0d.1"
+  - "address": "0000:87:0d.2"
+  - "address": "0000:87:0d.3"
+  - "address": "0000:87:0d.4"
+  - "address": "0000:87:0d.5"
+  - "address": "0000:87:0a.3"
+  - "address": "0000:87:0d.6"
+  - "address": "0000:87:0d.7"
+  - "address": "0000:87:0a.4"
+  - "address": "0000:87:0a.5"
+  - "address": "0000:87:0a.6"
+  - "address": "0000:87:0a.7"
+  - "address": "0000:87:0b.0"
+  - "address": "0000:87:0b.1"
 storage:
   osds:
+    - data: /dev/sda
+      journal: /var/lib/ceph/journal/journal-sda
     - data: /dev/sdb
-      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdb
+      journal: /var/lib/ceph/journal/journal-sdb
     - data: /dev/sdc
-      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdc
+      journal: /var/lib/ceph/journal/journal-sdc
     - data: /dev/sdd
-      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdd
+      journal: /var/lib/ceph/journal/journal-sdd
     - data: /dev/sde
-      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sde
+      journal: /var/lib/ceph/journal/journal-sde
     - data: /dev/sdf
-      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdf
-    - data: /dev/sdg
-      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdg
-    - data: /dev/sdg
-      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdh
-    - data: /dev/sdi
-      journal: /var/lib/openstack-helm/ceph/journal1/osd/journal-sdi
-    - data: /dev/sdk
-      journal: /var/lib/openstack-helm/ceph/journal0/osd/journal-sdk
-  osd_count: 9
+      journal: /var/lib/ceph/journal/journal-sdf
+  osd_count: 6
+  total_osd_count: 18
 genesis:
-  name: csonjrsv40
+  name: aknode40
   oob: 192.168.41.40
   host: 192.168.2.40
   storage: 172.31.2.40
@@ -209,34 +219,29 @@ genesis:
   ksn: 172.29.1.40
   neutron: 10.0.102.40
 masters:
-  - name : csonjrsv41
-  - name : csonjrsv42
-workers:
-  - name : csonjrsv43
-  - name : csonjrsv44
-servers:
-  - name : csonjrsv41
+  - name : aknode41
     oob: 192.168.41.41
     host: 192.168.2.41
     storage: 172.31.2.41
     pxe: 172.30.2.41
     ksn: 172.29.1.41
     neutron: 10.0.102.41
-  - name : csonjrsv42
+  - name : aknode42
     oob: 192.168.41.42
     host: 192.168.2.42
     storage: 172.31.2.42
     pxe: 172.30.2.42
     ksn: 172.29.1.42
     neutron: 10.0.102.42
-  - name : csonjrsv43
+workers:
+  - name : aknode43
     oob: 192.168.41.43
     host: 192.168.2.43
     storage: 172.31.2.43
     pxe: 172.30.2.43
     ksn: 172.29.1.43
     neutron: 10.0.102.43
-  - name : csonjrsv44
+  - name : aknode44
     oob: 192.168.41.44
     host: 192.168.2.44
     storage: 172.31.2.44
@@ -249,7 +254,7 @@ hardware:
   hw_version: '3'
   bios_version: '2.8'
 disks:
-  - name : sdj
+  - name : sdg
     labels:
       bootdrive: 'true'
     partitions:
@@ -262,16 +267,11 @@ disks:
       - name: var
         size: 100g
         mountpoint: /var
-  - name : sdb
+  - name : sdh
     partitions:
-      - name: cephj0
-        size: 100g
-        mountpoint: /var/lib/openstack-helm/ceph/journal0
-  - name : sdc
-    partitions:
-      - name: cephj1
-        size: 100g
-        mountpoint: /var/lib/openstack-helm/ceph/journal1
+      - name: ceph
+        size: 300g
+        mountpoint: /var/lib/ceph/journal
 genesis_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/n4mNLAj3XKG2fcm+8eVe0NUlNH0g8DA8KJ53rSLKccm8gm4UgLmGOJyBfUloQZMuOpU6a+hexN4ECCliqI7+KUmgJgsvLkJ3OUMNTEVu9tDX5mdXeffsufaqFkAdmbJ/9PMPiPQ3/UqbbtyEcqoZAwUWf4ggAWSp00SGE1Okg+skPSbDzPVHb4810eXZT1yoIg29HAenJNNrsVxvnMT2kw2OYmLfxgEUh1Ev4c5LnUog4GXBDHQtHAwaIoTu9s/q8VIvGav62RJVFn3U1D0jkiwDLSIFn8ezORQ4YkSidwdSrtqsqa2TJ0E5w/n5h5IVGO9neY8YlXrgynLd4Y+7 root@pocnjrsv132"
 kubernetes:
   api_service_ip: 10.96.0.1

@@ -18,7 +18,7 @@
 
 export YAML_BUILDS=/opt/yaml_builds
 echo YAML_BUILDS=$YAML_BUILDS
-export AIC_CLCP_MANIFESTS=/opt/yaml_builds/aic-clcp-manifests
+export AIC_CLCP_MANIFESTS=/root/ns156u/yaml_builds/site30/aic-clcp-manifests
 echo AIC_CLCP_MANIFESTS=$AIC_CLCP_MANIFESTS
-export AIC_CLCP_SECURITY_MANIFESTS=/opt/yaml_builds/aic-clcp-security-manifests
-echo AIC_CLCP_SECURITY_MANIFESTS=$AIC_CLCP_SECURITY_MANIFESTS
+export AIRSHIP_TREASUREMAP=/root/ns156u/airship-treasuremap
+echo AIRSHIP_TREASUREMAP=$AIRSHIP_TREASUREMAP

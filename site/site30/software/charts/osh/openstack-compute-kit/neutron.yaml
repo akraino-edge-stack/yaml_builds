@@ -1,6 +1,6 @@
 ---
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -18,8 +18,8 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron-site30
-  #replacement: true
+  name: neutron
+  replacement: true
   labels:
     component: neutron
   layeringDefinition:
@@ -33,9 +33,15 @@ metadata:
   storagePolicy: cleartext
 data:
   values:
+    labels:
+      agent:
+        sriov:
+          node_selector_key: sriov
+          node_selector_value: enabled
     network:
-#      auto_bridge_add:
-#        br-bond0: bond0
+      backend:
+        - openvswitch
+        - sriov
       interface:
         sriov:
           - device: ens6f0
@@ -48,11 +54,16 @@ data:
       plugins:
         openvswitch_agent:
           ovs:
-            bridge_mappings: physnet:br-bond0
+            bridge_mappings: bond0:br-bond0
         sriov_agent:
+          securitygroup:
+            firewall_driver: neutron.agent.firewall.NoopFirewallDriver
           sriov_nic:
+            exclude_devices: null
             physical_device_mappings: sriovnet1:ens6f0,sriovnet2:ens6f1
         ml2_conf:
+          ml2:
+            mechanism_drivers: l2population,openvswitch,sriovnicswitch
           ml2_type_vlan:
-            network_vlan_ranges: physnet:46:300,sriovnet1:100:4000,sriovnet2:100:4000,sriovnet3:100:4000,sriovnet4:100:4000
+            network_vlan_ranges: bond0:46:300,sriovnet1:2001:3000,sriovnet2:2001:3000
 ...

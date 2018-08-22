@@ -67,13 +67,13 @@ getactions(){
   sleep 5
 }
 
-#clean_configdocs
-#create_configdocs
-#commit_configdocs
+clean_configdocs
+create_configdocs
+commit_configdocs
 renderedconfigdocs
 
-#deploy_site
-getactions
+deploy_site
+#getactions
 #update_site
 
 ##

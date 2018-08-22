@@ -1,6 +1,6 @@
 ---
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -33,6 +33,7 @@ metadata:
         name: ipmi_admin_password
         path: .
 data:
+  hardware_profile: DELL_HP_Generic
   oob:
     type: 'ipmi'
     network: 'oob'
@@ -56,6 +57,18 @@ data:
         - 'storage'
         - 'overlay'
         - 'calico'
+    p1p1:
+      slaves:
+        - 'sriov_nic01'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
+    p3p2:
+      slaves:
+        - 'sriov_nic02'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
   storage:
     physical_devices:
       sdj:
@@ -94,11 +107,20 @@ data:
     kernel: 'hwe-16.04'
     kernel_params:
       console: 'ttyS1,115200n8'
+      intel_iommu: 'on'
+      iommu: 'pt'
+      amd_iommu: 'on'
+      transparent_hugepage: 'never'
+      hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      hugepages: 'hardwareprofile:hugepages.dpdk.count'
+      default_hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      isolcpus: 'hardwareprofile:cpuset.kvm'
   metadata:
     owner_data:
       openstack-nova-compute: enabled
       openvswitch: enabled
       openstack-libvirt: kernel
+      sriov: enabled
       beta.kubernetes.io/fluentd-ds-ready: 'true'
 ...
 

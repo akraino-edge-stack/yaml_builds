@@ -1,6 +1,6 @@
 ---
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -25,7 +25,6 @@ metadata:
   storagePolicy: cleartext
 data:
   host_profile: MyControlPlane_HP
-#/new/notused/aic-clcp-manifests/site/clcp-seaworthy/profiles/host/cp_rack.yaml
   addressing:
     - network: oob
       address: 192.168.41.131

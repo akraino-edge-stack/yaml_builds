@@ -1,6 +1,6 @@
 ---
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -366,6 +366,25 @@ metadata:
         pattern: DOMAIN
 data:
   osh:
+    object_store:
+      name: swift
+      namespace: ceph
+      hosts:
+        default: ceph-rgw
+        public: radosgw
+      host_fqdn_override:
+        default: null
+        public:
+          host: object-store.DOMAIN
+      path:
+        default: /swift/v1/KEY_$(tenant_id)s
+      scheme:
+        default: http
+        public: "https"
+      port:
+        api:
+          default: 8088
+          public: 443
     oslo_db:
       hosts:
         default: mariadb
@@ -1066,4 +1085,37 @@ data:
       port:
         exporter:
           default: 9103
+    nagios:
+      name: nagios
+      namespace: osh-infra
+      hosts:
+        default: nagios-metrics
+        public: nagios
+      host_fqdn_override:
+        default: null
+        public:
+          host: nagios.DOMAIN
+      path:
+        default: null
+      scheme:
+        default: http
+        public: https
+      port:
+        http:
+          default: 80
+          public: 443
+    ldap:
+      hosts:
+        default: ldap
+      host_fqdn_override:
+        default: null
+        public:
+          host: DOMAIN
+      path:
+        default: /AUTH_PATH
+      scheme:
+        default: "ldap"
+      port:
+        ldap:
+          default: 389
 ...

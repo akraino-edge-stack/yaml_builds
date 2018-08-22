@@ -27,17 +27,19 @@ else
   echo "SITE=$SITE"
 fi
 
+if [ -z "$YAML_BUILDS" ]
+then
+  echo "Please set YAML_BUILDS"
+  exit -3
+fi
+
 
 source $(dirname $0)/env_$SITE.sh
 
-scp $AIC_CLCP_MANIFESTS/tools/promenade-bundle.tar $GENESIS_HOST:/tmp/
+scp $YAML_BUILDS/tars/promenade-bundle-$SITE.tar $GENESIS_HOST:/tmp/
 ssh $GENESIS_HOST << EOF
-  mkdir -p /opt/sitename/aic-clcp-manifests/tools
-  cp /tmp/promenade-bundle.tar /opt/sitename/aic-clcp-manifests/tools/
-  cd /opt/sitename/aic-clcp-manifests/tools/
-  tar -xmf promenade-bundle.tar
-  mkdir configs/promenade
-  cp configs/promenade-bundle/*.yaml configs/promenade/
-  bash /opt/sitename/aic-clcp-manifests/tools/configs/promenade-bundle/genesis.sh
+  mkdir -p /root/akraino
+  cp /tmp/promenade-bundle-$SITE.tar /root/akraino/
+  cd /root/akraino/
+  tar -xmf promenade-bundle-$SITE.tar
 EOF
-

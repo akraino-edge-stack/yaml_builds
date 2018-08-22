@@ -1,0 +1,58 @@
+---
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  labels:
+    component: nova
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: nova-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    network:
+      backend:
+        - openvswitch
+        - sriov
+    conf:
+      nova:
+        filter_scheduler:
+          enabled_filters: "RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ComputeCapabilitiesFilter, ImagePropertiesFilter, ServerGroupAntiAffinityFilter, ServerGroupAffinityFilter, PciPassthroughFilter, NUMATopologyFilter, DifferentHostFilter, SameHostFilter"
+        libvirt:
+          virt_type: kvm
+        DEFAULT:
+          vcpu_pin_set: "4-21,26-43,48-65,72-87"
+          vif_plugging_is_fatal: False
+          vif_plugging_timeout: 30
+        pci:
+          alias: '{ "vendor_id":"10de", "product_id":"1db4", "name":"V100", "device_type":"type-PCI" }'
+          #passthrough_whitelist: [{ "vendor_id": "10de", "product_id": "1db4" } ]
+          #passthrough_whitelist: { "vendor_id": "10de", "product_id": "1db4" }
+          passthrough_whitelist: '{"vendor_id": "10de", "product_id": "1db4"}'
+#        pci:
+#          alias: '{"name": "numa0", "capability_type": "pci", "product_id": "154c", "vendor_id": "8086", "device_type": "type-PCI", "numa_policy": "required"}'
+#          passthrough_whitelist: |
+#            [{"address": "0000:87:02.0", "physical_network": "sriovnet1"},{"address": "0000:87:02.1", "physical_network": "sriovnet1"},{"address": "0000:87:03.2", "physical_network": "sriovnet1"},{"address": "0000:87:03.3", "physical_network": "sriovnet1"},{"address": "0000:87:03.4", "physical_network": "sriovnet1"},{"address": "0000:87:03.5", "physical_network": "sriovnet1"},{"address": "0000:87:03.6", "physical_network": "sriovnet1"},{"address": "0000:87:03.7", "physical_network": "sriovnet1"},{"address": "0000:87:04.0", "physical_network": "sriovnet1"},{"address": "0000:87:04.1", "physical_network": "sriovnet1"},{"address": "0000:87:04.2", "physical_network": "sriovnet1"},{"address": "0000:87:04.3", "physical_network": "sriovnet1"},{"address": "0000:87:02.2", "physical_network": "sriovnet1"},{"address": "0000:87:04.4", "physical_network": "sriovnet1"},{"address": "0000:87:04.5", "physical_network": "sriovnet1"},{"address": "0000:87:04.6", "physical_network": "sriovnet1"},{"address": "0000:87:04.7", "physical_network": "sriovnet1"},{"address": "0000:87:05.0", "physical_network": "sriovnet1"},{"address": "0000:87:05.1", "physical_network": "sriovnet1"},{"address": "0000:87:05.2", "physical_network": "sriovnet1"},{"address": "0000:87:05.3", "physical_network": "sriovnet1"},{"address": "0000:87:05.4", "physical_network": "sriovnet1"},{"address": "0000:87:05.5", "physical_network": "sriovnet1"},{"address": "0000:87:02.3", "physical_network": "sriovnet1"},{"address": "0000:87:05.6", "physical_network": "sriovnet1"},{"address": "0000:87:05.7", "physical_network": "sriovnet1"},{"address": "0000:87:02.4", "physical_network": "sriovnet1"},{"address": "0000:87:02.5", "physical_network": "sriovnet1"},{"address": "0000:87:02.6", "physical_network": "sriovnet1"},{"address": "0000:87:02.7", "physical_network": "sriovnet1"},{"address": "0000:87:03.0", "physical_network": "sriovnet1"},{"address": "0000:87:03.1", "physical_network": "sriovnet1"},{"address": "0000:87:0a.0", "physical_network": "sriovnet2"},{"address": "0000:87:0a.1", "physical_network": "sriovnet2"},{"address": "0000:87:0b.2", "physical_network": "sriovnet2"},{"address": "0000:87:0b.3", "physical_network": "sriovnet2"},{"address": "0000:87:0b.4", "physical_network": "sriovnet2"},{"address": "0000:87:0b.5", "physical_network": "sriovnet2"},{"address": "0000:87:0b.6", "physical_network": "sriovnet2"},{"address": "0000:87:0b.7", "physical_network": "sriovnet2"},{"address": "0000:87:0c.0", "physical_network": "sriovnet2"},{"address": "0000:87:0c.1", "physical_network": "sriovnet2"},{"address": "0000:87:0c.2", "physical_network": "sriovnet2"},{"address": "0000:87:0c.3", "physical_network": "sriovnet2"},{"address": "0000:87:0a.2", "physical_network": "sriovnet2"},{"address": "0000:87:0c.4", "physical_network": "sriovnet2"},{"address": "0000:87:0c.5", "physical_network": "sriovnet2"},{"address": "0000:87:0c.6", "physical_network": "sriovnet2"},{"address": "0000:87:0c.7", "physical_network": "sriovnet2"},{"address": "0000:87:0d.0", "physical_network": "sriovnet2"},{"address": "0000:87:0d.1", "physical_network": "sriovnet2"},{"address": "0000:87:0d.2", "physical_network": "sriovnet2"},{"address": "0000:87:0d.3", "physical_network": "sriovnet2"},{"address": "0000:87:0d.4", "physical_network": "sriovnet2"},{"address": "0000:87:0d.5", "physical_network": "sriovnet2"},{"address": "0000:87:0a.3", "physical_network": "sriovnet2"},{"address": "0000:87:0d.6", "physical_network": "sriovnet2"},{"address": "0000:87:0d.7", "physical_network": "sriovnet2"},{"address": "0000:87:0a.4", "physical_network": "sriovnet2"},{"address": "0000:87:0a.5", "physical_network": "sriovnet2"},{"address": "0000:87:0a.6", "physical_network": "sriovnet2"},{"address": "0000:87:0a.7", "physical_network": "sriovnet2"},{"address": "0000:87:0b.0", "physical_network": "sriovnet2"},{"address": "0000:87:0b.1", "physical_network": "sriovnet2"}]
+...

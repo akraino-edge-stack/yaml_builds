@@ -28,7 +28,7 @@ All the manual interactions requested are documented here. In future we automate
  * jinja2 PyYAML python packages should be available
  * git clone yaml_build project to your favorite location ( say **/opt/**).
 ~~~
-$ git clone http://gerrit.att-akraino.org/yaml_builds.git
+$ git clone http://gerrit.akraino.org/yaml_builds.git
 ~~~
  * export YAML_BUILDS=<<absolute path of yaml_builds>> created is previous step.
  * aic-clcp-manifests should be installed as explained here https://codecloud.web.att.com/projects/ST_CCP/repos/aic-clcp-manifests/browse/docs/source/deployment_blueprint.md

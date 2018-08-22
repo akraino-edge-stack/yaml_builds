@@ -1,6 +1,6 @@
 ---
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -42,7 +42,7 @@ data:
         asnumber: 65531
         ipv4:
           additional_cidrs:
-            - 172.29.1.136/29 
+            - 172.29.1.136/29
           peers:
             - apiVersion: v1
               kind: bgpPeer

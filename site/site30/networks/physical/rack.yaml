@@ -1,6 +1,6 @@
 ---
 ##############################################################################
-# Copyright © 2018 AT&T Intellectual Property. All rights reserved.          #
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -144,14 +144,14 @@ metadata:
 data:
   vlan: '41'
   mtu: 9000
-  cidr:  192.168.2.0/24
+  cidr: 192.168.2.0/24
   routes:
   - subnet: '0.0.0.0/0'
     gateway: 192.168.2.200
   ranges:
   - type: reserved
-    start:  192.168.2.84
-    end:  192.168.2.86
+    start: 192.168.2.84
+    end: 192.168.2.86
   - type: static
     start: 192.168.2.1
     end: 192.168.2.83

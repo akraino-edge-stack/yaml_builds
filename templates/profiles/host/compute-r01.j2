@@ -1,0 +1,114 @@
+---
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: ComputePlane
+  storagePolicy: cleartext
+  labels:
+    hosttype: ComputePlane
+  layeringDefinition:
+    abstract: false
+    layer: site
+  substitutions:
+    - dest:
+        path: .oob.credential
+      src:
+        schema: deckhand/Passphrase/v1
+        name: ipmi_admin_password
+        path: .
+data:
+  hardware_profile: DELL_HP_Generic
+  oob:
+    type: 'ipmi'
+    network: 'oob'
+    account: '{{yaml.ipmi_admin.username}}'
+  primary_network: 'oam'
+  hardware_profile: DELL_HP_Generic
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - '{{yaml.networks.pxe.interface}}'
+      networks:
+        - 'pxe'
+    bond0:
+      device_link: bond0
+      slaves:
+{% for slave in yaml.networks.slaves %}
+        - '{{ slave.name }}'
+{% endfor %}
+      networks:
+        - 'oam'
+        - 'storage'
+        - 'overlay'
+        - 'calico'
+    p1p1:
+      slaves:
+        - 'sriov_nic01'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
+    p3p2:
+      slaves:
+        - 'sriov_nic02'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
+  storage:
+    physical_devices:
+{% for disk in yaml.disks_compute %}
+      {{disk.name}}:
+      {% if disk.labels %}
+        labels:
+        {% for key, value in disk.labels.items() %}
+          {{key}}: '{{value}}'
+        {% endfor %}
+      {% endif %}
+        partitions:
+       {% for p in disk.partitions %}
+          - name: '{{p.name}}'
+            size: '{{p.size}}'
+            filesystem:
+              mountpoint: '{{p.mountpoint}}'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      {% endfor %}
+{% endfor %}
+  platform:
+    image: 'xenial'
+    kernel: 'hwe-16.04'
+    kernel_params:
+      console: 'ttyS1,115200n8'
+      intel_iommu: 'on'
+      iommu: 'pt'
+      amd_iommu: 'on'
+      transparent_hugepage: 'never'
+      hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      hugepages: 'hardwareprofile:hugepages.dpdk.count'
+      default_hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
+      isolcpus: 'hardwareprofile:cpuset.kvm'
+  metadata:
+    owner_data:
+      openstack-nova-compute: enabled
+      openvswitch: enabled
+      openstack-libvirt: kernel
+      sriov: enabled
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+...
+

@@ -1,0 +1,429 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e9c0da2_b8bd125b",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a24e29e5_93d51a47",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "Don\u0027t refer to AT\u0026T internal URL",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c701ce96_6853e61f",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "AT\u0026T internal URL again",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33ea3d0d_6a44178d",
+        "filename": "dellgen10.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5f8729d_e03543c1",
+        "filename": "tools/1prom-gen.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d117f74_f66a35c2",
+        "filename": "tools/1prom-gen.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "Don\u0027t refer to an AT\u0026T internal URL.",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "076d0b10_f5f826df",
+        "filename": "tools/1prom-gen.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "Spelling error - should be \"please\"",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4674742f_5962bc30",
+        "filename": "tools/2genesis.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebd3dbd4_0db750c8",
+        "filename": "tools/2genesis.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "spelling error - please",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a08f055_5114ae11",
+        "filename": "tools/3deploy_site.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e50a6c8f_bf102953",
+        "filename": "tools/3deploy_site.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "spelling error - please",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7df23c17_bbe200e6",
+        "filename": "tools/cleanup.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "Missing the Copyright comment header",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f874ed67_f3a5c05c",
+        "filename": "tools/deploy_site.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14186bb8_6e3286f6",
+        "filename": "tools/env_bedminster.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "If this file is only for AT\u0026T use it should not be in the external git since it contains AT\u0026T data",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a121a12_48acb963",
+        "filename": "tools/env_dellgen10.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "Need a copyright header",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f587743a_73423138",
+        "filename": "tools/env_testdellgen10.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "need a copyright header",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7b414c2c_cc8ceeef",
+        "filename": "tools/generate_yamls.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4277d41a_c43c0514",
+        "filename": "tools/generate_yamls.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "remove AT\u0026T internal URL",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f725365_9966ef22",
+        "filename": "tools/generate_yamls.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "spelling - please",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53a880d9_67c4dd89",
+        "filename": "tools/j2/set_site_env.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "need a copyright header",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1974f5f_47b485a6",
+        "filename": "tools/pegleg.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "need a copyright header",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cc162854_a70bf0f8",
+        "filename": "tools/setenv.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14a559c2_c75e31e0",
+        "filename": "tools/single_step_deploy.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdfb7872_fc5ebc90",
+        "filename": "tools/single_step_deploy.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "spelling - please",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f80a00a_41520f98",
+        "filename": "tools/update_iptables.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 45
+      },
+      "writtenOn": "2018-09-06T19:36:25Z",
+      "side": 1,
+      "message": "use (c) instead of non-ASCII character",
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    }
+  ]
+}

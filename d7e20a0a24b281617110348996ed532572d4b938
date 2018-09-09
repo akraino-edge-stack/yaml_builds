@@ -70,6 +70,29 @@
     },
     {
       "key": {
+        "uuid": "aafea1e7_2c3fd9a9",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 121
+      },
+      "writtenOn": "2018-09-09T18:13:18Z",
+      "side": 1,
+      "message": "Treasuremap does not have separate security manifest.  We only need the gen.sh file to generate the passphrases.",
+      "range": {
+        "startLine": 41,
+        "startChar": 11,
+        "endLine": 41,
+        "endChar": 38
+      },
+      "revId": "d7e20a0a24b281617110348996ed532572d4b938",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33ea3d0d_6a44178d",
         "filename": "dellgen10.yaml",
         "patchSetId": 6

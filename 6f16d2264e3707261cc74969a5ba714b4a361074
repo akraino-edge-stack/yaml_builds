@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba2f3058_045ce714",
+        "filename": "site/common/secrets/passphrases/ceph_swift_keystone_password.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 121
+      },
+      "writtenOn": "2018-09-09T18:13:18Z",
+      "side": 1,
+      "message": "Are the ____password.yamls (for instance, osh_heat_stack_user_password.yaml) being generated with the gen.sh script as a prior step? I searched for gen.sh passphrase.req and passphrase.sub files and did not find them in gerrit.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 3
+      },
+      "revId": "6f16d2264e3707261cc74969a5ba714b4a361074",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "322a9a2b_c0d3b20a",
+        "filename": "site/common/software/charts/ucp/divingbell/divingbell.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 121
+      },
+      "writtenOn": "2018-09-09T18:13:18Z",
+      "side": 1,
+      "message": "2.\tIt doesn’t look like the divingbell.yaml was templatized.  Each user will  have their own divingbell user(s) with ssh keys (located in secrets/publickey)  The genesis_ssh_public_key is included in the input.yaml (maybe change the name to divingbell ssh_key or cluster-wide ssh_key).  A corresponding user needs to be requested as well and both should be entered into the divingbell.yaml",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 5
+      },
+      "revId": "6f16d2264e3707261cc74969a5ba714b4a361074",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    }
+  ]
+}

@@ -42,6 +42,8 @@ networks:
     vlan: 41
     interface: bond0.41
     cidr: 192.168.2.0/24
+    subnet: 192.168.2.0
+    netmask: 255.255.255.0
     routes:
        gateway: 192.168.2.200
     ranges:
@@ -85,6 +87,7 @@ networks:
     dns:
       domain: lab.akraino.org
       servers: '192.168.2.85 8.8.8.8 8.8.4.4'
+    inf: net4
   ksn:
     vlan: 44
     interface: bond0.44
@@ -219,6 +222,8 @@ genesis:
   pxe: 172.30.2.40
   ksn: 172.29.1.40
   neutron: 10.0.102.40
+  root_password: smil3yfc 
+  oem: Dell
 masters:
   - name : aknode41
     oob: 192.168.41.41
@@ -227,6 +232,8 @@ masters:
     pxe: 172.30.2.41
     ksn: 172.29.1.41
     neutron: 10.0.102.41
+    oob_user: root
+    oob_password: calvin
   - name : aknode42
     oob: 192.168.41.42
     host: 192.168.2.42
@@ -234,6 +241,8 @@ masters:
     pxe: 172.30.2.42
     ksn: 172.29.1.42
     neutron: 10.0.102.42
+    oob_user: root
+    oob_password: calvin
 #workers:
 #  - name : aknode43
 #    oob: 192.168.41.43

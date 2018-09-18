@@ -15,43 +15,55 @@
 # limitations under the License.                                             #
 ##############################################################################
 
-schema: promenade/Genesis/v1
+schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: genesis-site
+  name: neutron
+  replacement: true
+  labels:
+    component: neutron
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: genesis-global
+      name: neutron-global
     actions:
-      - method: replace
-        path: .labels.dynamic
       - method: merge
         path: .
   storagePolicy: cleartext
 data:
-  labels:
-    dynamic:
-      - beta.kubernetes.io/fluentd-ds-ready=true
-      - calico-etcd=enabled
-      - ceph-mds=enabled
-      - ceph-mon=enabled
-      - ceph-osd=enabled
-      - ceph-rgw=enabled
-      - ceph-mgr=enabled
-      - kube-dns=enabled
-      - kube-ingress=enabled
-      - kubernetes-apiserver=enabled
-      - kubernetes-controller-manager=enabled
-      - kubernetes-etcd=enabled
-      - kubernetes-scheduler=enabled
-      - promenade-genesis=enabled
-      - ucp-control-plane=enabled
-      - maas-control-plane=enabled
-      - ceph-osd-bootstrap=enabled
-      - openstack-libvirt=kernel
-      - openvswitch=enabled
-      - openstack-control-plane=enabled
-      - openstack-nova-compute=enabled
+  values:
+    labels:
+      agent:
+        sriov:
+          node_selector_key: sriov
+          node_selector_value: enabled
+    network:
+      backend:
+        - openvswitch
+        - sriov
+      interface:
+        sriov:
+          - device: ens6f0
+            num_vfs: 32
+            promisc: false
+          - device: ens6f1
+            num_vfs: 32
+            promisc: false
+    conf:
+      plugins:
+        openvswitch_agent:
+          ovs:
+            bridge_mappings: bond0:br-bond0
+        sriov_agent:
+          securitygroup:
+            firewall_driver: neutron.agent.firewall.NoopFirewallDriver
+          sriov_nic:
+            exclude_devices: null
+            physical_device_mappings: 'sriovnet1:ens6f0,sriovnet2:ens6f1'
+        ml2_conf:
+          ml2:
+            mechanism_drivers: l2population,openvswitch,sriovnicswitch
+          ml2_type_vlan:
+            network_vlan_ranges: bond0:46:300,sriovnet1:2001:3000,sriovnet2:2001:3000
 ...

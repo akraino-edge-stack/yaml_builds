@@ -17,7 +17,7 @@
 
 set -x
 
-PEGLEG_IMAGE=${PEGLEG_IMAGE:-quay.io/airshipit/pegleg:master}
+PEGLEG_IMAGE=${PEGLEG_IMAGE:-quay.io/airshipit/pegleg:09d85465827f1468d3469e5bbcf6b48f25338e7c}
 
 echo
 echo "== NOTE: Workspace $WORKSPACE  is available as /workspace in container context =="

@@ -1,4 +1,4 @@
-#!/bin/bash
+---
 ##############################################################################
 # Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
@@ -15,11 +15,38 @@
 # limitations under the License.                                             #
 ##############################################################################
 
-export GENESIS_HOST={{yaml.genesis.host}}
-echo GENESIS_HOST=$GENESIS_HOST
-export PXE_INTERFACE={{yaml.networks.pxe.interface}}
-echo PXE_INTERFACE=$PXE_INTERFACE
-export HOST_INTERFACE={{yaml.networks.host.interface}}
-echo HOST_INTERFACE=$HOST_INTERFACE
-export GENESIS_NAME={{yaml.genesis.name}}
-echo GENESIS_NAME=$GENESIS_NAME
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  labels:
+    component: nova
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: nova-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    network:
+      backend:
+        - openvswitch
+        - sriov
+    conf:
+      nova:
+        filter_scheduler:
+          enabled_filters: "RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ComputeCapabilitiesFilter, ImagePropertiesFilter, ServerGroupAntiAffinityFilter, ServerGroupAffinityFilter, PciPassthroughFilter, NUMATopologyFilter, DifferentHostFilter, SameHostFilter"
+        libvirt:
+          virt_type: kvm
+        DEFAULT:
+          vcpu_pin_set: "4-21,26-43,48-65,72-87"
+          vif_plugging_is_fatal: False
+          vif_plugging_timeout: 30
+        pci:
+          alias: '{ "vendor_id":"10de", "product_id":"1db4", "name":"V100", "device_type":"type-PCI" }'
+          passthrough_whitelist: '{"vendor_id": "10de", "product_id": "1db4"}'
+...

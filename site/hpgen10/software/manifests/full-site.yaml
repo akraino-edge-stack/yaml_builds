@@ -15,43 +15,55 @@
 # limitations under the License.                                             #
 ##############################################################################
 
-schema: promenade/Genesis/v1
+schema: armada/Manifest/v1
 metadata:
   schema: metadata/Document/v1
-  name: genesis-site
+  name: full-site
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: genesis-global
+      name: full-site-global
     actions:
-      - method: replace
-        path: .labels.dynamic
       - method: merge
         path: .
   storagePolicy: cleartext
 data:
-  labels:
-    dynamic:
-      - beta.kubernetes.io/fluentd-ds-ready=true
-      - calico-etcd=enabled
-      - ceph-mds=enabled
-      - ceph-mon=enabled
-      - ceph-osd=enabled
-      - ceph-rgw=enabled
-      - ceph-mgr=enabled
-      - kube-dns=enabled
-      - kube-ingress=enabled
-      - kubernetes-apiserver=enabled
-      - kubernetes-controller-manager=enabled
-      - kubernetes-etcd=enabled
-      - kubernetes-scheduler=enabled
-      - promenade-genesis=enabled
-      - ucp-control-plane=enabled
-      - maas-control-plane=enabled
-      - ceph-osd-bootstrap=enabled
-      - openstack-libvirt=kernel
-      - openvswitch=enabled
-      - openstack-control-plane=enabled
-      - openstack-nova-compute=enabled
+  release_prefix: airship
+  chart_groups:
+    - kubernetes-proxy
+    - kubernetes-container-networking
+    - kubernetes-dns
+    - kubernetes-etcd
+    - kubernetes-haproxy
+    - kubernetes-core
+    - ingress-kube-system
+    - ucp-ceph-update
+    - ucp-ceph-config
+    - ucp-core
+    - ucp-keystone
+    - ucp-divingbell
+    - ucp-armada
+    - ucp-deckhand
+    - ucp-drydock
+    - ucp-promenade
+    - ucp-shipyard
+    - osh-infra-ingress-controller
+    - osh-infra-ceph-config
+    - osh-infra-logging
+    - osh-infra-monitoring
+    - osh-infra-mariadb
+    - osh-infra-dashboards
+    - openstack-ingress-controller
+    - openstack-ceph-config
+    - openstack-mariadb
+    - openstack-memcached
+    - openstack-keystone
+    - openstack-radosgw
+    - openstack-glance
+    - openstack-cinder
+    - openstack-compute-kit
+    - openstack-heat
+    - osh-infra-prometheus-openstack-exporter
+    - openstack-horizon
 ...

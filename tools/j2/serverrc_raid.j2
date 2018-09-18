@@ -1,4 +1,3 @@
-#!/bin/bash
 ##############################################################################
 # Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
@@ -15,11 +14,17 @@
 # limitations under the License.                                             #
 ##############################################################################
 
-export GENESIS_HOST={{yaml.genesis.host}}
-echo GENESIS_HOST=$GENESIS_HOST
-export PXE_INTERFACE={{yaml.networks.pxe.interface}}
-echo PXE_INTERFACE=$PXE_INTERFACE
-export HOST_INTERFACE={{yaml.networks.host.interface}}
-echo HOST_INTERFACE=$HOST_INTERFACE
-export GENESIS_NAME={{yaml.genesis.name}}
-echo GENESIS_NAME=$GENESIS_NAME
+# Add proxy settings if required for your environment
+# export http_proxy=http://your.proxy.com:8080/
+# export https_proxy=http://your.proxy.com:8080/
+#
+# Set the ip and port to use when creating the web server
+BUILD_WEBIP=192.168.2.5
+
+# host name for server
+SRV_NAME={{yaml.name}}
+
+# out of band interface information for server (idrac/ilo/etc)
+SRV_OOB_IP={{yaml.oob}}
+SRV_OOB_USR={{yaml.oob_user}}
+SRV_OOB_PWD={{yaml.oob_password}}

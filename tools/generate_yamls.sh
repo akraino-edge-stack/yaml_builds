@@ -35,7 +35,7 @@ else
 fi
 
 cd $YAML_BUILDS
+mkdir site/$SITE
 cp -r site/common/* site/$SITE/
 python ./scripts/jcopy.py $SITE.yaml ./templates $YAML_BUILDS/site/$SITE
-python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools
-mv ./tools/set_site_env.sh ./tools/env_$SITE.sh
+python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools/env_$SITE.sh

@@ -55,22 +55,21 @@ def expand_files(target_dir, dir_name, files):
         print '{0} -> {1}'.format(source_path, target_path)
         total += 1
 
-def expand_file(target_dir, file):
+def expand_file(target_file, file):
   global total
-  if not os.path.exists(target_dir):
-    os.makedirs(target_dir)
+  if not os.path.exists(os.path.dirname(target_file)):
+    os.makedirs(os.path.dirname(target_file))
   env = jinja2.Environment()
   env.trim_blocks = True
   env.lstrip_blocks = True
   with open(file) as fd:
     template = env.from_string(fd.read())
   data = template.render(yaml=yaml)
-  target_path = target_dir + '/' + os.path.basename(file)
-  fd2 = open(target_path,'w')
+  fd2 = open(target_file,'w')
   fd2.write(data)
   fd2.write("\n")
   fd2.close()
-  print '{0} -> {1}'.format(file, target_path)
+  print '{0} -> {1}'.format(file, target_file)
   total += 1
 
 if len(sys.argv) != 4:

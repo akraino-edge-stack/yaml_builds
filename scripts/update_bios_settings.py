@@ -56,7 +56,7 @@ def create_rc_masters(source, target_suffix):
     fd2.write("\n")
     fd2.close()
     print '{0} -> {1}'.format(source, target_file)
-    command = '/opt/akraino/redfish/apply_dellxml.sh --rc {0} --template dell_r740_g14_uefi_base.xml.template --no-confirm'.format(target_file)
+    command = '/opt/akraino/tools/apply_dellxml.sh --rc {0} --template dell_r740_g14_uefi_base.xml.template --no-confirm'.format(target_file)
     print 'command: {0}'.format(command)
     os.system(command)
 

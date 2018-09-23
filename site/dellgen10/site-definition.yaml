@@ -25,5 +25,5 @@ metadata:
   storagePolicy: cleartext
 data:
   revision: v4.0
-  site_type: edge
+  site_type: foundry
 ...

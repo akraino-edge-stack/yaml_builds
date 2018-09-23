@@ -169,5 +169,6 @@ data:
       elasticsearch-data: enabled
       postgresql: enabled
       kube-ingress: enabled
+      sriov: enabled
       beta.kubernetes.io/fluentd-ds-ready: 'true'
 ...

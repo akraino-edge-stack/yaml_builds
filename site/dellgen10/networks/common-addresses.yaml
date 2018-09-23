@@ -62,6 +62,11 @@ data:
     - hostname: aknode41
     - hostname: aknode42
 
+  proxy:
+    http: ""
+    https: ""
+    no_proxy: []
+
   node_ports:
     drydock_api: 30000
     maas_api: 30001

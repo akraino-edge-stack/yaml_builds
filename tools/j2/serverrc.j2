@@ -52,7 +52,7 @@ SRV_BLD_SCRIPT=script-hwe-16.04.5-amd64.ipxe
 # template xml file to set bios and raid configuration settings
 SRV_BIOS_TEMPLATE=dell_r740_g14_uefi_base.xml.template
 SRV_BOOT_TEMPLATE=dell_r740_g14_uefi_httpboot.xml.template
-SRV_HTTP_BOOT_DEV=NIC.Slot.7-1-1
+SRV_HTTP_BOOT_DEV=NIC.Slot.2-1-1
 
 # tempalte to run to configure OS after first boot
 # current options are: firstboot.sh.template, firstboot-genesis.sh.tempate or firstboot-airship-iab.sh.template
@@ -63,6 +63,7 @@ SRV_VLAN={{yaml.networks.host.vlan}}
 SRV_STORAGE_VLAN={{yaml.networks.storage.vlan}}
 SRV_CALICO_VLAN={{yaml.networks.ksn.vlan}}
 SRV_NEUTRON_VLAN={{yaml.networks.neutron.vlan}}
+SRV_PXE_INF={{yaml.networks.pxe.interface}}
 
 # basic network information for dhcp config and final server network settings
 SRV_MTU=9000
@@ -70,6 +71,7 @@ SRV_IP={{yaml.genesis.host}}
 SRV_STORAGE_IP={{yaml.genesis.storage}}
 SRV_CALICO_IP={{yaml.genesis.ksn}}
 SRV_NEUTRON_IP={{yaml.genesis.neutron}}
+SRV_PXE_IP={{yaml.genesis.pxe}}
 SRV_SUBNET={{yaml.networks.host.subnet}}
 SRV_NETMASK={{yaml.networks.host.netmask}}
 SRV_GATEWAY={{yaml.networks.host.routes.gateway}}
@@ -85,5 +87,5 @@ SRV_PWD={{yaml.genesis.root_password}}
 # network bond information
 SRV_BOND={{yaml.networks.primary}}
 {% for slave in yaml.networks.slaves %}
-SRV_SLAVE{{loop.index}}={{slave.name}}  
+SRV_SLAVE{{loop.index}}={{slave.name}}
 {% endfor %}

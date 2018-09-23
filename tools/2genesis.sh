@@ -15,6 +15,11 @@
 # limitations under the License.                                             #
 ##############################################################################
 
+set -x
+TIMESTAMP=$(date +"%Y%m%d%H%M")
+echo "Logging to /var/log/yaml_builds/2genesis_$TIMESTAMP.log"
+exec > /var/log/yaml_builds/2genesis_$TIMESTAMP.log
+exec 2>&1
 
 source $(dirname $0)/setenv.sh
 
@@ -37,16 +42,18 @@ fi
 source $(dirname $0)/env_$SITE.sh
 
 cd $YAML_BUILDS
-# Update BIOS Setting
-python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
 # Install OS on Genesis
 python $YAML_BUILDS/scripts/jcopy.py $SITE.yaml $YAML_BUILDS/tools/j2/serverrc.j2 $YAML_BUILDS/tools/"$GENESIS_NAME"rc
 /opt/akraino/redfish/install_server_os.sh --rc /opt/akraino/yaml_builds/tools/"$GENESIS_NAME"rc --skip-confirm
 
 scp $YAML_BUILDS/tars/promenade-bundle-$SITE.tar $GENESIS_HOST:/tmp/
 ssh $GENESIS_HOST << EOF
+  # TODO avoid following hard coding$
+  route add -net 192.168.41.0/24 gw 192.168.2.1 bond0.41
   mkdir -p /root/akraino
   cp /tmp/promenade-bundle-$SITE.tar /root/akraino/
   cd /root/akraino/
   tar -xmf promenade-bundle-$SITE.tar
 EOF
+# Update BIOS Setting
+python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml

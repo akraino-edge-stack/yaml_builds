@@ -135,7 +135,6 @@ data:
       openstack-libvirt: kernel
       openvswitch: enabled
       openstack-nova-compute: enabled
-      sriov: enabled
       ucp-barbican: enabled
       ceph-bootstrap: enabled
       ceph-mon: enabled

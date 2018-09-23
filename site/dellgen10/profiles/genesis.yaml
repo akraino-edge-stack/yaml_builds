@@ -50,8 +50,8 @@ data:
       - ucp-control-plane=enabled
       - maas-control-plane=enabled
       - ceph-osd-bootstrap=enabled
-#      - openstack-libvirt=kernel
-#      - openvswitch=enabled
-#      - openstack-control-plane=enabled
-#      - openstack-nova-compute=enabled
+      - openstack-libvirt=kernel
+      - openvswitch=enabled
+      - openstack-control-plane=enabled
+      - openstack-nova-compute=enabled
 ...

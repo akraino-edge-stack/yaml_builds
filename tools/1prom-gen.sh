@@ -19,6 +19,10 @@
 # re-generate prom config
 
 set -x
+TIMESTAMP=$(date +"%Y%m%d%H%M")
+echo "logging to /var/log/yaml_builds/1prom-gen_$TIMESTAMP.log"
+exec > /var/log/yaml_builds/1prom-gen_$TIMESTAMP.log
+exec 2>&1
 
 source $(dirname $0)/setenv.sh
 

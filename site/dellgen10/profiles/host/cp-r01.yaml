@@ -135,7 +135,6 @@ data:
       openstack-libvirt: kernel
       openvswitch: enabled
       openstack-nova-compute: enabled
-      sriov: enabled
       ucp-barbican: enabled
       ceph-bootstrap: enabled
       ceph-mon: enabled
@@ -170,6 +169,5 @@ data:
       elasticsearch-data: enabled
       postgresql: enabled
       kube-ingress: enabled
-      sriov: enabled
       beta.kubernetes.io/fluentd-ds-ready: 'true'
 ...

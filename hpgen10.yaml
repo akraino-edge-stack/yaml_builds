@@ -42,6 +42,8 @@ networks:
     vlan: 41
     interface: bond0.41
     cidr: 192.168.2.0/24
+    subnet: 192.168.2.0
+    netmask: 255.255.255.0
     routes:
        gateway: 192.168.2.200
     ranges:
@@ -218,6 +220,12 @@ genesis:
   pxe: 172.30.1.30
   ksn: 172.29.1.30
   neutron: 10.0.101.30
+  root_password: akraino,d
+  oem: HPE
+  mac_address: 3c:fd:fe:aa:90:b0
+  bios_template: hpe_dl380_g10_uefi_base.json.template
+  boot_template: hpe_dl380_g10_uefi_httpboot.json.template
+  http_boot_device: NIC.Slot.3-1-1
 masters:
   - name : aknode31
     oob: 192.168.41.131
@@ -226,6 +234,8 @@ masters:
     pxe: 172.30.1.31
     ksn: 172.29.1.31
     neutron: 10.0.101.31
+    oob_user: Administrator
+    oob_password: Admin123
   - name : aknode32
     oob: 192.168.41.132
     host: 192.168.2.32
@@ -233,6 +243,8 @@ masters:
     pxe: 172.30.1.32
     ksn: 172.29.1.32
     neutron: 10.0.101.32
+    oob_user: Administrator
+    oob_password: Admin123
 workers:
   - name : aknode33
     oob: 192.168.41.133
@@ -241,6 +253,8 @@ workers:
     pxe: 172.30.1.33
     ksn: 172.29.1.33
     neutron: 10.0.101.33
+    oob_user: Administrator
+    oob_password: Admin123
 #  - name : aknode34
 #    oob: 192.168.41.134
 #    host: 192.168.2.34

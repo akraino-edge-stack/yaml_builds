@@ -54,4 +54,5 @@ data:
       - openvswitch=enabled
       - openstack-control-plane=enabled
       - openstack-nova-compute=enabled
+      - sriov=enabled
 ...

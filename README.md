@@ -1,6 +1,6 @@
-# Acraino Edge Stack
+# Akraino Edge Stack
 ..............................................................................
-. Copyright © 2018 AT&T Intellectual Property. All rights reserved          .
+. Copyright (c) 2018 AT&T Intellectual Property. All rights reserved         .
 .                                                                            .
 . Licensed under the Apache License, Version 2.0 (the "License"); you may    .
 . not use this file except in compliance with the License.                   .
@@ -28,20 +28,13 @@ All the manual interactions requested are documented here. In future we automate
  * jinja2 PyYAML python packages should be available
  * git clone yaml_build project to your favorite location ( say **/opt/**).
 ~~~
-$ git clone http://gerrit.att-akraino.org/yaml_builds.git
+$ git clone http://gerrit.akraino.org/yaml_builds.git
 ~~~
  * export YAML_BUILDS=<<absolute path of yaml_builds>> created is previous step.
- * aic-clcp-manifests should be installed as explained here https://codecloud.web.att.com/projects/ST_CCP/repos/aic-clcp-manifests/browse/docs/source/deployment_blueprint.md
- * export AIC_CLCP_MANIFESTS
- * As per aic-clcp-manifests documents copy all required files to new <<site_name>>
-
-      This will copy a bunch of .yaml files to $AIC_CLCP_MANIFESTS/sites/<<site_name>>
-
-  * aic-clcp-security-manifests should be installed as explained here https://codecloud.web.att.com/projects/ST_CCP/repos/aic-clcp-manifests/browse/docs/source/deployment_blueprint.md
-  * export AIC_CLCP_SECURITY_MANIFESTS
-   As per aic-clcp-manifests documents copy all required files to new <<site_name>>
-
-     This will copy a bunch of .yaml files to $AIC_CLCP_MANIFESTS/sites/<<site_name>>
+~~~
+cd /root/
+git clone https://git.openstack.org/openstack/airship-treasuremap
+~~~
 
  * Manually verifying the generated .yaml files as explained in 1.1 Manually verifying the .YAMLs
  * Using following commands ssh and scp should be happen from regional servers to genesis host without asking any username/passwords

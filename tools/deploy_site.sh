@@ -17,6 +17,10 @@
 
 
 set -x
+TIMESTAMP=$(date +"%Y%m%d%H%M")
+echo "logging to /var/log/deploy_site_$TIMESTAMP.log"
+exec > /var/log/deploy_site_$TIMESTAMP.log
+exec 2>&1
 
 # Regional Server specific variables
 KEYSTONE_IMAGE=

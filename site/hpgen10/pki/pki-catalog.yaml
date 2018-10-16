@@ -73,15 +73,6 @@ data:
             - 172.30.1.32
           groups:
             - system:nodes
-        - document_name: kubelet-aknode33
-          common_name: system:node:aknode33
-          hosts:
-            - aknode33
-            - 192.168.2.33
-            - 172.29.1.33
-            - 172.30.1.33
-          groups:
-            - system:nodes
         - document_name: scheduler
           description: Service certificate for Kubernetes scheduler
           common_name: system:kube-scheduler

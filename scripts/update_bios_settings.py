@@ -49,8 +49,11 @@ def create_rc_masters(source, target_suffix):
     data = template.render(yaml=master)
     target_file = "server-config/"+master['name']+target_suffix
     print target_file
+    if os.path.exists(target_file):
+      print 'rc file exists maynot be new node'
+      continue
     if not os.path.exists(os.path.dirname(target_file)):
-     os.makedirs(os.path.dirname(target_file))
+      os.makedirs(os.path.dirname(target_file))
     fd2 = open(target_file,'w')
     fd2.write(data)
     fd2.write("\n")
@@ -72,8 +75,11 @@ def create_rc_workers(source, target_suffix):
       data = template.render(yaml=master)
       target_file = "server-config/"+master['name']+target_suffix
       print target_file
+      if os.path.exists(target_file):
+        print 'rc file exists maynot be new node'
+        continue
       if not os.path.exists(os.path.dirname(target_file)):
-       os.makedirs(os.path.dirname(target_file))
+        os.makedirs(os.path.dirname(target_file))
       fd2 = open(target_file,'w')
       fd2.write(data)
       fd2.write("\n")

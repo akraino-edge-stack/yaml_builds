@@ -34,7 +34,6 @@ data:
         node_names:
           - 'aknode31'
           - 'aknode32'
-          - 'aknode33'
   # TODO(alanmeadows) move what is global about this document - everything except nodenames to global
   assets:
     - path: /opt/promjoin.sh

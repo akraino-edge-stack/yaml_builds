@@ -76,14 +76,13 @@ SRV_PXE_IP=172.30.2.40
 SRV_SUBNET=192.168.2.0
 SRV_NETMASK=255.255.255.0
 SRV_GATEWAY=192.168.2.200
-#SRV_DNS=1
-SRV_DNS=192.168.2.85
+SRV_DNS=192.168.2.85 8.8.8.8 8.8.4.4
 SRV_DOMAIN=lab.akraino.org
 SRV_DNSSEARCH=lab.akraino.org
 SRV_NTP=ntp.ubuntu.org
 
 # root password for server being built
-SRV_PWD=smil3yfc
+SRV_PWD=akraino,d
 
 # network bond information
 SRV_BOND=bond0

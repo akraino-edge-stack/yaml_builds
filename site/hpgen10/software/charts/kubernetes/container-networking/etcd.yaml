@@ -184,5 +184,8 @@ metadata:
       dest:
         path: .values.nodes[2].tls.peer.key
 
-data: {}
+data:
+  values:
+    manifests:
+      test_etcd_health: false
 ...

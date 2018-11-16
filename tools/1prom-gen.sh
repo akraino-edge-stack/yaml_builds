@@ -144,7 +144,7 @@ create_directories() {
 }
 
 get_site_config(){
-   $YAML_BUILDS/tools/pegleg.sh site -p /site -a /global collect ${SITE} -s /site/tars/$SITE/configs/promenade
+   $YAML_BUILDS/tools/pegleg.sh site -r /workspace collect ${SITE} -s /workspace/tars/$SITE/configs/promenade
 }
 
 gen_certs() {
@@ -156,15 +156,13 @@ gen_bundle(){
 }
 
 create_scripts() {
-  KEYSTONE_IMAGE=$(grep "keystone_db_sync: docker.io" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
-  SHIPYARD_IMAGE=$(grep "shipyard_db_sync" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
+  SHIPYARD_IMAGE=$(grep "shipyard_db_sync: quay" $YAML_BUILDS/tars/$SITE/configs/promenade/airship-treasuremap.yaml | uniq | awk '{print $2}')
 
   DRYDOCK_PASSWORD=$(grep "^data:" $YAML_BUILDS/site/$SITE/secrets/passphrases/ucp_drydock_keystone_password.yaml | awk '{print $2}')
   SHIPYARD_PASSWORD=$(grep "^data:" $YAML_BUILDS/site/$SITE/secrets/passphrases/ucp_shipyard_keystone_password.yaml | awk '{print $2}')
   REGION_NAME=$SITE
 
   cp $YAML_BUILDS/tools/deploy_site.sh $YAML_BUILDS/tars/$SITE/
-  sed -i -e "s,KEYSTONE_IMAGE=,KEYSTONE_IMAGE=$KEYSTONE_IMAGE,g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
   sed -i -e "s,SHIPYARD_IMAGE=,SHIPYARD_IMAGE=$SHIPYARD_IMAGE,g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
   sed -i -e "s/DRYDOCK_PASSWORD=/DRYDOCK_PASSWORD=$DRYDOCK_PASSWORD/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
   sed -i -e "s/SHIPYARD_PASSWORD=/SHIPYARD_PASSWORD=$SHIPYARD_PASSWORD/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
@@ -181,12 +179,21 @@ create_scripts() {
 prepare_tar(){
    rm ./tars/promenade-bundle-$SITE.tar
    tar cvf ./tars/promenade-bundle-$SITE.tar -C ./tars/$SITE .
+
+}
+function error() {
+  # Processes errors
+  set +x
+  echo "Error when $1."
+  set -x
+  exit 1
 }
 
+
 #install_docker
-create_directories
-get_site_config
-gen_certs
-gen_bundle
-create_scripts
-prepare_tar
+create_directories || error "create_directories"
+get_site_config || error "get_site_config"
+gen_certs || error "gen_certs"
+gen_bundle || error "gen_bundle"
+create_scripts || error "create_scripts"
+prepare_tar || error "prepare_tar"

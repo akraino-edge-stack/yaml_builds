@@ -15,18 +15,32 @@
 # limitations under the License.                                             #
 ##############################################################################
 
-set -x
+#!/usr/bin/env bash
 
-PEGLEG_IMAGE=${PEGLEG_IMAGE:-quay.io/airshipit/pegleg:09d85465827f1468d3469e5bbcf6b48f25338e7c}
+set -e
+
+: ${IMAGE:=quay.io/airshipit/pegleg:a3da86e3119d150a4f36fd93657455e6ec0c51ed}
+
+: ${TERM_OPTS:=-it}
 
 echo
-echo "== NOTE: Workspace $WORKSPACE  is available as /workspace in container context =="
+echo "== NOTE: Workspace $WORKSPACE is the execution directory in the container =="
 echo
 
-docker run --rm -t \
-    --net=none \
-    --workdir="/site" \
-    -v "${WORKSPACE}:/site" \
-    -v "${AIRSHIP_TREASUREMAP}:/global" \
-    "${PEGLEG_IMAGE}" \
-        pegleg "${@}"
+# Working directory inside container to execute commands from and mount from
+# host OS
+container_workspace_path='/workspace'
+
+docker run --rm $TERM_OPTS \
+    --net=host \
+    --workdir="$container_workspace_path" \
+    -v "${HOME}/.ssh:${container_workspace_path}/.ssh" \
+    -v "${WORKSPACE}:$container_workspace_path" \
+    -e "PEGLEG_PASSPHRASE=$PEGLEG_PASSPHRASE" \
+    -e "PEGLEG_SALT=$PEGLEG_SALT" \
+    -e "http_proxy=http://one.proxy.att.com:8888/" \
+    -e "HTTPS_PROXY=http://one.proxy.att.com:8888/" \
+    -e "https_proxy=http://one.proxy.att.com:8888/" \
+    -e "HTTP_PROXY=http://one.proxy.att.com:8888/" \
+    "${IMAGE}" \
+pegleg "${@}"

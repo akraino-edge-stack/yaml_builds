@@ -390,6 +390,30 @@ data:
           default: 7000
       scheme:
         default: http
+    tenant_ceph_mgr:
+      namespace: tenant-ceph
+      hosts:
+        default: ceph-mgr
+      host_fqdn_override:
+        default: null
+      port:
+        mgr:
+          default: 7001
+        metrics:
+          default: 9284
+      scheme:
+        default: http
+    tenant_ceph_mon:
+      namespace: tenant-ceph
+      hosts:
+        default: ceph-mon
+        discovery: ceph-mon-discovery
+      host_fqdn_override:
+        default: null
+      port:
+        mon:
+          default: 6790
+
 ...
 ---
 schema: pegleg/EndpointCatalogue/v1

@@ -23,7 +23,7 @@ exec > /var/log/deploy_site_$TIMESTAMP.log
 exec 2>&1
 
 # Regional Server specific variables
-KEYSTONE_IMAGE=
+KEYSTONE_IMAGE=docker.io/openstackhelm/keystone:ocata
 SHIPYARD_IMAGE=
 # Site specific variables
 DRYDOCK_PASSWORD=

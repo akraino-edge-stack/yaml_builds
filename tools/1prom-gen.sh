@@ -138,9 +138,7 @@ ENDKEY
    systemctl restart docker || true
 }
 
-cleanup() {
-   rm -rf ./tars/$SITE/configs/promenade
-   rm -rf ./tars/$SITE/configs/promenade-bundle
+create_directories() {
    mkdir -p ./tars/$SITE/configs/promenade
    mkdir -p ./tars/$SITE/configs/promenade-bundle
 }
@@ -186,7 +184,7 @@ prepare_tar(){
 }
 
 #install_docker
-cleanup
+create_directories
 get_site_config
 gen_certs
 gen_bundle

@@ -21,6 +21,7 @@
 set -x
 TIMESTAMP=$(date +"%Y%m%d%H%M")
 echo "logging to /var/log/yaml_builds/1prom-gen_$TIMESTAMP.log"
+mkdir -p /var/log/yaml_builds
 exec > /var/log/yaml_builds/1prom-gen_$TIMESTAMP.log
 exec 2>&1
 

@@ -18,6 +18,7 @@
 set -x
 TIMESTAMP=$(date +"%Y%m%d%H%M")
 echo "Logging to /var/log/yaml_builds/transfer_$TIMESTAMP.log"
+mkdir -p /var/log/yaml_builds
 exec > /var/log/yaml_builds/transfer_$TIMESTAMP.log
 exec 2>&1
 

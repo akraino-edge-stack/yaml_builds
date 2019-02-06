@@ -31,6 +31,7 @@ TIMESTAMP=$(date +"%Y%m%d%H%M")
 echo "TIMESTAMP=$TIMESTAMP"
 
 echo "Validating the setup and generating the tar file"
+mkdir -p /var/log/yaml_builds
 bash $YAML_BUILDS/tools/1prom-gen.sh $SITE > /var/log/yaml_builds/1prom-gen-$TIMESTAMP.log 2>&1
 if [ $? -ne 0 ]
 then

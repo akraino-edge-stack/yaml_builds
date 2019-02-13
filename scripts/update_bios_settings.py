@@ -43,7 +43,7 @@ def create_rc_masters(source, target_suffix):
   env.trim_blocks = True
   env.lstrip_blocks = True
 
-  for master in yaml['masters']:
+  for master in yaml['masters'] and type(yaml['masters']) is list:
     with open(source) as fd:
       template = env.from_string(fd.read())
     data = template.render(yaml=master)
@@ -68,7 +68,7 @@ def create_rc_workers(source, target_suffix):
   env.trim_blocks = True
   env.lstrip_blocks = True
 
-  if 'workers' in yaml:
+  if 'workers' in yaml and type(yaml['workers']) is list:
     for master in yaml['workers']:
       with open(source) as fd:
         template = env.from_string(fd.read())

@@ -43,25 +43,26 @@ def create_rc_masters(source, target_suffix):
   env.trim_blocks = True
   env.lstrip_blocks = True
 
-  for master in yaml['masters'] and type(yaml['masters']) is list:
-    with open(source) as fd:
-      template = env.from_string(fd.read())
-    data = template.render(yaml=master)
-    target_file = "server-config/"+master['name']+target_suffix
-    print target_file
-    if os.path.exists(target_file):
-      print 'rc file exists maynot be new node'
-      continue
-    if not os.path.exists(os.path.dirname(target_file)):
-      os.makedirs(os.path.dirname(target_file))
-    fd2 = open(target_file,'w')
-    fd2.write(data)
-    fd2.write("\n")
-    fd2.close()
-    print '{0} -> {1}'.format(source, target_file)
-    command = '/opt/akraino/tools/apply_dellxml.sh --rc {0} --template dell_r740_g14_uefi_base.xml.template --no-confirm'.format(target_file)
-    print 'command: {0}'.format(command)
-    os.system(command)
+  if 'masters' in yaml and type(yaml['masters']) is list:
+    for master in yaml['masters']:
+      with open(source) as fd:
+        template = env.from_string(fd.read())
+      data = template.render(yaml=master)
+      target_file = "server-config/"+master['name']+target_suffix
+      print target_file
+      if os.path.exists(target_file):
+        print 'rc file exists maynot be new node'
+        continue
+      if not os.path.exists(os.path.dirname(target_file)):
+        os.makedirs(os.path.dirname(target_file))
+      fd2 = open(target_file,'w')
+      fd2.write(data)
+      fd2.write("\n")
+      fd2.close()
+      print '{0} -> {1}'.format(source, target_file)
+      command = '/opt/akraino/tools/apply_dellxml.sh --rc {0} --template dell_r740_g14_uefi_base.xml.template --no-confirm'.format(target_file)
+      print 'command: {0}'.format(command)
+      os.system(command)
 
 def create_rc_workers(source, target_suffix):
   env = jinja2.Environment()
@@ -69,11 +70,11 @@ def create_rc_workers(source, target_suffix):
   env.lstrip_blocks = True
 
   if 'workers' in yaml and type(yaml['workers']) is list:
-    for master in yaml['workers']:
+    for worker in yaml['workers']:
       with open(source) as fd:
         template = env.from_string(fd.read())
-      data = template.render(yaml=master)
-      target_file = "server-config/"+master['name']+target_suffix
+      data = template.render(yaml=worker)
+      target_file = "server-config/"+worker['name']+target_suffix
       print target_file
       if os.path.exists(target_file):
         print 'rc file exists maynot be new node'

@@ -31,7 +31,9 @@ SRV_OOB_USR={{yaml.ipmi_admin.username}}
 SRV_OOB_PWD={{yaml.ipmi_admin.password}}
 
 # mac address of server to be used during the build - not required for Dell servers
+{% if 'genesis.mac_address' in yaml %}
 SRV_MAC={{yaml.genesis.mac_address}}
+{% endif %}
 
 # name of network interface used during build when ipxe.efi is booted and when os is booted
 # ipxe numbers ports from 0-n in pci bus order.

@@ -1,5 +1,4 @@
-##############################################################################
-# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+opyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may    #
 # not use this file except in compliance with the License.                   #
@@ -20,81 +19,62 @@ import yaml
 import jinja2
 import subprocess
 
-with open(sys.argv[1]) as f:
-  yaml = yaml.safe_load(f)
-
-def create_rc_genesis(source, target_suffix):
+def create_node_rcfile(nodes, defaults, j2template, rcfile_suffix):
   env = jinja2.Environment()
   env.trim_blocks = True
   env.lstrip_blocks = True
   
-  with open(source) as fd:
+  with open(j2template) as fd:
     template = env.from_string(fd.read())
-  data = template.render(yaml=yaml)
-  target_file = yaml['genesis']['name']+target_suffix
-  fd2 = open(target_file,'w')
-  fd2.write(data)
-  fd2.write("\n")
-  fd2.close()
-  print '{0} -> {1}'.format(source, target_file)
-
-def create_rc_masters(source, target_suffix):
-  env = jinja2.Environment()
-  env.trim_blocks = True
-  env.lstrip_blocks = True
-
-  if 'masters' in yaml and type(yaml['masters']) is list:
-    for master in yaml['masters']:
-      with open(source) as fd:
-        template = env.from_string(fd.read())
-      data = template.render(yaml=master)
-      target_file = "server-config/"+master['name']+target_suffix
-      print target_file
-      if os.path.exists(target_file):
-        print 'rc file exists maynot be new node'
-        continue
-      if not os.path.exists(os.path.dirname(target_file)):
-        os.makedirs(os.path.dirname(target_file))
-      fd2 = open(target_file,'w')
+  
+  if type(nodes) is list:
+    for node in nodes:
+      newnode = dict( defaults.items() + node.items() )
+      data = template.render(yaml=newnode)
+      rcfile = "server-config/"+newnode['name']+rcfile_suffix
+      print rcfile
+      if os.path.exists(rcfile):
+        print 'warning: rc file {} exists. maynot be new node. overwriting file'.format(rcfile)
+        #continue
+      if not os.path.exists(os.path.dirname(rcfile)):
+        os.makedirs(os.path.dirname(rcfile),0600)
+      fd2 = open(rcfile,'w')
       fd2.write(data)
       fd2.write("\n")
       fd2.close()
-      print '{0} -> {1}'.format(source, target_file)
-      command = '/opt/akraino/tools/apply_dellxml.sh --rc {0} --template dell_r740_g14_uefi_base.xml.template --no-confirm'.format(target_file)
-      print 'command: {0}'.format(command)
-      os.system(command)
+      print '{0} -> {1}'.format(j2template, rcfile)
+      command = ""
+      if newnode['vendor'] == "DELL":
+        command = '/opt/akraino/redfish/apply_dellxml.sh --rc {0} --template {1} --no-confirm'.format(rcfile, newnode["bios_template"])
+      if newnode['vendor'] == "HP" or newnode['vendor'] == "HPE":
+        command = '/opt/akraino/redfish/apply_hpejson.sh --rc {0} --template {1} --no-confirm'.format(rcfile, newnode["bios_template"])
+      if command:
+        print 'command: {0}'.format(command)
+        os.system(command)
 
-def create_rc_workers(source, target_suffix):
-  env = jinja2.Environment()
-  env.trim_blocks = True
-  env.lstrip_blocks = True
-
-  if 'workers' in yaml and type(yaml['workers']) is list:
-    for worker in yaml['workers']:
-      with open(source) as fd:
-        template = env.from_string(fd.read())
-      data = template.render(yaml=worker)
-      target_file = "server-config/"+worker['name']+target_suffix
-      print target_file
-      if os.path.exists(target_file):
-        print 'rc file exists maynot be new node'
-        continue
-      if not os.path.exists(os.path.dirname(target_file)):
-        os.makedirs(os.path.dirname(target_file))
-      fd2 = open(target_file,'w')
-      fd2.write(data)
-      fd2.write("\n")
-      fd2.close()
-      print '{0} -> {1}'.format(source, target_file)
-      command = '/opt/akraino/tools/apply_dellxml.sh --rc {0} --template dell_r740_g14_uefi_base.xml.template --no-confirm'.format(target_file)
-      print 'command: {0}'.format(command)
-      os.system(command)
-
+### MAIN ###
 if len(sys.argv) != 2:
   print 'usage: update_bios_settings.py <yaml>'
   sys.exit(1)
 
-#create_rc_genesis("tools/j2/serverrc.j2", "rc")
-create_rc_masters("tools/j2/serverrc_raid.j2", "rc.raid")
-create_rc_workers("tools/j2/serverrc_raid.j2", "rc.raid")
+with open(sys.argv[1]) as f:
+  siteyaml = yaml.safe_load(f)
+
+# create set of defaults based on top level ipmi_admin and hardware key/value pairs
+defaults = dict( siteyaml["ipmi_admin"].items() + siteyaml["hardware"].items() )
+
+# add keys for backward compatibility
+defaults = dict( [('oob_user',siteyaml['ipmi_admin']['username'])]       + defaults.items())
+defaults = dict( [('oob_password',siteyaml['ipmi_admin']['password'])]   + defaults.items())
+defaults = dict( [('oem',siteyaml['hardware']['vendor'])]                + defaults.items())
+
+print 'Using defaults:'
+for line in yaml.dump(defaults,default_flow_style=False).split('\n'):
+    print '    {}'.format(line)
+
+if 'masters' in siteyaml:
+    create_node_rcfile(siteyaml["masters"], defaults, "tools/j2/serverrc_raid.j2", "rc.raid")
+
+if 'workers' in siteyaml:
+    create_node_rcfile(siteyaml["workers"], defaults, "tools/j2/serverrc_raid.j2", "rc.raid")
 

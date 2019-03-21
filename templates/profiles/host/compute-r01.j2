@@ -74,7 +74,7 @@ data:
     physical_devices:
 {% for disk in yaml.disks_compute %}
       {{disk.name}}:
-      {% if disk.labels %}
+      {% if 'labels' in disk %}
         labels:
         {% for key, value in disk.labels.items() %}
           {{key}}: '{{value}}'

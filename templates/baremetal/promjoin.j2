@@ -35,9 +35,9 @@ data:
 {% for server in yaml.masters %}
           - '{{server.name}}'
 {% endfor %}
-{% for server in yaml.workers %}
+{% if 'workers' in yaml %}{% for server in yaml.workers %}
           - '{{server.name}}'
-{% endfor %}
+{% endfor %}{% endif %}
 {% raw %}  # TODO(alanmeadows) move what is global about this document - everything except nodenames to global
   assets:
     - path: /opt/promjoin.sh

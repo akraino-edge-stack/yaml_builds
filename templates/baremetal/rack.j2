@@ -49,7 +49,7 @@ data:
     tags:
       - 'masters'
 {% endfor %}
-{% for server in yaml.workers %}
+{% if 'workers' in yaml %}{% for server in yaml.workers %}
 ---
 schema: 'drydock/BaremetalNode/v1'
 metadata:
@@ -84,5 +84,5 @@ data:
     rack: RACK01
     tags:
       - 'workers'
-{% endfor %}
+{% endfor %}{% endif %}
 ...

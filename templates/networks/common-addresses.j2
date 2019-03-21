@@ -36,7 +36,7 @@ data:
 {% for server in yaml.dns.upstream_servers %}
       - {{server}}
 {% endfor %}
-    upstream_servers_joined: '{{yaml.dns.upstream_servers[0]}}{% if yaml.dns.upstream_servers|length > 1 %},{{yaml.dns.upstream_servers[1]}}{% endif %}'
+    upstream_servers_joined: '{{yaml.dns.upstream_servers|batch(2)|first|join(',')}}'
     ingress_domain: {{yaml.dns.ingress_domain}}
   genesis:
     hostname: {{yaml.genesis.name}}

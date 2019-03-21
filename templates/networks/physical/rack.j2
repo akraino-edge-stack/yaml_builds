@@ -103,7 +103,7 @@ data:
     domain: {% if 'dns' in yaml.networks.pxe and 'domain' in yaml.networks.pxe.dns %}{{yaml.networks.pxe.dns.domain}}
             {% else %}{{yaml.dns.server_domain}}
             {% endif %}
-    servers: '{% if 'dns' in yaml.networks.pxe %}{{yaml.networks.pxe.dns.servers}}{% else %}{% for s in yaml.dns.upstream_servers %}{{s}} {% endfor %}{% endif %}'
+    servers: '{% if 'dns' in yaml.networks.pxe %}{{yaml.networks.pxe.dns.servers}}{% else %}{{yaml.dns.upstream_servers|join(' ')}}{% endif %}'
 ...
 ---
 schema: 'drydock/NetworkLink/v1'
@@ -163,7 +163,7 @@ data:
     domain: {% if 'dns' in yaml.networks.host and 'domain' in yaml.networks.host.dns %}{{yaml.networks.host.dns.domain}}
             {% else %}{{yaml.dns.server_domain}}
             {% endif %}
-    servers: '{% if 'dns' in yaml.networks.host %}{{yaml.networks.host.dns.servers}}{% else %}{% for s in yaml.dns.upstream_servers %}{{s}} {% endfor %}{% endif %}'
+    servers: '{% if 'dns' in yaml.networks.host %}{{yaml.networks.host.dns.servers}}{% else %}{{yaml.dns.upstream_servers|join(' ')}}{% endif %}'
 ...
 ---
 schema: 'drydock/Network/v1'

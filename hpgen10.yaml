@@ -53,9 +53,6 @@ networks:
       static:
         start: 192.168.2.1
         end: 192.168.2.83
-    dns:
-      domain: lab.akraino.org
-      servers: '192.168.2.85 8.8.8.8 8.8.4.4'
   storage:
     vlan: 42
     interface: bond0.42
@@ -81,9 +78,6 @@ networks:
       dhcp:
         start: 172.30.1.201
         end: 172.30.1.254
-    dns:
-      domain: lab.akraino.org
-      servers: '192.168.2.85 8.8.8.8 8.8.4.4'
     inf: net4
   ksn:
     vlan: 44
@@ -115,8 +109,8 @@ dns:
     - 192.168.2.85
     - 8.8.8.8
     - 8.8.8.8
-  upstream_servers_joined: '192.168.2.85,8.8.8.8'
   ingress_domain: hpgen10.akraino.org
+  server_domain: lab.akraino.org
 sriovnets:
 - physical: sriovnet1
   interface: ens6f0
@@ -223,9 +217,9 @@ genesis:
   root_password: akraino,d
   oem: HPE
   mac_address: 3c:fd:fe:aa:90:b0
-  bios_template: hpe_dl380_g10_uefi_base.json.template
-  boot_template: hpe_dl380_g10_uefi_httpboot.json.template
-  http_boot_device: NIC.Slot.3-1-1
+#  bios_template: hpe_dl380_g10_uefi_base.json.template
+#  boot_template: hpe_dl380_g10_uefi_httpboot.json.template
+#  http_boot_device: NIC.Slot.3-1-1
 masters:
   - name : aknode31
     oob: 192.168.41.131

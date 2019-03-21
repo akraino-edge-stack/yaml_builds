@@ -100,8 +100,10 @@ data:
     start: {{yaml.networks.pxe.ranges.dhcp.start}}
     end: {{yaml.networks.pxe.ranges.dhcp.end}}
   dns:
-    domain: {{yaml.networks.pxe.dns.domain}}
-    servers: '{{yaml.networks.pxe.dns.servers}}'
+    domain: {% if 'dns' in yaml.networks.pxe and 'domain' in yaml.networks.pxe.dns %}{{yaml.networks.pxe.dns.domain}}
+            {% else %}{{yaml.dns.server_domain}}
+            {% endif %}
+    servers: '{% if 'dns' in yaml.networks.pxe %}{{yaml.networks.pxe.dns.servers}}{% else %}{% for s in yaml.dns.upstream_servers %}{{s}} {% endfor %}{% endif %}'
 ...
 ---
 schema: 'drydock/NetworkLink/v1'
@@ -158,8 +160,10 @@ data:
     start: {{yaml.networks.host.ranges.static.start}}
     end: {{yaml.networks.host.ranges.static.end}}
   dns:
-    domain: {{yaml.networks.host.dns.domain}}
-    servers: '{{yaml.networks.host.dns.servers}}'
+    domain: {% if 'dns' in yaml.networks.host and 'domain' in yaml.networks.host.dns %}{{yaml.networks.host.dns.domain}}
+            {% else %}{{yaml.dns.server_domain}}
+            {% endif %}
+    servers: '{% if 'dns' in yaml.networks.host %}{{yaml.networks.host.dns.servers}}{% else %}{% for s in yaml.dns.upstream_servers %}{{s}} {% endfor %}{% endif %}'
 ...
 ---
 schema: 'drydock/Network/v1'
@@ -215,3 +219,4 @@ data:
     start: {{yaml.networks.ksn.ranges.static.start}}
     end: {{yaml.networks.ksn.ranges.static.end}}
 ...
+

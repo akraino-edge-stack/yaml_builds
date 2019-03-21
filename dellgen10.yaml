@@ -53,9 +53,6 @@ networks:
       static:
         start: 192.168.2.40
         end: 192.168.2.45
-    dns:
-      domain: lab.akraino.org
-      servers: '192.168.2.85 8.8.8.8 8.8.4.4'
   storage:
     vlan: 42
     interface: bond0.42
@@ -84,9 +81,6 @@ networks:
       dhcp:
         start: 172.30.2.201
         end: 172.30.2.254
-    dns:
-      domain: lab.akraino.org
-      servers: '192.168.2.85 8.8.8.8 8.8.4.4'
     inf: net4
   ksn:
     vlan: 44
@@ -120,9 +114,9 @@ dns:
   upstream_servers:
     - 192.168.2.85
     - 8.8.8.8
-    - 8.8.8.8
-  upstream_servers_joined: '192.168.2.85,8.8.8.8'
+    - 8.8.4.4
   ingress_domain: dellgen10.akraino.org
+  server_domain: lab.akraino.org
 sriovnets:
 - physical: sriovnet1
   interface: enp135s0f0
@@ -224,9 +218,9 @@ genesis:
   neutron: 10.0.102.40
   root_password: akraino,d
   oem: Dell
-  bios_template: dell_r740_g14_uefi_base.xml.template
-  boot_template: dell_r740_g14_uefi_httpboot.xml.template
-  http_boot_device: NIC.Slot.2-1-1
+#  bios_template: dell_r740_g14_uefi_base.xml.template
+#  boot_template: dell_r740_g14_uefi_httpboot.xml.template
+#  http_boot_device: NIC.Slot.2-1-1
 masters:
   - name : aknode41
     oob: 192.168.41.41

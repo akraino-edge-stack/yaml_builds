@@ -53,9 +53,15 @@ SRV_CEPH_DEVICE={{yaml.disks[1].name}}
 SRV_BLD_SCRIPT=script-hwe-16.04.6-amd64.ipxe
 
 # template xml file to set bios and raid configuration settings
-SRV_BIOS_TEMPLATE={{yaml.genesis.bios_template}}
-SRV_BOOT_TEMPLATE={{yaml.genesis.boot_template}}
-SRV_HTTP_BOOT_DEV={{yaml.genesis.http_boot_device}}
+SRV_BIOS_TEMPLATE={% if 'bios_template' in yaml.genesis %}{{yaml.genesis.bios_template}}
+                  {% else %}{{yaml.hardware.bios_template}}
+                  {% endif %}
+SRV_BOOT_TEMPLATE={% if 'boot_template' in yaml.genesis %}{{yaml.genesis.boot_template}}
+                  {% else %}{{yaml.hardware.boot_template}}
+                  {% endif %}
+SRV_HTTP_BOOT_DEV={% if 'http_boot_device' in yaml.genesis %}{{yaml.genesis.http_boot_device}}
+                  {% else %}{{yaml.hardware.http_boot_device}}
+                  {% endif %}
 
 # tempalte to run to configure OS after first boot
 # current options are: firstboot.sh.template, firstboot-genesis.sh.tempate or firstboot-airship-iab.sh.template
@@ -78,9 +84,13 @@ SRV_PXE_IP={{yaml.genesis.pxe}}
 SRV_SUBNET={{yaml.networks.host.subnet}}
 SRV_NETMASK={{yaml.networks.host.netmask}}
 SRV_GATEWAY={{yaml.networks.host.routes.gateway}}
-SRV_DNS="{{yaml.networks.host.dns.servers}}"
-SRV_DOMAIN={{yaml.networks.host.dns.domain}}
-SRV_DNSSEARCH={{yaml.networks.host.dns.domain}}
+SRV_DNS="{% if 'dns' in yaml.networks.host %}{{yaml.networks.host.dns.servers}}{% else %}{{yaml.dns.upstream_servers|join(' ')}}{% endif %}"
+SRV_DOMAIN={% if 'dns' in yaml.networks.pxe and 'domain' in yaml.networks.pxe.dns %}{{yaml.networks.pxe.dns.domain}}
+           {% else %}{{yaml.dns.server_domain}}
+           {% endif %}
+SRV_DNSSEARCH={% if 'dns' in yaml.networks.pxe and 'domain' in yaml.networks.pxe.dns %}{{yaml.networks.pxe.dns.domain}}
+              {% else %}{{yaml.dns.server_domain}}
+              {% endif %}
 SRV_NTP=ntp.ubuntu.org
 
 # root password for server being built
@@ -91,3 +101,4 @@ SRV_BOND={{yaml.networks.primary}}
 {% for slave in yaml.networks.slaves %}
 SRV_SLAVE{{loop.index}}={{slave.name}}
 {% endfor %}
+

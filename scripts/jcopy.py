@@ -52,10 +52,10 @@ with open(yaml_input) as f:
   siteyaml = yaml.safe_load(f)
 
 if os.path.isfile(j2in_name):
-  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(j2in_name)), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.make_logging_undefined())
+  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(j2in_name)), trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True, undefined=jinja2.make_logging_undefined())
   expand_template(j2_env.get_template(name=os.path.basename(j2in_name)),yaml_out,len(j2in_name))
 else:
-  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(j2in_name), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.make_logging_undefined())
+  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(j2in_name), trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True, undefined=jinja2.make_logging_undefined())
   templates=j2_env.list_templates(extensions=('j2'))
   fill=len(max(templates,key=len))+len(j2in_name)
   for f in templates:

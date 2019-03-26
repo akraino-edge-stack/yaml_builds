@@ -32,12 +32,18 @@ def usage(msg=None):
   print( 'usage: jcopy.py <yaml> <template_dir_or_file> <out_dir>' )
   sys.exit(1)
 
+def expand_template( t, output_fname, fill=60 ):
+  print( '### {0: <{fill}} ==> {1}'.format(t.filename, output_fname, fill=fill) )
+  if not os.path.exists(os.path.dirname(output_fname)):
+    os.makedirs(os.path.dirname(output_fname))
+  t.stream(yaml=siteyaml).dump(output_fname)
+
 if len(sys.argv) != 4:
   usage('incorrect number of arguments')
 
 yaml_input=sys.argv[1]
 j2in_name=sys.argv[2]
-yaml_outdir=os.path.dirname(sys.argv[3]+'/')
+yaml_out=sys.argv[3]
 
 if not os.path.isfile(yaml_input):
   usage('input yaml file {} does not exist'.format(yaml_input))
@@ -46,24 +52,16 @@ with open(yaml_input) as f:
   siteyaml = yaml.safe_load(f)
 
 if os.path.isfile(j2in_name):
-  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(j2in_name)), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.make_logging_undefined() )
-  templates=[ os.path.basename(j2in_name) ]
+  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(j2in_name)), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.make_logging_undefined())
+  expand_template(j2_env.get_template(name=os.path.basename(j2in_name)),yaml_out,len(j2in_name))
 else:
-  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(j2in_name), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.make_logging_undefined() )
+  j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(j2in_name), trim_blocks=True, lstrip_blocks=True, undefined=jinja2.make_logging_undefined())
   templates=j2_env.list_templates(extensions=('j2'))
+  fill=len(max(templates,key=len))+len(j2in_name)
+  for f in templates:
+    expand_template(j2_env.get_template(name=f), yaml_out+'/'+f.replace('.j2','.yaml'), fill)
+  print('%d files processed.' % len(templates))
 
-# find length of longest template name to pad output
-fill=len(max(templates,key=len))
-
-for f in templates:
-  t=j2_env.get_template(name=f)
-  fname=yaml_outdir+'/'+f.replace('.j2','.yaml')
-  print( '### {0: <{fill}} ==> {1}'.format(f, fname, fill=fill) )
-  if not os.path.exists(os.path.dirname(fname)):
-    os.makedirs(os.path.dirname(fname))
-  t.stream(yaml=siteyaml).dump(fname)
-
-print('%d files processed.' % len(templates))
 sys.exit(0)
 
 # sudo apt-get install python-jinja2 python-yaml

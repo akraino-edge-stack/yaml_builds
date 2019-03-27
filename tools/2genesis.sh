@@ -15,7 +15,7 @@
 # limitations under the License.                                             #
 ##############################################################################
 
-set -x
+set -xe
 TIMESTAMP=$(date +"%Y%m%d%H%M")
 echo "Logging to /var/log/yaml_builds/2genesis_$TIMESTAMP.log"
 mkdir -p /var/log/yaml_builds

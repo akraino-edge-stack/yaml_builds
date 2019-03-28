@@ -1,3 +1,4 @@
+
 ##############################################################################
 # Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
@@ -24,10 +25,10 @@ def create_node_rcfile(nodes, defaults, j2template, rcfile_suffix):
   env = jinja2.Environment()
   env.trim_blocks = True
   env.lstrip_blocks = True
-  
+
   with open(j2template) as fd:
     template = env.from_string(fd.read())
-  
+
   if type(nodes) is list:
     for node in nodes:
       newnode = dict( defaults.items() + node.items() )
@@ -50,8 +51,9 @@ def create_node_rcfile(nodes, defaults, j2template, rcfile_suffix):
       if newnode['vendor'] == "HP" or newnode['vendor'] == "HPE":
         command = '/opt/akraino/redfish/apply_hpejson.sh --rc {0} --template {1} --no-confirm'.format(rcfile, newnode["bios_template"])
       if command:
-        print 'command: {0}'.format(command)
-        os.system(command)
+        p=subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True, preexec_fn=os.setsid)
+        print 'process: {}  command: {}'.format(p.pid, command)
+        plist.append(p)
 
 ### MAIN ###
 if len(sys.argv) != 2:
@@ -60,6 +62,9 @@ if len(sys.argv) != 2:
 
 with open(sys.argv[1]) as f:
   siteyaml = yaml.safe_load(f)
+
+# list of background processes created
+plist = []
 
 # create set of defaults based on top level ipmi_admin and hardware key/value pairs
 defaults = dict( siteyaml["ipmi_admin"].items() + siteyaml["hardware"].items() )
@@ -78,4 +83,11 @@ if 'masters' in siteyaml:
 
 if 'workers' in siteyaml:
     create_node_rcfile(siteyaml["workers"], defaults, "tools/j2/serverrc_raid.j2", "rc.raid")
+
+# print output from background processes
+for p in plist:
+    print "waiting for process {}".format(p.pid)
+    exitcode=p.wait()
+    print 'Process {0} ended with exit code {1}'.format(p.pid, p.returncode)
+    print p.communicate()[0]
 

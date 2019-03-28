@@ -104,7 +104,7 @@ create_scripts() {
 }
 
 prepare_tar(){
-   rm ./tars/promenade-bundle-$SITE.tar
+   rm -f ./tars/promenade-bundle-$SITE.tar
    tar cvf ./tars/promenade-bundle-$SITE.tar -C ./tars/$SITE .
 }
 

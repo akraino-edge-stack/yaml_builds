@@ -31,8 +31,8 @@ TIMESTAMP=$(date +"%Y%m%d%H%M")
 echo "TIMESTAMP=$TIMESTAMP"
 
 echo "Validating the setup and generating the tar file"
-mkdir -p /var/log/yaml_builds
-bash $YAML_BUILDS/tools/1prom-gen.sh $SITE > /var/log/yaml_builds/1prom-gen-$TIMESTAMP.log 2>&1
+mkdir -p /var/log/akraino
+bash $YAML_BUILDS/tools/1prom-gen.sh $SITE
 if [ $? -ne 0 ]
 then
   echo "Error:Could not generate tar file. So stopping here"
@@ -40,7 +40,7 @@ then
 fi
 
 echo "Bringing up the genesis node"
-bash $YAML_BUILDS/tools/2genesis.sh $SITE > /var/log/yaml_builds/2genesis-$TIMESTAMP.log 2>&1
+bash $YAML_BUILDS/tools/2genesis.sh $SITE
 if [ $? -ne 0 ]
 then
   echo "Error:Could not bringup the genesis nodes. So stopping here"
@@ -48,7 +48,7 @@ then
 fi
 
 echo "Deploying the site"
-bash $YAML_BUILDS/tools/3deploy_site.sh $SITE > /var/log/yaml_builds/3deploy-$TIMESTAMP.log 2>&1
+bash $YAML_BUILDS/tools/3deploy_site.sh $SITE
 if [ $? -ne 0 ]
 then
   echo "Error:Could not deploy the site."

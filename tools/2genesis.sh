@@ -16,7 +16,7 @@
 ##############################################################################
 
 set -xe
-LOGDIR="/var/log/yaml_builds"
+LOGDIR="/var/log/akraino"
 mkdir -p $LOGDIR
 LOGFILE="$LOGDIR/${1}_$(date +"%Y%m%d%H%M%z")_$(basename $0|cut -d. -f1)"
 echo "logging to $LOGFILE"

@@ -19,10 +19,11 @@
 # re-generate prom config
 
 set -xe
-TIMESTAMP=$(date +"%Y%m%d%H%M")
-echo "logging to /var/log/yaml_builds/1prom-gen_$TIMESTAMP.log"
-mkdir -p /var/log/yaml_builds
-exec > /var/log/yaml_builds/1prom-gen_$TIMESTAMP.log
+LOGDIR="/var/log/yaml_builds"
+mkdir -p $LOGDIR
+LOGFILE="$LOGDIR/${1}_$(date +"%Y%m%d%H%M%z")_$(basename $0|cut -d. -f1)"
+echo "logging to $LOGFILE"
+exec 1> >(tee -a $LOGFILE)
 exec 2>&1
 
 source $(dirname $0)/setenv.sh
@@ -114,3 +115,8 @@ gen_certs
 gen_bundle
 create_scripts
 prepare_tar
+
+exec 2>&-
+exec 1>&-
+exit 0
+

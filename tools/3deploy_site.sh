@@ -17,6 +17,12 @@
 
 
 set -xe
+LOGDIR="/var/log/yaml_builds"
+mkdir -p $LOGDIR
+LOGFILE="$LOGDIR/${1}_$(date +"%Y%m%d%H%M%z")_$(basename $0|cut -d. -f1)"
+echo "logging to $LOGFILE"
+exec 1> >(tee -a $LOGFILE)
+exec 2>&1
 
 source $(dirname $0)/setenv.sh
 
@@ -42,3 +48,8 @@ ssh $GENESIS_HOST << EOF
   bash update_iptables.sh
   bash deploy_site.sh
 EOF
+
+exec 2>&-
+exec 1>&-
+exit 0
+

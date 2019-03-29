@@ -16,10 +16,11 @@
 ##############################################################################
 
 set -xe
-TIMESTAMP=$(date +"%Y%m%d%H%M")
-echo "Logging to /var/log/yaml_builds/2genesis_$TIMESTAMP.log"
-mkdir -p /var/log/yaml_builds
-exec > /var/log/yaml_builds/2genesis_$TIMESTAMP.log
+LOGDIR="/var/log/yaml_builds"
+mkdir -p $LOGDIR
+LOGFILE="$LOGDIR/${1}_$(date +"%Y%m%d%H%M%z")_$(basename $0|cut -d. -f1)"
+echo "logging to $LOGFILE"
+exec 1> >(tee -a $LOGFILE)
 exec 2>&1
 
 source $(dirname $0)/setenv.sh
@@ -58,3 +59,8 @@ ssh $GENESIS_HOST << EOF
 EOF
 # Update BIOS Setting
 python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
+
+exec 2>&-
+exec 1>&-
+exit 0
+

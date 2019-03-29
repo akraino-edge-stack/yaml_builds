@@ -18,8 +18,9 @@
 
 set -x
 TIMESTAMP=$(date +"%Y%m%d%H%M")
-echo "logging to /var/log/deploy_site_$TIMESTAMP.log"
-exec > /var/log/deploy_site_$TIMESTAMP.log
+LOGFILE=/var/log/deploy_site_$TIMESTAMP.log
+echo "logging to $LOGFILE"
+exec 1> >(tee -a $LOGFILE)
 exec 2>&1
 
 # Regional Server specific variables
@@ -81,8 +82,13 @@ deploy_site
 #getactions
 #update_site
 
-##
-#"Look at.. for progress"
-#'MaaS GUI -> http://{{yaml.genesis.host}}:30001/MAAS/#/nodes'
-#'Airflow GUI -> http://{{yaml.genesis.host}}:30004/admin/taskinstance/'
+echo "## Airship deployment has been started..."
+echo "##"
+echo "## To monitor progress check:"
+echo "## MaaS GUI    -> http://{{yaml.genesis.host}}:30001/MAAS/#/nodes"
+echo "## Airflow GUI -> http://{{yaml.genesis.host}}:30004/admin/taskinstance/"
+
+exec 2>&-
+exec 1>&-
+exit 0
 

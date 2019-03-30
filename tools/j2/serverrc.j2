@@ -22,9 +22,6 @@
 # host name for server
 SRV_NAME={{yaml.genesis.name}}
 
-# server oem - Dell or HPE (case sensitive)
-SRV_OEM={{yaml.genesis.oem}}
-
 # out of band interface information for server (idrac/ilo/etc)
 SRV_OOB_IP={{yaml.genesis.oob}}
 SRV_OOB_USR={{yaml.ipmi_admin.username}}
@@ -34,15 +31,6 @@ SRV_OOB_PWD={{yaml.ipmi_admin.password}}
 {% if 'genesis.mac_address' in yaml %}
 SRV_MAC={{yaml.genesis.mac_address}}
 {% endif %}
-
-# name of network interface used during build when ipxe.efi is booted and when os is booted
-# ipxe numbers ports from 0-n in pci bus order.
-# the netx value will depend on how many nics are in the server
-# and which pci device number is assigned to the slot
-SRV_IPXE_INF={{yaml.networks.pxe.inf}}
-
-# the build interface is the nic used by the Ubuntu installed to load the OS
-SRV_BLD_INF={{yaml.networks.slaves[0].name}}
 
 # the boot device is the device name on which the OS will be loaded
 SRV_BOOT_DEVICE={{yaml.disks[0].name}}
@@ -86,10 +74,10 @@ SRV_NETMASK={{yaml.networks.host.netmask}}
 SRV_GATEWAY={{yaml.networks.host.routes.gateway}}
 SRV_DNS="{% if 'dns' in yaml.networks.host %}{{yaml.networks.host.dns.servers}}{% else %}{{yaml.dns.upstream_servers|join(' ')}}{% endif %}"
 SRV_DOMAIN={% if 'dns' in yaml.networks.pxe and 'domain' in yaml.networks.pxe.dns %}{{yaml.networks.pxe.dns.domain}}
-           {% else %}{{yaml.dns.server_domain}}
+           {% else %}{{yaml.dns.domain}}
            {% endif %}
 SRV_DNSSEARCH={% if 'dns' in yaml.networks.pxe and 'domain' in yaml.networks.pxe.dns %}{{yaml.networks.pxe.dns.domain}}
-              {% else %}{{yaml.dns.server_domain}}
+              {% else %}{{yaml.dns.domain}}
               {% endif %}
 SRV_NTP=ntp.ubuntu.org
 

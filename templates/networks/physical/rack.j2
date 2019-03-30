@@ -101,7 +101,7 @@ data:
     end: {{yaml.networks.pxe.ranges.dhcp.end}}
   dns:
     domain: {% if 'dns' in yaml.networks.pxe and 'domain' in yaml.networks.pxe.dns %}{{yaml.networks.pxe.dns.domain}}
-            {% else %}{{yaml.dns.server_domain}}
+            {% else %}{{yaml.dns.domain}}
             {% endif %}
     servers: '{% if 'dns' in yaml.networks.pxe %}{{yaml.networks.pxe.dns.servers}}{% else %}{{yaml.dns.upstream_servers|join(' ')}}{% endif %}'
 ...
@@ -161,7 +161,7 @@ data:
     end: {{yaml.networks.host.ranges.static.end}}
   dns:
     domain: {% if 'dns' in yaml.networks.host and 'domain' in yaml.networks.host.dns %}{{yaml.networks.host.dns.domain}}
-            {% else %}{{yaml.dns.server_domain}}
+            {% else %}{{yaml.dns.domain}}
             {% endif %}
     servers: '{% if 'dns' in yaml.networks.host %}{{yaml.networks.host.dns.servers}}{% else %}{{yaml.dns.upstream_servers|join(' ')}}{% endif %}'
 ...

@@ -72,7 +72,6 @@ defaults = dict( siteyaml["ipmi_admin"].items() + siteyaml["hardware"].items() )
 # add keys for backward compatibility
 defaults = dict( [('oob_user',siteyaml['ipmi_admin']['username'])]       + defaults.items())
 defaults = dict( [('oob_password',siteyaml['ipmi_admin']['password'])]   + defaults.items())
-defaults = dict( [('oem',siteyaml['hardware']['vendor'])]                + defaults.items())
 
 print 'Using defaults:'
 for line in yaml.dump(defaults,default_flow_style=False).split('\n'):

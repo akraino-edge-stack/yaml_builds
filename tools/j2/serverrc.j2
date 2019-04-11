@@ -28,7 +28,7 @@ SRV_OOB_USR={{yaml.ipmi_admin.username}}
 SRV_OOB_PWD={{yaml.ipmi_admin.password}}
 
 # mac address of server to be used during the build - not required for Dell servers
-{% if 'genesis.mac_address' in yaml %}
+{% if 'mac_address' in yaml.genesis %}
 SRV_MAC={{yaml.genesis.mac_address}}
 {% endif %}
 

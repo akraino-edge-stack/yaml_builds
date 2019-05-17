@@ -1,4 +1,3 @@
----
 ##############################################################################
 # Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
 #                                                                            #
@@ -33,7 +32,11 @@ data:
   values:
     networking:
       settings:
+{% if ('peers' in yaml.networks.ksn and yaml.networks.ksn.peers is not none and yaml.networks.ksn.peers is iterable ) %}
         mesh: "off"
+{% else %}
+        mesh: "on"
+{% endif %}
         ippool:
           ipip:
             enabled: "false"
@@ -45,6 +48,7 @@ data:
 {% for add_cidr in yaml.networks.ksn.additional_cidrs %}
             - {{add_cidr}}
 {% endfor %}
+{% if ('peers' in yaml.networks.ksn and yaml.networks.ksn.peers is not none and yaml.networks.ksn.peers is iterable ) %}
           peers:
 {% for peer in yaml.networks.ksn.peers %}
             - apiVersion: v1
@@ -55,4 +59,6 @@ data:
               spec:
                 asnumber: {{peer.asnumber}}
 {% endfor %}
+{% endif %}
 ...
+

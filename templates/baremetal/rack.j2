@@ -44,10 +44,19 @@ data:
       address: {{server.neutron}}
     - network: calico
       address: {{server.ksn}}
+    - network: dpdk
+      address: {{server.dpdk}}
   metadata:
     rack: RACK01
     tags:
       - 'masters'
+  platform:
+    kernel_params:
+      hugepagesz: '1G'
+      hugepages: 32
+      default_hugepagesz: '1G'
+      iommu: 'pt'
+      intel_iommu: 'on'
 {% endfor %}
 {% if 'workers' in yaml %}{% for server in yaml.workers %}
 ---
@@ -80,9 +89,18 @@ data:
       address: {{server.neutron}}
     - network: calico
       address: {{server.ksn}}
+    - network: dpdk
+      address: {{server.dpdk}}
   metadata:
     rack: RACK01
     tags:
       - 'workers'
+  platform:
+    kernel_params:
+      hugepagesz: '1G'
+      hugepages: 32
+      default_hugepagesz: '1G'
+      iommu: 'pt'
+      intel_iommu: 'on'
 {% endfor %}{% endif %}
 ...

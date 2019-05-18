@@ -57,18 +57,12 @@ data:
         - 'storage'
         - 'overlay'
         - 'calico'
-    p1p1:
+    dpdk:
+      device_link: dpdk
       slaves:
-        - 'sriov_nic01'
-      sriov:
-        vf_count: 32 # Currently ignored
-        trustedmode: false
-    p3p2:
-      slaves:
-        - 'sriov_nic02'
-      sriov:
-        vf_count: 32 # Currently ignored
-        trustedmode: false
+        - '{{yaml.networks.vxlan.interface}}'
+      networks:
+        - dpdk
   storage:
     physical_devices:
 {% for disk in yaml.disks %}

@@ -18,59 +18,53 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron
+  name: openvswitch
   replacement: true
   labels:
-    component: neutron
+    name: openvswitch-global
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: neutron-global
+      name: openvswitch-global
     actions:
       - method: merge
         path: .
   storagePolicy: cleartext
 data:
   values:
-    labels:
-    network:
-      interface:
-        tunnel: br-phy
-{%- for pci in yaml.dpdk -%}
-    conf:
-      ovs_dpdk:
+    pod:
+      resources:
         enabled: true
+    conf:
+      dpdk:
+        enabled: true
+        hugepages_mountpath: /dev/hugepages_1G
+        socket_memory: 1024
         driver: uio_pci_generic
-        nics:
-          - name: dpdk0
-            pci_id: '0000:86:00.0'
-            bridge: br-phy
-            migrate_ip: true
-        bridges:
-          - name: br-phy
   dependencies:
-    - openstack-neutron-helm-toolkit
-{%- endfor %}
-...
+    - openstack-openvswitch-helm-toolkit
+---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-neutron-helm-toolkit
+  name: openstack-openvswitch-helm-toolkit
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
   substitutions:
+    # Chart source
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.osh.neutron-htk
+        path: .charts.osh.openvswitch-htk
       dest:
         path: .source
+
 data:
-  chart_name: openstack-neutron-helm-toolkit
-  release: openstack-neutron-helm-toolkit
+  chart_name: openstack-openvswitch-helm-toolkit
+  release: openstack-openvswitch-helm-toolkit
   namespace: helm-toolkit
   values: {}
   dependencies: []

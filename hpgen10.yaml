@@ -16,6 +16,7 @@
 ##############################################################################
 
 site_name: hpgen10
+site_type: sriov
 ipmi_admin:
   username: Administrator
   password: Admin123

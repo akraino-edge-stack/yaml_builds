@@ -30,12 +30,6 @@ source $(dirname $0)/setenv.sh
 
 PROMENADE_IMAGE=quay.io/airshipit/promenade:009f3de7ecf6afcdd2783ac7a12470394d7dfab3
 
-if [ -z "$AIRSHIP_TREASUREMAP" ]
-then
-  echo "Please use https://git.openstack.org/openstack/airship-treasuremap to clone airship_treasuremap. Also set AIRSHIP_TREASUREMAP to it."
-  exit -1
-fi
-
 if [ -z "$1" ]
 then
   echo "Please pass site name as command line argument"
@@ -46,6 +40,15 @@ else
 fi
 source $(dirname $0)/env_$SITE.sh
 
+if [ ! -d "$AIRSHIP_TREASUREMAP" ]; then
+  echo "ERROR: Missing AIRSHIP_TREASUREMAP directory [$AIRSHIP_TREASUREMAP]."
+  exit -1
+fi
+
+if [ ! -d "$AIRSHIP_TEMPLATES" ]; then
+  echo "ERROR: Missing AIRSHIP_TEMPLATES directory [$AIRSHIP_TEMPLATES]."
+  exit -1
+fi
 
 # Check that we are root
 if [[ $(whoami) != "root" ]]

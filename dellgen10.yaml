@@ -16,6 +16,7 @@
 ##############################################################################
 
 site_name: dellgen10
+site_type: sriov
 ipmi_admin:
   username: root
   password: calvin

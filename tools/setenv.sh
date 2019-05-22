@@ -18,5 +18,3 @@
 
 export YAML_BUILDS=/opt/akraino/yaml_builds
 echo YAML_BUILDS=$YAML_BUILDS
-export AIRSHIP_TREASUREMAP=/root/airship-treasuremap
-echo AIRSHIP_TREASUREMAP=$AIRSHIP_TREASUREMAP

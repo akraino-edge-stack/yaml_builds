@@ -19,12 +19,6 @@ set -x
 
 source $(dirname $0)/setenv.sh
 
-if [ -z "$AIRSHIP_TREASUREMAP" ]
-then
-  echo "Please use https://git.openstack.org/openstack/airship-treasuremap to clone airship_treasuremap. Also set AIRSHIP_TREASUREMAP to it."
-  exit -1
-fi
-
 if [ -z "$1" ]
 then
   echo "Please pass site name as command line argument"
@@ -35,6 +29,18 @@ else
 fi
 
 cd $YAML_BUILDS
-python ./scripts/jcopy.py $SITE.yaml ./templates $YAML_BUILDS/site/$SITE
 python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools/env_$SITE.sh
+source ./tools/env_$SITE.sh
+
+if [ ! -d "$AIRSHIP_TREASUREMAP" ]; then
+  echo "ERROR: Missing AIRSHIP_TREASUREMAP directory [$AIRSHIP_TREASUREMAP]."
+  exit -1
+fi
+
+if [ ! -d "$AIRSHIP_TEMPLATES" ]; then
+  echo "ERROR: Missing AIRSHIP_TEMPLATES directory [$AIRSHIP_TEMPLATES]."
+  exit -1
+fi
+
+python ./scripts/jcopy.py $SITE.yaml AIRSHIP_TEMPLATES $YAML_BUILDS/site/$SITE
 cp -r site/common/* site/$SITE/

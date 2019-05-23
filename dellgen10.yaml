@@ -117,6 +117,15 @@ dns:
   domain: lab.akraino.org
 gpu:
   alias:
+    - name: "P4"
+      product_id: "1bb2"
+      vendor_id: "10de"
+    - name: "P40"
+      product_id: "1b38"
+      vendor_id: "10de"
+    - name: "P100"
+      product_id: "15f8"
+      vendor_id: "10de"
     - name: "V100"
       product_id: "1db4"
       vendor_id: "10de"
@@ -252,14 +261,15 @@ masters:
 #    pxe: 172.30.2.43
 #    ksn: 172.29.1.43
 #    neutron: 10.0.102.43
-platform:
-  vcpu_pin_set: "4-21,26-43,48-65,72-87"
-  kernel_params:
-    hugepagesz: '1G'
-    hugepages: 32
-    default_hugepagesz: '1G'
-    iommu: 'pt'
-    intel_iommu: 'on'
+#platform:
+#  vcpu_pin_set: "4-21,26-43,48-65,72-87"
+# WARNING: HUGEPAGES APPEARS TO CAUSE ISSUES WITH UCP POSTGRES
+#  kernel_params:
+#    hugepagesz: '1G'
+#    hugepages: 32
+#    default_hugepagesz: '1G'
+#    iommu: 'pt'
+#    intel_iommu: 'on'
 hardware:
   vendor: DELL
   generation: '10'

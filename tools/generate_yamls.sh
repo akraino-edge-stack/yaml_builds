@@ -42,5 +42,5 @@ if [ ! -d "$AIRSHIP_TEMPLATES" ]; then
   exit -1
 fi
 
-python ./scripts/jcopy.py $SITE.yaml AIRSHIP_TEMPLATES $YAML_BUILDS/site/$SITE
+python ./scripts/jcopy.py $SITE.yaml $AIRSHIP_TEMPLATES $YAML_BUILDS/site/$SITE
 cp -r site/common/* site/$SITE/

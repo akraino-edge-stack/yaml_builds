@@ -93,15 +93,20 @@ data:
     image: 'xenial'
     kernel: 'hwe-16.04'
     kernel_params:
+{% if 'platform' in yaml and 'kernel_params' in yaml.platform %}
+{% for key, value in yaml.platform.kernel_params.items() %}
+      {{key}}: '{{value}}'
+{% endfor %}
+{% else %}
       console: 'ttyS1,115200n8'
       intel_iommu: 'on'
       iommu: 'pt'
       amd_iommu: 'on'
       transparent_hugepage: 'never'
-      hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
-      hugepages: 'hardwareprofile:hugepages.dpdk.count'
-      default_hugepagesz: 'hardwareprofile:hugepages.dpdk.size'
-      isolcpus: 'hardwareprofile:cpuset.kvm'
+{% endif %}
+{% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}
+      isolcpus: '{{yaml.platform.vcpu_pin_set}}'
+{% endif %}
   metadata:
     owner_data:
       control-plane: enabled

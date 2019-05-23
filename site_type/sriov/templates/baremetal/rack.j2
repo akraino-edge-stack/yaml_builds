@@ -52,8 +52,12 @@ data:
   platform:
     kernel_params:
 {% for key, value in yaml.platform.kernel_params.items() %}
-      {{key}}: {{value}}
-{% endfor %}{% endif %}
+      {{key}}: '{{value}}'
+{% endfor %}
+{% if 'vcpu_pin_set' in yaml.platform %}
+      isolcpus: '{{yaml.platform.vcpu_pin_set}}'
+{% endif %}
+{% endif %}
 {% endfor %}
 {% if 'workers' in yaml %}{% for server in yaml.workers %}
 ---
@@ -94,7 +98,11 @@ data:
   platform:
     kernel_params:
 {% for key, value in yaml.platform.kernel_params.items() %}
-      {{key}}: {{value}}
-{% endfor %}{% endif %}
+      {{key}}: '{{value}}'
+{% endfor %}
+{% if 'vcpu_pin_set' in yaml.platform %}
+      isolcpus: '{{yaml.platform.vcpu_pin_set}}'
+{% endif %}
+{% endif %}
 {% endfor %}{% endif %}
 ...

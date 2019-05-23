@@ -260,15 +260,17 @@ masters:
 #    pxe: 172.30.1.33
 #    ksn: 172.29.1.33
 #    neutron: 10.0.101.33
-#platform:
-#  vcpu_pin_set: "4-21,26-43,48-65,72-87"
-# WARNING: HUGEPAGES APPEARS TO CAUSE ISSUES WITH UCP POSTGRES
-#  kernel_params:
-#    hugepagesz: '1G'
-#    hugepages: 32
-#    default_hugepagesz: '1G'
-#    iommu: 'pt'
-#    intel_iommu: 'on'
+platform:
+  vcpu_pin_set: "4-21,26-43,48-65,72-87"
+  kernel_params:
+    hugepagesz: '1G'
+    hugepages: 32
+    default_hugepagesz: '1G'
+    transparent_hugepage: 'never'
+    iommu: 'pt'
+    intel_iommu: 'on'
+    amd_iommu: 'on'
+#    console: 'ttyS1,115200n8'
 hardware:
   vendor: HP
   generation: '10'

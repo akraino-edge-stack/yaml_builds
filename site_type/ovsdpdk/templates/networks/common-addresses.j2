@@ -1,0 +1,104 @@
+---
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+schema: pegleg/CommonAddresses/v1
+metadata:
+  schema: metadata/Document/v1
+  name: common-addresses
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  calico:
+    ip_autodetection_method: interface={{yaml.networks.ksn.interface}}
+    etcd:
+      service_ip: 10.96.232.136
+
+  dns:
+    cluster_domain: cluster.local
+    service_ip: 10.96.0.10
+    upstream_servers:
+{% for server in yaml.dns.upstream_servers %}
+      - {{server}}
+{% endfor %}
+    upstream_servers_joined: '{{yaml.dns.upstream_servers|batch(2)|first|join(',')}}'
+    ingress_domain: {{yaml.dns.ingress_domain}}
+  genesis:
+    hostname: {{yaml.genesis.name}}
+    ip: {{yaml.genesis.ksn}}
+
+  bootstrap:
+    ip: {{yaml.genesis.pxe}}
+
+  kubernetes:
+    api_service_ip: {{yaml.kubernetes.api_service_ip}}
+    etcd_service_ip: {{yaml.kubernetes.etcd_service_ip}}
+    pod_cidr: {{yaml.kubernetes.pod_cidr}}
+    service_cidr: {{yaml.kubernetes.service_cidr}}
+    apiserver_port: 6443
+    haproxy_port: 6553
+    service_node_port_range: 30000-32767
+
+  etcd:
+    container_port: 2379
+    haproxy_port: 2378
+
+  masters:
+{% for master in yaml.masters %}
+    - hostname: {{master.name}}
+{% endfor %}
+
+  proxy:
+    http: ""
+    https: ""
+    no_proxy: []
+
+  node_ports:
+    drydock_api: 30000
+    maas_api: 30001
+    maas_proxy: 31800  # hardcoded in MAAS
+    shipyard_api: 30003
+    airflow_web: 30004
+
+  ntp:
+    servers_joined: '0.ubuntu.pool.ntp.org,1.ubuntu.pool.ntp.org,2.ubuntu.pool.ntp.org'
+
+  # Used for FQDN setup/definition
+  domain:
+    url: {{yaml.site_name}}.lab.akraino.org
+
+  ldap:
+    base_url: 'its-a-ldap.example.com'
+    url: 'ldap://its-a-ldap.example.com'
+    auth_path: DC=test,DC=test,DC=com?sAMAccountName?sub?memberof=CN=test,OU=Application,OU=Groups,DC=test,DC=test,DC=com
+    common_name: AP-NC_Test_Users
+    subdomain: testitservices
+    domain: example
+
+  storage:
+    ceph:
+      public_cidr: '{{yaml.networks.storage.cidr}}'
+      cluster_cidr: '{{yaml.networks.storage.cidr}}'
+
+  neutron:
+    tunnel_device: '{{yaml.networks.neutron.interface}}'
+    external_iface: '{{yaml.networks.primary}}'
+
+  openvswitch:
+    external_iface: '{{yaml.networks.primary}}'
+...

@@ -43,8 +43,6 @@ networks:
     vlan: 41
     interface: bond0.41
     cidr: 192.168.2.0/24
-    subnet: 192.168.2.0
-    netmask: 255.255.255.0
     routes:
        gateway: 192.168.2.200
     ranges:

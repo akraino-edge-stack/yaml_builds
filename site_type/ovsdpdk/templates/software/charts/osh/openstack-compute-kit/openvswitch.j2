@@ -18,85 +18,63 @@
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron
+  name: openvswitch
   replacement: true
   labels:
-    component: neutron
+    name: openvswitch-global
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: neutron-global
+      name: openvswitch-global
     actions:
       - method: merge
         path: .
   storagePolicy: cleartext
 data:
-  endpoints:
-    identity:
-      port:
-        api:
-          default: 80
-          internal: 35357
   values:
-    labels:
-    network:
-      interface:
-        tunnel: br-phy
-    conf:
-      logging:
-        logger_root:
-          level: WARNING
-          handlers: stdout
-      plugins:
-        openvswitch_agent:
-          ovs:
-            bridge_mappings: external:br-phy
-        ml2_conf:
-          ml2:
-            mechanism_drivers: openvswitch
-            type_drivers: flat,vlan,vxlan
-            tenant_network_types: vxlan
-          ml2_type_vlan:
-            network_vlan_ranges: "external:1100:1110"
-          ml2_type_flat:
-            flat_networks: public
-        openvswitch_agent:
-          agent:
-            tunnel_types: vxlan
-          ovs:
-            bridge_mappings: external:br-phy
-      ovs_dpdk:
+    pod:
+      resources:
         enabled: true
-        driver: vfio-pci
-        nics:
-{% for nic in yaml.dpdk.nics %}
-          - name: {{ nic.name }}
-            pci_id: '{{ nic.pci_id }}'
-            bridge: {{ nic.bridge }}
-            migrate_ip: {{ nic.migrate_ip }}
-{% endfor %}
+        ovs:
+          vswitchd:
+            requests:
+              memory: "8Gi"
+              cpu: "4000m"
+            limits:
+              memory: "8Gi"
+              cpu: "4000m"
+              hugepages-1Gi: "8Gi"
+    conf:
+      dpdk:
+        enabled: true
+        hugepages_mountpath: /dev/hugepages_1G
+        socket_memory: '4096,4096'
+        pmd_cpu_mask: '0xF'
   dependencies:
-    - openstack-neutron-helm-toolkit
+    - openstack-openvswitch-helm-toolkit
 ...
+---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-neutron-helm-toolkit
+  name: openstack-openvswitch-helm-toolkit
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
   substitutions:
+    # Chart source
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.osh.neutron-htk
+        path: .charts.osh.openvswitch-htk
       dest:
         path: .source
+
 data:
-  chart_name: openstack-neutron-helm-toolkit
-  release: openstack-neutron-helm-toolkit
+  chart_name: openstack-openvswitch-helm-toolkit
+  release: openstack-openvswitch-helm-toolkit
   namespace: helm-toolkit
   values: {}
   dependencies: []

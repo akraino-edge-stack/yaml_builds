@@ -44,7 +44,7 @@ data:
         - sriov
       interface:
         sriov:
-{% for sriovnet in yaml.sriovnets %}
+{% for sriovnet in yaml.sriov.nets %}
           - device: {{sriovnet.interface}}
             num_vfs: 32
             promisc: false
@@ -60,7 +60,7 @@ data:
           sriov_nic:
             exclude_devices: null
             physical_device_mappings: ' 
-{%- for sriovnet in yaml.sriovnets -%}
+{%- for sriovnet in yaml.sriov.nets -%}
 {%- if loop.index > 1 -%}
 ,
 {%- endif -%}
@@ -71,7 +71,7 @@ data:
             mechanism_drivers: l2population,openvswitch,sriovnicswitch
           ml2_type_vlan:
             network_vlan_ranges: bond0:46:300
-{%- for sriovnet in yaml.sriovnets -%}
+{%- for sriovnet in yaml.sriov.nets -%}
 ,{{sriovnet.physical}}:{{sriovnet.vlan_start}}:{{sriovnet.vlan_end}}
 {%- endfor %}
 

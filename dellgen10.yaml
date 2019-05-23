@@ -115,81 +115,91 @@ dns:
     - 8.8.4.4
   ingress_domain: dellgen10.akraino.org
   domain: lab.akraino.org
-sriovnets:
-- physical: sriovnet1
-  interface: enp135s0f0
-  vlan_start: 2001
-  vlan_end: 3000
-  whitelists:
-  - "address": "0000:87:02.0"
-  - "address": "0000:87:02.1"
-  - "address": "0000:87:03.2"
-  - "address": "0000:87:03.3"
-  - "address": "0000:87:03.4"
-  - "address": "0000:87:03.5"
-  - "address": "0000:87:03.6"
-  - "address": "0000:87:03.7"
-  - "address": "0000:87:04.0"
-  - "address": "0000:87:04.1"
-  - "address": "0000:87:04.2"
-  - "address": "0000:87:04.3"
-  - "address": "0000:87:02.2"
-  - "address": "0000:87:04.4"
-  - "address": "0000:87:04.5"
-  - "address": "0000:87:04.6"
-  - "address": "0000:87:04.7"
-  - "address": "0000:87:05.0"
-  - "address": "0000:87:05.1"
-  - "address": "0000:87:05.2"
-  - "address": "0000:87:05.3"
-  - "address": "0000:87:05.4"
-  - "address": "0000:87:05.5"
-  - "address": "0000:87:02.3"
-  - "address": "0000:87:05.6"
-  - "address": "0000:87:05.7"
-  - "address": "0000:87:02.4"
-  - "address": "0000:87:02.5"
-  - "address": "0000:87:02.6"
-  - "address": "0000:87:02.7"
-  - "address": "0000:87:03.0"
-  - "address": "0000:87:03.1"
-- physical: sriovnet2
-  interface: enp135s0f1
-  vlan_start: 2001
-  vlan_end: 3000
-  whitelists:
-  - "address": "0000:87:0a.0"
-  - "address": "0000:87:0a.1"
-  - "address": "0000:87:0b.2"
-  - "address": "0000:87:0b.3"
-  - "address": "0000:87:0b.4"
-  - "address": "0000:87:0b.5"
-  - "address": "0000:87:0b.6"
-  - "address": "0000:87:0b.7"
-  - "address": "0000:87:0c.0"
-  - "address": "0000:87:0c.1"
-  - "address": "0000:87:0c.2"
-  - "address": "0000:87:0c.3"
-  - "address": "0000:87:0a.2"
-  - "address": "0000:87:0c.4"
-  - "address": "0000:87:0c.5"
-  - "address": "0000:87:0c.6"
-  - "address": "0000:87:0c.7"
-  - "address": "0000:87:0d.0"
-  - "address": "0000:87:0d.1"
-  - "address": "0000:87:0d.2"
-  - "address": "0000:87:0d.3"
-  - "address": "0000:87:0d.4"
-  - "address": "0000:87:0d.5"
-  - "address": "0000:87:0a.3"
-  - "address": "0000:87:0d.6"
-  - "address": "0000:87:0d.7"
-  - "address": "0000:87:0a.4"
-  - "address": "0000:87:0a.5"
-  - "address": "0000:87:0a.6"
-  - "address": "0000:87:0a.7"
-  - "address": "0000:87:0b.0"
-  - "address": "0000:87:0b.1"
+gpu:
+  alias:
+    - name: "V100"
+      product_id: "1db4"
+      vendor_id: "10de"
+sriov:
+  alias:
+    - name: "numa0"
+      product_id: "158b"
+      vendor_id: "8086"
+  nets:
+    - physical: sriovnet1
+      interface: enp135s0f0
+      vlan_start: 2001
+      vlan_end: 3000
+      whitelists:
+      - "address": "0000:87:02.0"
+      - "address": "0000:87:02.1"
+      - "address": "0000:87:03.2"
+      - "address": "0000:87:03.3"
+      - "address": "0000:87:03.4"
+      - "address": "0000:87:03.5"
+      - "address": "0000:87:03.6"
+      - "address": "0000:87:03.7"
+      - "address": "0000:87:04.0"
+      - "address": "0000:87:04.1"
+      - "address": "0000:87:04.2"
+      - "address": "0000:87:04.3"
+      - "address": "0000:87:02.2"
+      - "address": "0000:87:04.4"
+      - "address": "0000:87:04.5"
+      - "address": "0000:87:04.6"
+      - "address": "0000:87:04.7"
+      - "address": "0000:87:05.0"
+      - "address": "0000:87:05.1"
+      - "address": "0000:87:05.2"
+      - "address": "0000:87:05.3"
+      - "address": "0000:87:05.4"
+      - "address": "0000:87:05.5"
+      - "address": "0000:87:02.3"
+      - "address": "0000:87:05.6"
+      - "address": "0000:87:05.7"
+      - "address": "0000:87:02.4"
+      - "address": "0000:87:02.5"
+      - "address": "0000:87:02.6"
+      - "address": "0000:87:02.7"
+      - "address": "0000:87:03.0"
+      - "address": "0000:87:03.1"
+    - physical: sriovnet2
+      interface: enp135s0f1
+      vlan_start: 2001
+      vlan_end: 3000
+      whitelists:
+      - "address": "0000:87:0a.0"
+      - "address": "0000:87:0a.1"
+      - "address": "0000:87:0b.2"
+      - "address": "0000:87:0b.3"
+      - "address": "0000:87:0b.4"
+      - "address": "0000:87:0b.5"
+      - "address": "0000:87:0b.6"
+      - "address": "0000:87:0b.7"
+      - "address": "0000:87:0c.0"
+      - "address": "0000:87:0c.1"
+      - "address": "0000:87:0c.2"
+      - "address": "0000:87:0c.3"
+      - "address": "0000:87:0a.2"
+      - "address": "0000:87:0c.4"
+      - "address": "0000:87:0c.5"
+      - "address": "0000:87:0c.6"
+      - "address": "0000:87:0c.7"
+      - "address": "0000:87:0d.0"
+      - "address": "0000:87:0d.1"
+      - "address": "0000:87:0d.2"
+      - "address": "0000:87:0d.3"
+      - "address": "0000:87:0d.4"
+      - "address": "0000:87:0d.5"
+      - "address": "0000:87:0a.3"
+      - "address": "0000:87:0d.6"
+      - "address": "0000:87:0d.7"
+      - "address": "0000:87:0a.4"
+      - "address": "0000:87:0a.5"
+      - "address": "0000:87:0a.6"
+      - "address": "0000:87:0a.7"
+      - "address": "0000:87:0b.0"
+      - "address": "0000:87:0b.1"
 storage:
   osds:
     - data: /dev/sda
@@ -243,6 +253,7 @@ masters:
 #    ksn: 172.29.1.43
 #    neutron: 10.0.102.43
 platform:
+  vcpu_pin_set: "4-21,26-43,48-65,72-87"
   kernel_params:
     hugepagesz: '1G'
     hugepages: 32
@@ -304,3 +315,4 @@ kubernetes:
 regional_server:
   ip: 135.16.101.85
 ...
+

@@ -43,15 +43,28 @@ data:
         libvirt:
           virt_type: kvm
         DEFAULT:
-          vcpu_pin_set: "4-21,26-43,48-65,72-87"
+          vcpu_pin_set: {% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}{{yaml.platform.vcpu_pin_set}}
+{% else %}"4-21,26-43,48-65,72-87"
+{% endif %}
           vif_plugging_is_fatal: False
           vif_plugging_timeout: 30
         pci:
-#          alias: '{ "vendor_id":"10de", "product_id":"1db4", "name":"V100", "device_type":"type-PCI" }'
-#          passthrough_whitelist: '{"vendor_id": "10de", "product_id": "1db4"}'
-          alias: '{"name": "numa0", "capability_type": "pci", "product_id": "158b", "vendor_id": "8086", "device_type": "type-PCI", "numa_policy": "required"}`'
-{% for sriovnet in yaml.sriovnets %}
-          passthrough_whitelist: |
-            [{% for vf in sriovnet.whitelists -%}{"address":"{{vf["address"]}}","physical_network":"{{sriovnet.physical}}"}{% if loop.index < sriovnet.whitelists|length %},{% endif %}{% endfor %}]
+{% if 'gpu' in yaml and 'alias' in yaml.gpu %}
+{% for alias in yaml.gpu.alias %}
+          alias: '{ "name":"{{alias.name}}", "vendor_id":"{{alias.vendor_id}}", "product_id":"{{alias.product_id}}", "device_type":"type-PCI" }'
+          passthrough_whitelist: '{"vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}"}'
 {% endfor %}
+{% endif %}
+{% if 'sriov' in yaml and 'alias' in yaml.sriov %}
+{% for alias in yaml.sriov.alias %}
+          alias: '{"name": "{{alias.name}}", "vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}", "capability_type": "pci", "device_type": "type-PCI", "numa_policy": "required"}`'
+{% endfor %}
+{% endif %}
+{% if 'sriov' in yaml and 'nets' in yaml.sriov %}
+{% for sriovnet in yaml.sriov.nets %}
+          passthrough_whitelist: |
+            [{% for vf in sriovnet.whitelists -%}{"address":"{{vf["address"]}}","physical_network":"{{sriovnet.physical}}"}{{',' if not loop.last else ''}}{% endfor %}]
+{% endfor %}
+{% endif %}
 ...
+

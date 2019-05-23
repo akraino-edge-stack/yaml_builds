@@ -48,6 +48,12 @@ data:
     rack: RACK01
     tags:
       - 'masters'
+{% if 'platform' in yaml %}
+  platform:
+    kernel_params:
+{% for key, value in yaml.platform.kernel_params.items() %}
+      {{key}}: {{value}}
+{% endfor %}{% endif %}
 {% endfor %}
 {% if 'workers' in yaml %}{% for server in yaml.workers %}
 ---
@@ -84,5 +90,12 @@ data:
     rack: RACK01
     tags:
       - 'workers'
+{% if 'platform' in yaml %}
+  platform:
+    kernel_params:
+{% for key, value in yaml.platform.kernel_params.items() %}
+      {{key}}: {{value}}
+{% endfor %}{% endif %}
 {% endfor %}{% endif %}
 ...
+

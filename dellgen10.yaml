@@ -215,9 +215,6 @@ genesis:
   ksn: 172.29.1.40
   neutron: 10.0.102.40
   root_password: akraino,d
-#  bios_template: dell_r740_g14_uefi_base.xml.template
-#  boot_template: dell_r740_g14_uefi_httpboot.xml.template
-#  http_boot_device: NIC.Slot.2-1-1
 masters:
   - name : aknode41
     oob: 192.168.41.41
@@ -245,13 +242,13 @@ masters:
 #    pxe: 172.30.2.43
 #    ksn: 172.29.1.43
 #    neutron: 10.0.102.43
-#  - name : aknode44
-#    oob: 192.168.41.44
-#    host: 192.168.2.44
-#    storage: 172.31.2.44
-#    pxe: 172.30.2.44
-#    ksn: 172.29.1.44
-#    neutron: 10.0.102.44
+platform:
+  kernel_params:
+    hugepagesz: '1G'
+    hugepages: 32
+    default_hugepagesz: '1G'
+    iommu: 'pt'
+    intel_iommu: 'on'
 hardware:
   vendor: DELL
   generation: '10'

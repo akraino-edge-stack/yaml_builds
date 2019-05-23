@@ -214,9 +214,6 @@ genesis:
   neutron: 10.0.101.30
   root_password: akraino,d
   mac_address: 3c:fd:fe:aa:90:b0
-#  bios_template: hpe_dl380_g10_uefi_base.json.template
-#  boot_template: hpe_dl380_g10_uefi_httpboot.json.template
-#  http_boot_device: NIC.Slot.3-1-1
 masters:
   - name : aknode31
     oob: 192.168.41.131
@@ -244,15 +241,13 @@ masters:
 #    pxe: 172.30.1.33
 #    ksn: 172.29.1.33
 #    neutron: 10.0.101.33
-#    oob_user: Administrator
-#    oob_password: Admin123
-#  - name : aknode34
-#    oob: 192.168.41.134
-#    host: 192.168.2.34
-#    storage: 172.31.1.34
-#    pxe: 172.30.1.34
-#    ksn: 172.29.1.34
-#    neutron: 10.0.101.34
+platform:
+  kernel_params:
+    hugepagesz: '1G'
+    hugepages: 32
+    default_hugepagesz: '1G'
+    iommu: 'pt'
+    intel_iommu: 'on'
 hardware:
   vendor: HP
   generation: '10'

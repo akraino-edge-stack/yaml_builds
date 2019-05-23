@@ -54,6 +54,7 @@ SRV_HTTP_BOOT_DEV={% if 'http_boot_device' in yaml.genesis %}{{yaml.genesis.http
 # tempalte to run to configure OS after first boot
 # current options are: firstboot.sh.template, firstboot-genesis.sh.tempate or firstboot-airship-iab.sh.template
 SRV_FIRSTBOOT_TEMPLATE=firstboot-genesis.sh.template
+SRV_KERNEL_PARAMS="{% if 'platform' in yaml %}{% for key, value in yaml.platform.kernel_params.items() %}{{key}}={{value}}{{ ' ' if not loop.last else '' }}{% endfor %}{% endif %}"
 
 # VLAN to use during build and for final network configuration
 SRV_VLAN={{yaml.networks.host.vlan}}
@@ -61,7 +62,7 @@ SRV_STORAGE_VLAN={{yaml.networks.storage.vlan}}
 SRV_CALICO_VLAN={{yaml.networks.ksn.vlan}}
 SRV_NEUTRON_VLAN={{yaml.networks.neutron.vlan}}
 SRV_PXE_INF={{yaml.networks.pxe.interface}}
-SRV_VXLAN_INF={{yaml.networks.vxlan.interface}}
+SRV_VXLAN_INF={% if 'vxlan' in yaml.networks %}{{yaml.networks.vxlan.interface}}{% endif %}
 
 # basic network information for dhcp config and final server network settings
 SRV_MTU=9000
@@ -70,7 +71,8 @@ SRV_STORAGE_IP={{yaml.genesis.storage}}
 SRV_CALICO_IP={{yaml.genesis.ksn}}
 SRV_NEUTRON_IP={{yaml.genesis.neutron}}
 SRV_PXE_IP={{yaml.genesis.pxe}}
-SRV_VXLAN_IP={{yaml.genesis.vxlan}}
+SRV_VXLAN_IP={% if 'vxlan' in yaml.networks %}{{yaml.genesis.vxlan}}{% endif %}
+
 SRV_SUBNET={{yaml.networks.host.cidr | cidr_subnet}}
 SRV_NETMASK={{yaml.networks.host.cidr | cidr_netmask}}
 SRV_GATEWAY={{yaml.networks.host.routes.gateway}}
@@ -91,4 +93,3 @@ SRV_BOND={{yaml.networks.primary}}
 {% for slave in yaml.networks.slaves %}
 SRV_SLAVE{{loop.index}}={{slave.name}}
 {% endfor %}
-

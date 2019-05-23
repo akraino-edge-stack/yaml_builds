@@ -25,6 +25,23 @@ import os.path
 import jinja2
 import sys
 import yaml
+import netaddr
+
+def cidr_netmask(value):
+  if '/' in str(value):
+    v = netaddr.IPNetwork(value)
+    result = v.netmask
+  else:
+    result = "ERROR"
+  return result
+
+def cidr_subnet(value):
+  if '/' in str(value):
+    v = netaddr.IPNetwork(value)
+    result = v.network
+  else:
+    result = "ERROR"
+  return result
 
 def usage(msg=None):
   if not msg is None:
@@ -53,9 +70,13 @@ with open(yaml_input) as f:
 
 if os.path.isfile(j2in_name):
   j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(j2in_name)), trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True, undefined=jinja2.make_logging_undefined())
+  j2_env.filters['cidr_netmask'] = cidr_netmask
+  j2_env.filters['cidr_subnet'] = cidr_subnet
   expand_template(j2_env.get_template(name=os.path.basename(j2in_name)),yaml_out,len(j2in_name))
 else:
   j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(j2in_name), trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True, undefined=jinja2.make_logging_undefined())
+  j2_env.filters['cidr_netmask'] = cidr_netmask
+  j2_env.filters['cidr_subnet'] = cidr_subnet
   templates=j2_env.list_templates(extensions=('j2'))
   fill=len(max(templates,key=len))+len(j2in_name)
   for f in templates:
@@ -66,4 +87,3 @@ sys.exit(0)
 
 # sudo apt-get install python-jinja2 python-yaml
 # sudo apt-get install python3-jinja2 python3-yaml
-

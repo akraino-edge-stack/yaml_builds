@@ -43,7 +43,7 @@ data:
         libvirt:
           virt_type: kvm
         DEFAULT:
-          vcpu_pin_set: {% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}{{yaml.platform.vcpu_pin_set}}
+          vcpu_pin_set: {% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}"{{yaml.platform.vcpu_pin_set}}"
 {% else %}"4-21,26-43,48-65,72-87"
 {% endif %}
           vif_plugging_is_fatal: False

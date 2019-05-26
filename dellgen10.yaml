@@ -266,7 +266,7 @@ platform:
   kernel_params:
     hugepagesz: '1G'
     hugepages: 32
-    default_hugepagesz: '1G'
+#    default_hugepagesz: '1G'
     transparent_hugepage: 'never'
     iommu: 'pt'
     intel_iommu: 'on'

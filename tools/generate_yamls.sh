@@ -28,6 +28,13 @@ else
   echo "SITE=$SITE"
 fi
 
+# ECHO INPUT FILE TO LOGS FOR TROUBLESHOOTING
+echo "#######################################"
+echo "# USING INPUT FILE [$SITE.yaml]"
+echo "#######################################"
+cat $SITE.yaml
+echo "#######################################"
+
 cd $YAML_BUILDS
 python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools/env_$SITE.sh
 source ./tools/env_$SITE.sh

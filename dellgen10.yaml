@@ -242,8 +242,6 @@ masters:
     pxe: 172.30.2.41
     ksn: 172.29.1.41
     neutron: 10.0.102.41
-    oob_user: root
-    oob_password: calvin
   - name : aknode42
     oob: 192.168.41.42
     host: 192.168.2.42
@@ -251,8 +249,6 @@ masters:
     pxe: 172.30.2.42
     ksn: 172.29.1.42
     neutron: 10.0.102.42
-    oob_user: root
-    oob_password: calvin
 #workers:
 #  - name : aknode43
 #    oob: 192.168.41.43

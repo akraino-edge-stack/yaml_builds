@@ -32,7 +32,7 @@ fi
 echo "#######################################"
 echo "# USING INPUT FILE [$SITE.yaml]"
 echo "#######################################"
-cat $SITE.yaml
+sed -E 's/(^.*password:).*/\1 ###PASSWORD REMOVED####/g' $SITE.yaml
 echo "#######################################"
 
 cd $YAML_BUILDS

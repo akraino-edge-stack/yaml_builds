@@ -32,9 +32,9 @@ cd $YAML_BUILDS
 
 # ECHO INPUT FILE TO LOGS FOR TROUBLESHOOTING
 echo "#######################################"
-echo "# USING INPUT FILE [${YAML_BUILDS}\${SITE}.yaml]"
+echo "# USING INPUT FILE [${YAML_BUILDS}/${SITE}.yaml]"
 echo "#######################################"
-sed -E 's/(^.*password:).*/\1 ###PASSWORD REMOVED####/g' ${YAML_BUILDS}\${SITE}.yaml
+sed -E 's/(^.*password:).*/\1 ###PASSWORD REMOVED####/g' ${YAML_BUILDS}/${SITE}.yaml
 echo "#######################################"
 
 python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools/env_$SITE.sh

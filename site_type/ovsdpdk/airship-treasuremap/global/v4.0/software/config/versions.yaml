@@ -909,5 +909,5 @@ data:
       docker: docker-engine=1.13.1-0~ubuntu-xenial
       socat: socat=1.7.3.1-1
     unnamed:
-      - ceph-common=10.2.11-0ubuntu0.16.04.1
+      - ceph-common=10.2.11-0ubuntu0.16.04.2
 ...

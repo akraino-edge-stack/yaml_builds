@@ -45,7 +45,7 @@ ssh-keygen; ssh-copy-id your-host
  ### 1. Generating YAML files
  To bring up a edge site we need to pass a bunch of configurations as form of .yaml documents. Manually documenting these documents is tedious process so we tried to automate all .yaml files that needs modification.
  ~~~
- $ sh $YAML_BUILDS/tools/generate_yamls.sh <<site_name>>
+ $ $YAML_BUILDS/tools/generate_yamls.sh <<site_name>>
  ~~~
 
  Based on the input site name it picks the master input .yaml for that site and generates 23 .yaml files to $AIC_CLCP_MANIFESTS/sites/<<site_name>>
@@ -57,13 +57,13 @@ ssh-keygen; ssh-copy-id your-host
 At this step we generate .tar file required to bring up the Genesis node.
 
 ~~~
-$ sh $YAML_BUILDS/tools/1prom-gen.sh  <<site_name>>
+$ $YAML_BUILDS/tools/1prom-gen.sh  <<site_name>>
 ~~~
 
 ### 3. Bring up the Genesis node
 At this step we transfer the .tar file generated in previous step to genesis node, untars it and executes the genesis.sh available in it.
 ~~~
-$ sh $YAML_BUILDS/tools/2genesis.sh <<site_name>>
+$ $YAML_BUILDS/tools/2genesis.sh <<site_name>>
 ~~~
 This process takes around 4 hours to complete. Meanwhile use the following command to find out the status. On genesis node it installs kubernetes cluster, UCP (Under Cloud flatform)/Airship and Ceph.
 ~~~
@@ -73,7 +73,7 @@ $ kubectl get pods --all-namespaces
 ### 4. Deploy the edge site
 At this step it brings other server into the control of Genesis, installs the OS on server using PXE booting, and Required OpenStack components.
 ~~~
-$ sh $YAML_BUILDS/tools/3deploy_site.sh <<site_name>>
+$ $YAML_BUILDS/tools/3deploy_site.sh <<site_name>>
 ~~~
 
 Akraino Team

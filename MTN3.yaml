@@ -1,0 +1,282 @@
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+site_name: akraino-ki20
+site_type: ovsdpdk
+ipmi_admin:
+  username: root
+  password: calvin
+networks:
+  bonded: yes
+  primary: bond0
+  slaves:
+    - name: enp95s0f0
+    - name: enp95s0f1
+  oob:
+    vlan: 400
+    interface:
+    cidr: 10.51.35.128/27
+    netmask: 255.255.255.224
+    routes:
+      gateway: 10.51.35.129
+    ranges:
+      reserved:
+        start: 10.51.35.153
+        end: 10.51.35.158
+      static:
+        start: 10.51.35.132
+        end: 10.51.35.152
+  host:
+    vlan: 408
+    interface: bond0.408
+    cidr: 10.51.34.224/27
+    subnet: 10.51.34.224
+    netmask: 255.255.255.224
+    routes:
+       gateway: 10.51.34.225
+    ranges:
+      reserved:
+        start: 10.51.34.226
+        end: 10.51.34.228
+      static:
+        start: 10.51.34.229
+        end: 10.51.34.235
+  storage:
+    vlan: 23
+    interface: bond0.23
+    cidr: 10.224.174.0/24
+    #netmask: 255.255.255.0 - Not Used
+    ranges:
+      reserved:
+        start: 10.224.174.1
+        end: 10.224.174.10
+      static:
+        start: 10.224.174.11
+        end: 10.224.174.254
+  pxe:
+    vlan: 407
+    interface: eno3
+    cidr: 10.224.168.0/24
+    #netmask: 255.255.255.0 - Not Used
+    gateway: 10.224.168.1
+    routes:
+      gateway: 10.224.168.12 #This address is the PXE of the Genesis Node.
+    ranges:
+      reserved:
+        start: 10.224.168.1
+        end:  10.224.168.10
+      static:
+        start: 10.224.168.11
+        end: 10.224.168.200
+      dhcp:
+        start: 10.224.168.201
+        end: 10.224.168.254
+  ksn:
+    vlan: 22
+    interface: bond0.22
+    cidr: 10.224.160.0/24
+    #netmask: 255.255.255.0 - Not Used
+    local_asnumber: 65531
+    ranges:
+      static:
+        start: 10.224.160.134
+        end: 10.224.160.254
+    additional_cidrs:
+      -  10.224.160.200/29
+    ingress_cidr: 10.224.160.201/32
+#    peers:
+#    - ip: 10.224.160.129 #Old QFX VC VIP
+#    - ip: 10.224.160.131
+#    - ip: 10.224.160.130
+#      scope: global
+#      asnumber: 65001
+
+#    peers:
+#    - ip: 10.224.160.129 #Old QFX VC VIP
+#    - ip: 10.224.160.131
+#    - ip: 10.224.160.130
+#      scope: global
+#      asnumber: 65001
+
+#    peers:
+#    - ip: 10.224.160.129 #Old QFX VC VIP
+#    - ip: 10.224.160.131
+#    - ip: 10.224.160.130
+#      scope: global
+#      asnumber: 65001
+
+
+    vrrp_ip: 10.224.160.129 # keep peers ip address in case of only peer.
+  neutron:
+    vlan: 24
+    interface: bond0.24
+    cidr: 10.224.171.0/24
+    #netmask: 255.255.255.0 - Not Used
+    ranges:
+      reserved:
+        start: 10.224.171.1
+        end: 10.224.171.10
+      static:
+        start: 10.224.171.11
+        end: 10.224.171.254
+  vxlan:
+    vlan: 1
+    interface: enp134s0f0
+    cidr: 10.224.169.0/24
+    #netmask: 255.255.255.0 - Not Used
+    ranges:
+      reserved:
+        start: 10.224.169.1
+        end: 10.224.169.10
+      static:
+        start: 10.224.169.11
+        end: 10.224.169.254
+dns:
+  upstream_servers:
+    - 10.64.73.100
+    - 10.64.73.101
+    - 10.51.40.100
+  ingress_domain: vran.k2.ericsson.se
+  domain: vran.k2.ericsson.se
+dpdk:
+  nics:
+  - name: dpdk0
+    pci_id: '0000:86:00.0'
+    bridge: br-phy
+    migrate_ip: true
+storage:
+  osds:
+    - data: /dev/sda
+      journal: /var/lib/ceph/journal/journal-sda
+    - data: /dev/sdb
+      journal: /var/lib/ceph/journal/journal-sdb
+    - data: /dev/sdc
+      journal: /var/lib/ceph/journal/journal-sdc
+    - data: /dev/sdd
+      journal: /var/lib/ceph/journal/journal-sdd
+    - data: /dev/sde
+      journal: /var/lib/ceph/journal/journal-sde
+    - data: /dev/sdf
+      journal: /var/lib/ceph/journal/journal-sdf
+  osd_count: 6
+  total_osd_count: 18
+genesis:
+  name : aknode23
+  oob: 10.51.35.143
+  host: 10.51.34.233
+  storage: 10.224.174.12
+  pxe: 10.224.168.12
+  ksn: 10.224.160.135
+  neutron: 10.224.171.12
+  vxlan: 10.224.169.12
+  root_password: akraino,d
+#  bios_template: dell_r740_g14_uefi_base.xml.template
+#  boot_template: dell_r740_g14_uefi_httpboot.xml.template
+#  http_boot_device: NIC.Slot.2-1-1
+masters:
+  - name: aknode31
+    oob: 10.51.35.147
+    host: 10.51.34.229
+    storage: 10.224.174.13
+    pxe: 10.224.168.13
+    ksn: 10.224.160.136
+    neutron: 10.224.171.13
+    vxlan: 10.224.169.13
+    oob_user: root
+    oob_password: calvin
+  - name : aknode25
+    oob: 10.51.35.144
+    host: 10.51.34.232
+    storage: 10.224.174.11
+    pxe: 10.224.168.11
+    ksn: 10.224.160.134
+    neutron: 10.224.171.11
+    vxlan: 10.224.169.11
+    oob_user: root
+    oob_password: calvin
+#workers:
+#  - name : aknode43
+#    oob: 192.168.41.43
+#    host: 192.168.2.43
+#    storage: 172.31.2.43
+#    pxe: 172.30.2.43
+#    ksn: 172.29.1.43
+#    neutron: 10.0.102.43
+platform:
+#  vcpu_pin_set: "4-21,26-43,48-65,72-87"
+  kernel_params:
+    hugepagesz: '1G'
+    hugepages: 32
+#    default_hugepagesz: '1G'
+#    transparent_hugepage: 'never'
+    iommu: 'pt'
+    intel_iommu: 'on'
+#    amd_iommu: 'on'
+#    console: 'ttyS1,115200n8'
+hardware:
+  vendor: DELL
+  generation: '10'
+  hw_version: '3'
+  bios_version: '2.8'
+  bios_template: dell_r740_g14_uefi_base.xml.template
+  boot_template: dell_r740_g14_uefi_httpboot.xml.template
+  http_boot_device: NIC.Slot.2-1-1
+disks:
+  - name : sdg
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 20g
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var
+        size: 100g
+        mountpoint: /var
+  - name : sdh
+    partitions:
+      - name: ceph
+        size: 300g
+        mountpoint: /var/lib/ceph/journal
+disks_compute:
+  - name : sdg
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 20g
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var
+        size: '>300g'
+        mountpoint: /var
+  - name : sdh
+    partitions:
+      - name: nova
+        size: '99%'
+        mountpoint: /var/lib/nova
+genesis_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCcPBvOARRyxYM7CC9tDID3pOXhFa0E6fuFn+e6ST5Ar2NJEvDzlhKjXz+X/rgCp3fcnXjvLVHbP3pduZMqso3dAZaYrzHr0PTFNDx61XuXf0mEiI65AR4VpvjgBJM3pyULYl9S3ERfWyWBQl8ZnkcMrt+MD/bmXHzpbZsfxFLKXmlamYZ96WafkhLSRa9Uaz5aZFwWN+qU0vw1blq8dSt/u/speH6sodQ4+TZ332H+0tQWaYBOVFauzupXLMz3kuhU8B+xP+klRyfntxqVdAHIiP5txCJ+LSbD+V2Ly1ySlutaEjISz3FyeabhN+VA1qYYpv9AeUMYK356CT2nl4c9 root@aknode27"
+kubernetes:
+  api_service_ip: 10.96.0.1
+  etcd_service_ip: 10.96.0.2
+  pod_cidr: 10.98.0.0/16
+  service_cidr: 10.96.0.0/15
+regional_server:
+  ip: 10.51.34.231

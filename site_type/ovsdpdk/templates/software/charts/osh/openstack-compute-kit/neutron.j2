@@ -19,7 +19,6 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: neutron
-  replacement: true
   labels:
     component: neutron
   layeringDefinition:
@@ -74,6 +73,9 @@ data:
             pci_id: '{{ nic.pci_id }}'
             bridge: {{ nic.bridge }}
             migrate_ip: {{ nic.migrate_ip }}
+        bridges:
+         - name: {{ nic.bridge }}
+        bonds: []
 {% endfor %}
   dependencies:
     - openstack-neutron-helm-toolkit
@@ -84,7 +86,7 @@ metadata:
   name: openstack-neutron-helm-toolkit
   layeringDefinition:
     abstract: false
-    layer: global
+    layer: site
   storagePolicy: cleartext
   substitutions:
     - src:

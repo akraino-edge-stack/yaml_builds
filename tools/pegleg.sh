@@ -1,32 +1,26 @@
 #!/usr/bin/env bash
-##############################################################################
-# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
-#                                                                            #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
-# not use this file except in compliance with the License.                   #
-#                                                                            #
-# You may obtain a copy of the License at                                    #
-#       http://www.apache.org/licenses/LICENSE-2.0                           #
-#                                                                            #
-# Unless required by applicable law or agreed to in writing, software        #
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
-# See the License for the specific language governing permissions and        #
-# limitations under the License.                                             #
-##############################################################################
 
-set -x
+set -e
 
-PEGLEG_IMAGE=${PEGLEG_IMAGE:-quay.io/airshipit/pegleg:09d85465827f1468d3469e5bbcf6b48f25338e7c}
+: ${WORKSPACE:=$(pwd)}
+: ${IMAGE:=quay.io/airshipit/pegleg:latest-ubuntu_xenial}
+
+: ${TERM_OPTS:=-it}
 
 echo
-echo "== NOTE: Workspace $WORKSPACE  is available as /workspace in container context =="
+echo "== NOTE: Workspace $WORKSPACE is the execution directory in the container =="
 echo
 
-docker run --rm -t \
-    --net=none \
-    --workdir="/site" \
-    -v "${WORKSPACE}:/site" \
-    -v "${AIRSHIP_TREASUREMAP}:/global" \
-    "${PEGLEG_IMAGE}" \
-        pegleg "${@}"
+# Working directory inside container to execute commands from and mount from
+# host OS
+container_workspace_path='/workspace'
+
+docker run --rm $TERM_OPTS \
+    --net=host \
+    --workdir="$container_workspace_path" \
+    -v "${HOME}/.ssh:${container_workspace_path}/.ssh" \
+    -v "${WORKSPACE}:$container_workspace_path" \
+    -e "PEGLEG_PASSPHRASE=$PEGLEG_PASSPHRASE" \
+    -e "PEGLEG_SALT=$PEGLEG_SALT" \
+    "${IMAGE}" \
+    pegleg "${@}"

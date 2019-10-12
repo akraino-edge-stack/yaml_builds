@@ -28,8 +28,6 @@ exec 2>&1
 
 source $(dirname $0)/setenv.sh
 
-PROMENADE_IMAGE=quay.io/airshipit/promenade:009f3de7ecf6afcdd2783ac7a12470394d7dfab3
-
 if [ -z "$1" ]
 then
   echo "Please pass site name as command line argument"
@@ -73,18 +71,21 @@ create_directories() {
 }
 
 get_site_config(){
-   $YAML_BUILDS/tools/pegleg.sh site -p /site -a /global collect ${SITE} -s /site/tars/$SITE/configs/promenade
+   ${AIRSHIP_TREASUREMAP}/tools/airship pegleg site -r . collect ${SITE} -s tars/${SITE}/configs/promenade
 }
 
 gen_certs() {
-   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade generate-certs -o /target/tars/$SITE/configs/promenade /target/tars/$SITE/configs/promenade/*.yaml
+  ${AIRSHIP_TREASUREMAP}/tools/airship promenade generate-certs -o tars/$SITE/configs/promenade tars/$SITE/configs/promenade/*.yaml
 }
 
 gen_bundle(){
-   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade build-all --validators -o /target/tars/$SITE/configs/promenade-bundle /target/tars/$SITE/configs/promenade/*.yaml
+  # TODO use airship treasuremap tools
+  ${AIRSHIP_TREASUREMAP}/tools/airship promenade build-all --validators -o tars/$SITE/configs/promenade-bundle tars/$SITE/configs/promenade/*.yaml
+#   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade build-all --validators -o /target/tars/$SITE/configs/promenade-bundle /target/tars/$SITE/configs/promenade/*.yaml
 }
 
 create_scripts() {
+  # update v4.0
   KEYSTONE_IMAGE=$(grep "keystone_db_sync: docker.io" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
   SHIPYARD_IMAGE=$(grep "shipyard_db_sync" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
 

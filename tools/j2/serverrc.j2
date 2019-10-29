@@ -33,16 +33,16 @@ SRV_MAC={{yaml.genesis.mac_address}}
 {% endif %}
 
 # the boot device is the device name on which the OS will be loaded
-SRV_BOOT_DEVICE={{yaml.disks[0].name}}
-SRV_CEPH_DEVICE={{yaml.disks[1].name}}
+SRV_BOOT_DEVICE={{yaml.hardware.device_aliases|selectattr('key', 'equalto', 'bootdisk') | map(attribute='name')|first|replace("/dev/","")}}
+SRV_CEPH_DEVICE={{yaml.hardware.device_aliases|selectattr('key', 'equalto', 'cephjournal1') | map(attribute='name')|first|replace("/dev/","")}}
 
 # ipxe script to use - based on the os version and kernel to install
 # valid options are script-hwe-16.04.6-amd64.ipxe or script-16.04.6-amd64.ipxe
 SRV_BLD_SCRIPT=script-hwe-16.04.6-amd64.ipxe
 
 # template xml file to set bios and raid configuration settings
-SRV_BIOS_TEMPLATE={% if 'bios_template' in yaml.genesis %}{{yaml.genesis.bios_template}}
-                  {% else %}{{yaml.hardware.bios_template}}
+SRV_BIOS_TEMPLATE={% if 'bios_template' in yaml.genesis %}{{yaml.genesis.bios_template|default("",true)}}
+                  {% else %}{{yaml.hardware.bios_template|default("",true)}}
                   {% endif %}
 SRV_BOOT_TEMPLATE={% if 'boot_template' in yaml.genesis %}{{yaml.genesis.boot_template}}
                   {% else %}{{yaml.hardware.boot_template}}

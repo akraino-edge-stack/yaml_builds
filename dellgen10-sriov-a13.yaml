@@ -1,0 +1,326 @@
+---
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+site_name: dellgen10
+site_type: sriov-a13
+ipmi_admin:
+  username: root
+  password: calvin
+networks:
+  bonded: yes
+  primary: bond0
+  slaves:
+    - name: enp94s0f0
+    - name: enp94s0f1
+  oob:
+    vlan: 40
+    interface:
+    cidr: 192.168.41.0/24
+    routes:
+      gateway: 192.168.41.1
+    ranges:
+      reserved:
+        start: 192.168.41.2
+        end: 192.168.41.12
+      static:
+        start: 192.168.41.13
+        end: 192.168.41.254
+  host:
+    vlan: 41
+    interface: bond0.41
+    cidr: 192.168.2.0/24
+    routes:
+       gateway: 192.168.2.200
+    ranges:
+      reserved:
+        start: 192.168.2.84
+        end: 192.168.2.86
+      static:
+        start: 192.168.2.40
+        end: 192.168.2.49
+  storage:
+    vlan: 42
+    interface: bond0.42
+    cidr: 172.31.2.0/24
+    ranges:
+      reserved:
+        start: 172.31.2.1
+        end: 172.31.2.10
+      static:
+        start: 172.31.2.11
+        end: 172.31.2.254
+  pxe:
+    vlan: 43
+    interface: eno3
+    cidr: 172.30.2.0/24
+    gateway: 172.30.2.1
+    routes:
+      gateway: 172.30.2.40
+    ranges:
+      reserved:
+        start: 172.30.2.2
+        end:  172.30.2.10
+      static:
+        start: 172.30.2.11
+        end: 172.30.2.200
+      dhcp:
+        start: 172.30.2.201
+        end: 172.30.2.254
+  ksn:
+    vlan: 44
+    interface: bond0.44
+    cidr: 172.29.1.0/24
+    gateway: 172.29.1.1
+    local_asnumber: 65531
+    ranges:
+      reserved:
+        start: 172.29.1.1
+        end:  172.29.1.10
+      static:
+        start: 172.29.1.11
+        end: 172.29.1.254
+    additional_cidrs:
+      -  172.29.1.128/29
+    ingress_vip: 172.29.1.129/32
+    peers:
+    - ip: 172.29.1.1
+      scope: global
+      asnumber: 65001
+    # keep peers ip address in case of only peer.
+    vrrp_ip: 172.29.1.1
+  neutron:
+    vlan: 45
+    interface: bond0.45
+    cidr: 10.0.102.0/24
+    ranges:
+      reserved:
+        start: 10.0.102.1
+        end: 10.0.102.10
+      static:
+        start: 10.0.102.11
+        end: 10.0.102.254
+dns:
+  upstream_servers:
+    - 192.168.2.85
+    - 8.8.8.8
+    - 8.8.4.4
+  ingress_domain: dellgen10.akraino.org
+  domain: lab.akraino.org
+gpu:
+  alias:
+    - name: "P4"
+      product_id: "1bb2"
+      vendor_id: "10de"
+    - name: "P40"
+      product_id: "1b38"
+      vendor_id: "10de"
+    - name: "P100"
+      product_id: "15f8"
+      vendor_id: "10de"
+    - name: "V100"
+      product_id: "1db4"
+      vendor_id: "10de"
+sriov:
+  alias:
+    - name: "numa0"
+      product_id: "158b"
+      vendor_id: "8086"
+  nets:
+    - physical: sriovnet1
+      interface: enp135s0f0
+      vlan_start: 2001
+      vlan_end: 3000
+      whitelists:
+      - "address": "0000:87:02.*"
+      - "address": "0000:87:03.*"
+      - "address": "0000:87:04.*"
+      - "address": "0000:87:05.*"
+    - physical: sriovnet2
+      interface: enp135s0f1
+      vlan_start: 2001
+      vlan_end: 3000
+      whitelists:
+      - "address": "0000:87:0a.*"
+      - "address": "0000:87:0b.*"
+      - "address": "0000:87:0c.*"
+      - "address": "0000:87:0d.*"
+storage:
+  osds:
+    - data: /dev/sda
+      journal: /dev/sdh1
+    - data: /dev/sdb
+      journal: /dev/sdh2
+    - data: /dev/sdc
+      journal: /dev/sdh3
+  osd_count: 3
+  total_osd_count: 9
+tenant_storage:
+  osds:
+    - data: /dev/sdd
+      journal: /dev/sdh4
+    - data: /dev/sde
+      journal: /dev/sdh5
+    - data: /dev/sdf
+      journal: /dev/sdh6
+  osd_count: 3
+genesis:
+  name: aknode40
+  oob: 192.168.41.40
+  host: 192.168.2.40
+  storage: 172.31.2.40
+  pxe: 172.30.2.40
+  ksn: 172.29.1.40
+  neutron: 10.0.102.40
+  root_password: akraino,d
+masters:
+  - name : aknode41
+    oob: 192.168.41.41
+    host: 192.168.2.41
+    storage: 172.31.2.41
+    pxe: 172.30.2.41
+    ksn: 172.29.1.41
+    neutron: 10.0.102.41
+    oob_user: root
+    oob_password: calvin
+  - name : aknode42
+    oob: 192.168.41.42
+    host: 192.168.2.42
+    storage: 172.31.2.42
+    pxe: 172.30.2.42
+    ksn: 172.29.1.42
+    neutron: 10.0.102.42
+    oob_user: root
+    oob_password: calvin
+#workers:
+#  - name : aknode43
+#    oob: 192.168.41.43
+#    host: 192.168.2.43
+#    storage: 172.31.2.43
+#    pxe: 172.30.2.43
+#    ksn: 172.29.1.43
+#    neutron: 10.0.102.43
+platform:
+  vcpu_pin_set: "4-21,26-43,48-65,72-87"
+  kernel_params:
+    hugepagesz: '1G'
+    hugepages: 32
+#    default_hugepagesz: '1G'
+    transparent_hugepage: 'never'
+    iommu: 'pt'
+    intel_iommu: 'on'
+    amd_iommu: 'on'
+#    console: 'ttyS1,115200n8'
+hardware:
+  vendor: DELL
+  generation: '10'
+  hw_version: '3'
+  bios_version: '2.8'
+  bios_template:
+  boot_template: dell_r740_g14_uefi_httpboot.xml.template
+  http_boot_device: NIC.Slot.2-1-1
+  device_aliases:
+    ## network
+    - name: eno3
+      key: pxe_nic01
+      address: '0000:01:00.0'
+      dev_type: 'I350 Gigabit Network Connection'
+      bus_type: 'pci'
+    - name: enp94s0f0
+      key: data_nic01
+      address: '0000:5e:00.0'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    - name: enp94s0f1
+      key: data_nic02
+      address: '0000:5e:00.1'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    ## storage  - use "dmesg | grep -Pe 'sd \d:\d'" to find address of drives
+    - name: /dev/sdg
+      key: bootdisk
+      address: '0:2.0.0'
+      dev_type: 'PERC H730P'
+      bus_type: 'scsi'
+    - name: /dev/sdh
+      key: cephjournal1
+      address: '0:2.1.0'
+      dev_type: 'PERC H730P'
+      bus_type: 'scsi'
+    - name: /dev/sdi
+      key: cephjournal2
+      address: '0:2.2.0'
+      dev_type: 'PERC H730P'
+      bus_type: 'scsi'
+    - name: /dev/sdj
+      key: ephemeral
+      address: '0:2.3.0'
+      dev_type: 'PERC H730P'
+      bus_type: 'scsi'
+
+disks:
+#  - name : sdg
+  - name : bootdisk
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 30g
+        bootable: true
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var_log
+        size: '100g'
+        mountpoint: /var/log
+      - name: var
+        size: '>100g'
+        mountpoint: /var
+disks_compute:
+#  - name : sdg
+  - name : bootdisk
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 30g
+        bootable: true
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var_log
+        size: '100g'
+        mountpoint: /var/log
+      - name: var
+        size: '>100g'
+        mountpoint: /var
+  - name : ephemeral
+    partitions:
+      - name: nova
+        size: 99%
+        mountpoint: /var/lib/nova
+genesis_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/n4mNLAj3XKG2fcm+8eVe0NUlNH0g8DA8KJ53rSLKccm8gm4UgLmGOJyBfUloQZMuOpU6a+hexN4ECCliqI7+KUmgJgsvLkJ3OUMNTEVu9tDX5mdXeffsufaqFkAdmbJ/9PMPiPQ3/UqbbtyEcqoZAwUWf4ggAWSp00SGE1Okg+skPSbDzPVHb4810eXZT1yoIg29HAenJNNrsVxvnMT2kw2OYmLfxgEUh1Ev4c5LnUog4GXBDHQtHAwaIoTu9s/q8VIvGav62RJVFn3U1D0jkiwDLSIFn8ezORQ4YkSidwdSrtqsqa2TJ0E5w/n5h5IVGO9neY8YlXrgynLd4Y+7 root@pocnjrsv132"
+kubernetes:
+  api_service_ip: 10.96.0.1
+  etcd_service_ip: 10.96.0.2
+  pod_cidr: 10.98.0.0/16
+  service_cidr: 10.96.0.0/15
+regional_server:
+  ip: 135.16.101.85
+...
+

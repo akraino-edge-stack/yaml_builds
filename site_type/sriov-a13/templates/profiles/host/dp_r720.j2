@@ -1,0 +1,85 @@
+---
+# The data plane host profile for Airship for DELL R720s, and should
+# not need to be altered if you are using matching HW. The host profile is setup
+# for cpu isolation (for nova pinning), hugepages, and sr-iov.
+schema: drydock/HostProfile/v1
+metadata:
+  schema: metadata/Document/v1
+  name: dp_r720
+  storagePolicy: cleartext
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      hosttype: dp-global
+    actions:
+      - method: replace
+        path: .interfaces
+      - method: replace
+        path: .storage
+      - method: merge
+        path: .
+data:
+  hardware_profile: dell_r720
+
+  primary_network: oam
+  interfaces:
+    pxe:
+      device_link: pxe
+      slaves:
+        - pxe_nic01
+      networks:
+        - pxe
+    bond0:
+      device_link: data
+      slaves:
+        - data_nic01
+        - data_nic02
+      networks:
+        - oam
+        - storage
+        - overlay
+        - calico
+
+  storage:
+    physical_devices:
+{% for disk in yaml.disks %}
+      {{disk.name}}:
+      {% if 'labels' in disk %}
+        labels:
+        {% for key, value in disk.labels.items() %}
+          {{key}}: '{{value}}'
+        {% endfor %}
+      {% endif %}
+        partitions:
+       {% for p in disk.partitions %}
+          - name: '{{p.name}}'
+            size: '{{p.size}}'
+            {% if 'bootable' in p %}
+            bootable: {{p.bootable}}
+            {% endif %}
+            filesystem:
+              mountpoint: '{{p.mountpoint}}'
+              fstype: 'ext4'
+              mount_options: 'defaults'
+      {% endfor %}
+{% endfor %}
+
+  platform:
+    kernel: 'hwe-16.04'
+    kernel_params:
+{% if 'platform' in yaml and 'kernel_params' in yaml.platform %}
+{% for key, value in yaml.platform.kernel_params.items() %}
+      {{key}}: '{{value}}'
+{% endfor %}
+{% else %}
+      console: 'ttyS1,115200n8'
+      intel_iommu: 'on'
+      iommu: 'pt'
+      amd_iommu: 'on'
+      transparent_hugepage: 'never'
+{% endif %}
+{% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}
+      isolcpus: '{{yaml.platform.vcpu_pin_set}}'
+{% endif %}
+...

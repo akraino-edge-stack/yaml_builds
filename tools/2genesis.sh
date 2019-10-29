@@ -58,7 +58,7 @@ ssh $GENESIS_HOST << EOF
   tar -xmf promenade-bundle-$SITE.tar
 EOF
 # Update BIOS Setting
-python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
+#python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
 
 exec 2>&-
 exec 1>&-

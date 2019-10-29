@@ -18,17 +18,9 @@
 {% if 'site_type' in yaml %}
 export SITE_TYPE={{yaml.site_type}}
 echo SITE_TYPE=$SITE_TYPE
-export AIRSHIP_TREASUREMAP=/opt/akraino/yaml_builds/site_type/{{yaml.site_type}}/airship-treasuremap
+export AIRSHIP_TREASUREMAP=/opt/akraino/yaml_builds/site_type/{{yaml.site_type}}/treasuremap
 echo AIRSHIP_TREASUREMAP=$AIRSHIP_TREASUREMAP
 export AIRSHIP_TEMPLATES=/opt/akraino/yaml_builds/site_type/{{yaml.site_type}}/templates/
-echo AIRSHIP_TEMPLATES=$AIRSHIP_TEMPLATES
-{% else %}
-# ASSUME SRIOV FOR BACKWARD COMPATIBILITY
-export SITE_TYPE=sriov
-echo SITE_TYPE=$SITE_TYPE
-export AIRSHIP_TREASUREMAP=/opt/akraino/yaml_builds/site_type/sriov/airship-treasuremap
-echo AIRSHIP_TREASUREMAP=$AIRSHIP_TREASUREMAP
-export AIRSHIP_TEMPLATES=/opt/akraino/yaml_builds/site_type/sriov/templates/
 echo AIRSHIP_TEMPLATES=$AIRSHIP_TEMPLATES
 {% endif %}
 export GENESIS_HOST={{yaml.genesis.host}}

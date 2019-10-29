@@ -39,14 +39,14 @@ source $(dirname $0)/env_$SITE.sh
 
 ssh $GENESIS_HOST << EOF
   cd /root/akraino
-  bash configs/promenade-bundle/genesis.sh
+  bash genesis.sh
   # Shipyard takes time to really come up and start responding.
   date
   sleep 900
   # Following is a workaround, tested on dell servers.
   # TODO to be removed when not required.
   bash update_iptables.sh
-  bash deploy_site.sh
+  #bash deploy_site.sh
 EOF
 
 exec 2>&-

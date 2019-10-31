@@ -1,0 +1,83 @@
+---
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+# This file defines hardware-specific settings for nova. If you use the same
+# hardware profile as this environment, you should not need to change this file.
+# Otherwise, you should review the settings here and adjust for your hardware.
+# In particular:
+# 1. vcpu_pin_set will change if the number of logical CPUs on the hardware
+#    changes.
+# 2. pci alias / passthrough_whitelist could change if the NIC type or NIC
+#    slotting changes.
+# TODO: Should move to global layer and become tied to the hardware profile
+
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: nova
+  labels:
+    component: nova
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: nova-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+data:
+  values:
+    network:
+      backend:
+        - openvswitch
+    conf:
+      nova:
+        filter_scheduler:
+          enabled_filters: "RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ComputeCapabilitiesFilter, ImagePropertiesFilter, ServerGroupAntiAffinityFilter, ServerGroupAffinityFilter, PciPassthroughFilter, NUMATopologyFilter, DifferentHostFilter, SameHostFilter"
+        libvirt:
+          virt_type: kvm
+        DEFAULT:
+          vcpu_pin_set: {% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}"{{yaml.platform.vcpu_pin_set}}"
+{% else %}"4-21,26-43,48-65,72-87"
+{% endif %}
+          vif_plugging_is_fatal: False
+          vif_plugging_timeout: 30
+        pci:
+{% if 'gpu' in yaml or 'sriov' in yaml %}
+          alias: |
+  {% if 'sriov' in yaml and 'alias' in yaml.sriov %}
+  {% for alias in yaml.sriov.alias %}
+            '{"name": "{{alias.name}}", "vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}", "capability_type": "pci", "device_type": "type-PCI", "numa_policy": "required"}'
+  {% endfor %}
+  {% endif %}
+  {% if 'gpu' in yaml and 'alias' in yaml.gpu %}
+  {% for alias in yaml.gpu.alias %}
+            '{"name":"{{alias.name}}", "vendor_id":"{{alias.vendor_id}}", "product_id":"{{alias.product_id}}", "device_type":"type-PCI"}'
+  {% endfor %}
+  {% endif %}
+          passthrough_whitelist: |
+            [
+  {%- if 'sriov' in yaml and 'nets' in yaml.sriov %}
+  {% for sriovnet in yaml.sriov.nets %}
+    {%- for vf in sriovnet.whitelists -%}{"address":"{{vf["address"]}}","physical_network":"{{sriovnet.physical}}"}{{',' if not loop.last else ''}}{% endfor %}{{',' if not loop.last else '' -}}
+  {%- endfor -%}
+  {%- if 'gpu' in yaml and 'sriov' in yaml %},{% endif -%}
+  {%- for alias in yaml.gpu.alias %}{"vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}"}{{',' if not loop.last else ''}}{% endfor -%}
+            ]
+  {% endif %}
+{% endif %}
+...

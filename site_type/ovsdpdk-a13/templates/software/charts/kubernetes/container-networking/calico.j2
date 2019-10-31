@@ -1,0 +1,65 @@
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-calico
+  replacement: true
+  #labels:
+  #  name: kubernetes-calico-global
+  #  component: kubernetes-calico
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubernetes-calico-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.public_service_cidr
+      dest:
+        path: .values.networking.bgp.ipv4.additional_cidrs[0]
+
+data:
+  values:
+    networking:
+      mtu: 1500
+      settings:
+{% if ('peers' in yaml.networks.ksn and yaml.networks.ksn.peers is not none and yaml.networks.ksn.peers is iterable ) %}
+        mesh: "off"
+        ippool:
+          ipip:
+            enabled: "false"
+{% else %}
+        mesh: "on"
+        ippool:
+          ipip:
+            enabled: "true"
+            mode: "Always"
+          nat_outgoing: "true"
+          disabled: "false"
+{% endif %}
+      bgp:
+        asnumber: {{yaml.networks.ksn.local_asnumber}}
+        ipv4:
+          additional_cidrs:
+{% for add_cidr in yaml.networks.ksn.additional_cidrs %}
+            - {{add_cidr}}
+{% endfor %}
+{% if ('peers' in yaml.networks.ksn and yaml.networks.ksn.peers is not none and yaml.networks.ksn.peers is iterable ) %}
+          peers:
+{% for peer in yaml.networks.ksn.peers %}
+            - apiVersion: projectcalico.org/v3
+              kind: BGPPeer
+              metadata:
+                name: peer-{{loop.index-1}}
+              spec:
+                peerIP: {{peer.ip}}
+                asnumber: {{peer.asnumber}}
+{% endfor %}
+{% endif %}
+...

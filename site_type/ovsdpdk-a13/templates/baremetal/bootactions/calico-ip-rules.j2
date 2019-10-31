@@ -1,0 +1,85 @@
+---
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+# This file defines a boot action for MaaS to deploy the calico-ip-rules script
+# to nodes, register with systemd, and runs the script on all PXE booted nodes.
+# On the genesis node, this is a manual step detailed in deployment documentation.
+
+# NOTE: This is a copy from `aic-clcp-manifests/type/cruiser/v4.0/`, because
+# this is an upstream manifest based on airship-treasuremap, which does not
+# have bgp VIP configuration scripts.
+schema: 'drydock/BootAction/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: calico-ip-rules
+  storagePolicy: 'cleartext'
+  layeringDefinition:
+    abstract: false
+    layer: site
+  labels:
+    application: 'drydock'
+  substitutions:
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.ip_rule.gateway
+      dest:
+        path: .assets[0].data
+        pattern: DH_SUB_GATEWAY_IP
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .kubernetes.pod_cidr
+      dest:
+        path: .assets[0].data
+        pattern: DH_SUB_POD_CIDR
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .calico.bgp.ipv4.public_service_cidr
+      dest:
+        path: .assets[0].data
+        pattern: DH_SUB_INGRESS_CIDR
+    # Substitution of the configure-ip-rules script into this bootaction
+    - src:
+        schema: pegleg/Script/v1
+        name: configure-ip-rules
+        path: .
+      dest:
+        path: .assets[1].data
+data:
+  signaling: false
+  assets:
+    - path: /etc/systemd/system/configure-ip-rules.service
+      type: unit
+      permissions: '444'
+      data: |-
+        [Unit]
+        Description=IP Rules Initialization Service
+        After=network-online.target local-fs.target
+        [Service]
+        Type=simple
+        ExecStart=/opt/configure-ip-rules.sh -g DH_SUB_GATEWAY_IP -c DH_SUB_POD_CIDR -s DH_SUB_INGRESS_CIDR
+        [Install]
+        WantedBy=multi-user.target
+      data_pipeline:
+        - utf8_decode
+    - path: /opt/configure-ip-rules.sh
+      type: file
+      permissions: '700'
+      data_pipeline:
+        - utf8_decode
+...

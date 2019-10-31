@@ -198,6 +198,10 @@ echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
     tar cvf $YAML_BUILDS/tars/promenade-bundle-$SITE.tar -C $AIRSHIP_TREASUREMAP/${SITE}_bundle .
 )
 
+echo "#######################################"
+echo "# $0 finished"
+echo "#######################################"
+
 exec 2>&-
 exec 1>&-
 exit 0

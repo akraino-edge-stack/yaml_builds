@@ -39,13 +39,22 @@ source $(dirname $0)/env_$SITE.sh
 
 ssh $GENESIS_HOST << EOF
   cd /root/akraino
+  echo "#######################################################"
+  echo "# Running genesis.sh script "
+  echo "#######################################################"
   bash genesis.sh
   # Shipyard takes time to really come up and start responding.
   date
   sleep 900
   # Following is a workaround, tested on dell servers.
   # TODO to be removed when not required.
+  echo "#######################################################"
+  echo "# Updating iptables "
+  echo "#######################################################"
   bash update_iptables.sh
+  echo "#######################################################"
+  echo "# Running deploy_site.sh script "
+  echo "#######################################################"
   #bash deploy_site.sh
 EOF
 

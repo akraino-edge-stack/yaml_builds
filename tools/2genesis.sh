@@ -48,17 +48,25 @@ cd $YAML_BUILDS
 python $YAML_BUILDS/scripts/jcopy.py $SITE.yaml $YAML_BUILDS/tools/j2/serverrc.j2 $YAML_BUILDS/tools/"$GENESIS_NAME"rc
 /opt/akraino/redfish/install_server_os.sh --rc /opt/akraino/yaml_builds/tools/"$GENESIS_NAME"rc --skip-confirm
 
+# Stage Airship files on Genesis
 scp $YAML_BUILDS/tars/promenade-bundle-$SITE.tar $GENESIS_HOST:/tmp/
 ssh $GENESIS_HOST << EOF
   # TODO avoid following hard coding$
   route add -net 192.168.41.0/24 gw 192.168.2.1 bond0.41
-  mkdir -p /root/akraino
-  cp /tmp/promenade-bundle-$SITE.tar /root/akraino/
+  mkdir -p /root/akraino/configs/promenade-bundle
+  mv /tmp/promenade-bundle-$SITE.tar /root/akraino/
   cd /root/akraino/
   tar -xmf promenade-bundle-$SITE.tar
+  # MOVE TO LOCATION EXPECTED BY WORKFLOW
+  mv genesis.sh /root/akraino/configs/promenade-bundle/
 EOF
-# Update BIOS Setting
-#python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
+
+# Update BIOS settings on master and worker nodes
+python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
+
+echo "#######################################"
+echo "# $0 finished"
+echo "#######################################"
 
 exec 2>&-
 exec 1>&-

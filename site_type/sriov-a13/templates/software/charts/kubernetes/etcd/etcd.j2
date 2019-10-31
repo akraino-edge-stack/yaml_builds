@@ -96,7 +96,11 @@ metadata:
     - src:
         schema: deckhand/CertificateKey/v1
         name: kubernetes-etcd-{{server.name}}-peer
+{% if loop.first %}
         path: .
+{% else %}
+        path: $
+{% endif %}
       dest:
         path: .values.nodes[{{loop.index}}].tls.peer.key
 {% endfor %}

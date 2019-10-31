@@ -37,6 +37,10 @@ echo "#######################################"
 sed -E 's/(^.*password:).*/\1 ###PASSWORD REMOVED####/g' ${YAML_BUILDS}/${SITE}.yaml
 echo "#######################################"
 
+echo "# NOTE: root ssh key will be used for genesis_ssh_public_key if no key is provided"
+RCKEY=$(cat ~/.ssh/id_rsa.pub | sed -e 's/[\/&]/\\&/g')
+sed -i -e "s/genesis_ssh_public_key\: */genesis_ssh_public_key: \'$RCKEY\'/" $SITE.yaml
+
 python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools/env_$SITE.sh
 source ./tools/env_$SITE.sh
 
@@ -73,10 +77,13 @@ echo "#######################################"
 echo "# Created site $AIRSHIP_TREASUREMAP/site/$SITE with $CONFIG_COUNT config files"
 echo "#######################################"
 
-(
-echo "# Linting config files in $AIRSHIP_TREASUREMAP/site/$SITE"
-cd $AIRSHIP_TREASUREMAP
-$AIRSHIP_TREASUREMAP/tools/airship pegleg site -r /target lint $SITE -x P001 -x P005 || true
-)
+# UNCOMMENT TO DEBUG/LINT GENERATED YAML FILES
+#(
+#echo "# Linting config files in $AIRSHIP_TREASUREMAP/site/$SITE"
+#cd $AIRSHIP_TREASUREMAP
+#$AIRSHIP_TREASUREMAP/tools/airship pegleg site -r /target lint $SITE -x P001 -x P005 || true
+#)
 
+echo "#######################################"
+echo "# $0 finished"
 echo "#######################################"

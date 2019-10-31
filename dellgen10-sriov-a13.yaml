@@ -194,8 +194,6 @@ masters:
     pxe: 172.30.2.41
     ksn: 172.29.1.41
     neutron: 10.0.102.41
-    oob_user: root
-    oob_password: calvin
   - name : aknode42
     oob: 192.168.41.42
     host: 192.168.2.42
@@ -203,8 +201,6 @@ masters:
     pxe: 172.30.2.42
     ksn: 172.29.1.42
     neutron: 10.0.102.42
-    oob_user: root
-    oob_password: calvin
 #workers:
 #  - name : aknode43
 #    oob: 192.168.41.43
@@ -229,7 +225,7 @@ hardware:
   generation: '10'
   hw_version: '3'
   bios_version: '2.8'
-  bios_template:
+  bios_template: 
   boot_template: dell_r740_g14_uefi_httpboot.xml.template
   http_boot_device: NIC.Slot.2-1-1
   device_aliases:
@@ -284,11 +280,8 @@ disks:
       - name: boot
         size: 1g
         mountpoint: /boot
-      - name: var_log
-        size: '100g'
-        mountpoint: /var/log
       - name: var
-        size: '>100g'
+        size: '300g'
         mountpoint: /var
 disks_compute:
 #  - name : sdg
@@ -314,7 +307,7 @@ disks_compute:
       - name: nova
         size: 99%
         mountpoint: /var/lib/nova
-genesis_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC/n4mNLAj3XKG2fcm+8eVe0NUlNH0g8DA8KJ53rSLKccm8gm4UgLmGOJyBfUloQZMuOpU6a+hexN4ECCliqI7+KUmgJgsvLkJ3OUMNTEVu9tDX5mdXeffsufaqFkAdmbJ/9PMPiPQ3/UqbbtyEcqoZAwUWf4ggAWSp00SGE1Okg+skPSbDzPVHb4810eXZT1yoIg29HAenJNNrsVxvnMT2kw2OYmLfxgEUh1Ev4c5LnUog4GXBDHQtHAwaIoTu9s/q8VIvGav62RJVFn3U1D0jkiwDLSIFn8ezORQ4YkSidwdSrtqsqa2TJ0E5w/n5h5IVGO9neY8YlXrgynLd4Y+7 root@pocnjrsv132"
+genesis_ssh_public_key: 
 kubernetes:
   api_service_ip: 10.96.0.1
   etcd_service_ip: 10.96.0.2
@@ -323,4 +316,3 @@ kubernetes:
 regional_server:
   ip: 135.16.101.85
 ...
-

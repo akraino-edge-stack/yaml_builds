@@ -38,7 +38,13 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+
 data:
+  source:
+    location: https://opendev.org/openstack/openstack-helm
+    reference: 3784a3fe2f542ec827c314d1b225e7124f20e539
+    subpath: neutron
+    type: git
   values:
     network:
       backend:

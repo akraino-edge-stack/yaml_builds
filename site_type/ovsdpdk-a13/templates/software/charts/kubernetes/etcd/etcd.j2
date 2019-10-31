@@ -1,0 +1,109 @@
+---
+# The purpose of this file is to build the list of k8s etcd nodes and the
+# k8s etcd certs for those nodes in the environment.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-etcd
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubernetes-etcd-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Generate a list of control plane nodes (i.e. genesis node + master node
+    # list) on which k8s etcd will run and will need certs. It is assumed
+    # that Airship sites will have 4 control plane nodes, so this should not need to
+    # change for a new site.
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.hostname
+      dest:
+        path: .values.nodes[0].name
+{% for server in yaml.masters %}
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .masters[{{loop.index-1}}].hostname
+      dest:
+        path: .values.nodes[{{loop.index}}].name
+{% endfor %}
+
+    # Certificate substitutions for the node names assembled on the above list.
+    # NEWSITE-CHANGEME: Per above, the number of substitutions should not need
+    # to change with a standard Airship deployment. However, the names of each
+    # deckhand certficiate should be updated with the correct hostnames for your
+    # environment. The ordering is important (Genesis is index 0, then master
+    # nodes in the order they are specified in common-addresses).
+
+    # Genesis Exception*
+    # *NOTE: This is an exception in that `genesis` is not the hostname of the
+    # genesis node, but `genesis` is reference here in the certificate names
+    # because of certain Promenade assumptions that may be addressed in the
+    # future. Therefore `genesis` is used instead of `cab23-r720-11` here.
+
+    # Genesis node {{yaml.genesis.name}}
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-genesis
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-genesis
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-genesis-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-genesis-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.key
+{% for server in yaml.masters %}
+
+    # Master node {{loop.index}} hostname - {{server.name}}
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-{{server.name}}
+        path: .
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-{{server.name}}
+        path: .
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: kubernetes-etcd-{{server.name}}-peer
+        path: .
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: kubernetes-etcd-{{server.name}}-peer
+{% if loop.first %}
+        path: .
+{% else %}
+        path: $
+{% endif %}
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.peer.key
+{% endfor %}
+
+data: {}
+...

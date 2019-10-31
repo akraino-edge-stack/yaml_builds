@@ -1,0 +1,99 @@
+---
+# The purpose of this file is to build the list of calico etcd nodes and the
+# calico etcd certs for those nodes in the environment.
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: kubernetes-calico-etcd
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      name: kubernetes-calico-etcd-global
+    actions:
+      - method: merge
+        path: .
+  storagePolicy: cleartext
+  substitutions:
+    # Generate a list of control plane nodes (i.e. genesis node + master node
+    # list) on which calico etcd will run and will need certs. It is assumed
+    # that Airship sites will have 4 control plane nodes, so this should not need to
+    # change for a new site.
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .genesis.hostname
+      dest:
+        path: .values.nodes[0].name
+{% for server in yaml.masters %}
+    - src:
+        schema: pegleg/CommonAddresses/v1
+        name: common-addresses
+        path: .masters[{{loop.index-1}}].hostname
+      dest:
+        path: .values.nodes[{{loop.index}}].name
+{% endfor %}
+
+    # Certificate substitutions for the node names assembled on the above list.
+    # NEWSITE-CHANGEME: Per above, the number of substitutions should not need
+    # to change with a standard Airship deployment. However, the names of each
+    # deckhand certficiate should be updated with the correct hostnames for your
+    # environment. The ordering is important (Genesis is index 0, then master
+    # nodes in the order they are specified in common-addresses).
+
+    # Genesis node {{yaml.genesis.name}}
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-{{yaml.genesis.name}}
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-{{yaml.genesis.name}}
+        path: .
+      dest:
+        path: .values.nodes[0].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-{{yaml.genesis.name}}-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-{{yaml.genesis.name}}-peer
+        path: .
+      dest:
+        path: .values.nodes[0].tls.peer.key
+{% for server in yaml.masters %}
+
+    # Master node {{server.name}}
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-{{server.name}}
+        path: .
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.client.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-{{server.name}}
+        path: .
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.client.key
+    - src:
+        schema: deckhand/Certificate/v1
+        name: calico-etcd-{{server.name}}-peer
+        path: .
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.peer.cert
+    - src:
+        schema: deckhand/CertificateKey/v1
+        name: calico-etcd-{{server.name}}-peer
+        path: .
+      dest:
+        path: .values.nodes[{{loop.index}}].tls.peer.key
+{% endfor %}
+
+data: {}
+...

@@ -38,6 +38,7 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
+
 data:
   values:
     network:
@@ -74,6 +75,9 @@ data:
         bridges:
           - name: br-phy
         bonds: []
+      paste:
+        app:neutronversions:
+          paste.app_factory: neutron.pecan_wsgi.app:versions_factory
   dependencies:
     - openstack-neutron-helm-toolkit
 ---

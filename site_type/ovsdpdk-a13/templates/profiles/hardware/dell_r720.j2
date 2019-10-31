@@ -1,0 +1,37 @@
+---
+schema: 'drydock/HardwareProfile/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: dell_r720
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  # Vendor of the server chassis
+  vendor: {{yaml.hardware.vendor}}
+  # Generation of the chassis model
+  generation: '{{yaml.hardware.generation}}'
+  # Version of the chassis model within its generation - not version of the hardware definition
+  hw_version: '{{yaml.hardware.hw_version}}'
+  # The certified version of the chassis BIOS
+  bios_version: '{{yaml.hardware.bios_version}}'
+  # Mode of the default boot of hardware - bios, uefi
+  boot_mode: bios
+  # Protocol of boot of the hardware - pxe, usb, hdd
+  bootstrap_protocol: pxe
+  # Which interface to use for network booting within the OOB manager, not OS device
+  pxe_interface: 0
+  # Map hardware addresses to aliases/roles to allow a mix of hardware configs
+  # in a site to result in a consistent configuration
+  device_aliases:
+{% if 'hardware' in yaml and 'device_aliases' in yaml.hardware %}
+{% for device in yaml.hardware.device_aliases %}
+    # {{ device.name }}
+    {{ device.key }}:
+      address: '{{ device.address }}'
+      dev_type: '{{ device.dev_type }}'
+      bus_type: '{{ device.bus_type }}'
+{% endfor %}
+{% endif %}
+...

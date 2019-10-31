@@ -14,87 +14,69 @@
 # See the License for the specific language governing permissions and        #
 # limitations under the License.                                             #
 ##############################################################################
-# This file defines hardware-specific settings for neutron. If you use the same
-# hardware profile as this environment, you should not need to change this file.
-# Otherwise, you should review the settings here and adjust for your hardware.
-# In particular:
-# 1. logical network interface names
-# 2. physical device mappigns
-# TODO: Should move to global layer and become tied to the hardware profile
 
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron
+  name: openvswitch
   replacement: true
   labels:
-    component: neutron
+    name: openvswitch-global
   layeringDefinition:
     abstract: false
     layer: site
     parentSelector:
-      name: neutron-global
+      name: openvswitch-global
     actions:
       - method: merge
         path: .
   storagePolicy: cleartext
+
 data:
   values:
-    network:
-      backend:
-        - openvswitch
-      interface:
-        tunnel: br-phy
+    pod:
+      resources:
+        enabled: true
+        ovs:
+          vswitchd:
+            requests:
+              memory: "8Gi"
+              cpu: "4000m"
+            limits:
+              memory: "8Gi"
+              cpu: "4000m"
+              hugepages-1Gi: "8Gi"
     conf:
-      plugins:
-        ml2_conf:
-          ml2:
-            mechanism_drivers: openvswitch,l2population
-            type_drivers: flat,vlan,vxlan
-            tenant_network_types: vxlan
-          ml2_type_vlan:
-            network_vlan_ranges: "external:3002:3008"
-          ml2_type_flat:
-            flat_networks: public
-        openvswitch_agent:
-          agent:
-            tunnel_types: vxlan
-          ovs:
-            bridge_mappings: external:br-phy
       ovs_dpdk:
         enabled: true
-        driver: vfio-pci
-        nics:
-{% for nic in yaml.dpdk.nics %}
-          - name: {{ nic.name }}
-            pci_id: '{{ nic.pci_id }}'
-            bridge: {{ nic.bridge }}
-            migrate_ip: {{ nic.migrate_ip }}
-{% endfor %}
-        bridges:
-          - name: br-phy
-        bonds: []
+        hugepages_mountpath: /dev/hugepages_1G
+        socket_memory: '4096,4096'
+        pmd_cpu_mask: '0xF'
+        vhostuser_socket_dir: vhostuser
   dependencies:
-    - openstack-neutron-helm-toolkit
+    - openstack-openvswitch-helm-toolkit
+...
 ---
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: openstack-neutron-helm-toolkit
+  name: openstack-openvswitch-helm-toolkit
   layeringDefinition:
     abstract: false
     layer: global
   storagePolicy: cleartext
   substitutions:
+    # Chart source
     - src:
         schema: pegleg/SoftwareVersions/v1
         name: software-versions
-        path: .charts.osh.neutron-htk
+        path: .charts.osh.openvswitch-htk
       dest:
         path: .source
+
 data:
-  chart_name: openstack-neutron-helm-toolkit
-  release: openstack-neutron-helm-toolkit
+  chart_name: openstack-openvswitch-helm-toolkit
+  release: openstack-openvswitch-helm-toolkit
   namespace: helm-toolkit
   values: {}
   dependencies: []

@@ -25,7 +25,9 @@ import os.path
 import jinja2
 import sys
 import yaml
+import crypt
 import netaddr
+from base64 import b64encode
 
 def cidr_netmask(value):
   if '/' in str(value):
@@ -41,6 +43,16 @@ def cidr_subnet(value):
     result = v.network
   else:
     result = "ERROR"
+  return result
+
+def crypt_sha512(value):
+  if not '$6$' in str(value):
+    if sys.hexversion < 0x3000000:
+      result = crypt.crypt(value, "$6$"+b64encode(os.urandom(16)))
+    else:
+      result = crypt.crypt(value, crypt.mksalt(crypt.METHOD_SHA512))
+  else:
+    result = value
   return result
 
 def usage(msg=None):
@@ -72,11 +84,13 @@ if os.path.isfile(j2in_name):
   j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(j2in_name)), trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True, undefined=jinja2.make_logging_undefined())
   j2_env.filters['cidr_netmask'] = cidr_netmask
   j2_env.filters['cidr_subnet'] = cidr_subnet
+  j2_env.filters['crypt_sha512'] = crypt_sha512
   expand_template(j2_env.get_template(name=os.path.basename(j2in_name)),yaml_out,len(j2in_name))
 else:
   j2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(j2in_name), trim_blocks=True, lstrip_blocks=True, keep_trailing_newline=True, undefined=jinja2.make_logging_undefined())
   j2_env.filters['cidr_netmask'] = cidr_netmask
   j2_env.filters['cidr_subnet'] = cidr_subnet
+  j2_env.filters['crypt_sha512'] = crypt_sha512
   templates=j2_env.list_templates(extensions=('j2'))
   fill=len(max(templates,key=len))+len(j2in_name)
   for f in templates:

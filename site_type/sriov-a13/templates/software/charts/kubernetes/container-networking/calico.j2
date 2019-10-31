@@ -54,7 +54,7 @@ data:
           peers:
 {% for peer in yaml.networks.ksn.peers %}
             - apiVersion: projectcalico.org/v3
-              kind: bgpPeer
+              kind: BGPPeer
               metadata:
                 name: peer-{{loop.index-1}}
               spec:

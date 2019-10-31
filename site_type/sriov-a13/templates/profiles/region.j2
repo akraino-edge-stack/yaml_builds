@@ -24,7 +24,7 @@ metadata:
         schema: deckhand/PublicKey/v1
         # This should match the "name" metadata of the SSH key which will be
         # substituted, located in site/seaworthy/secrets folder.
-        name: localadmin_ssh_public_key
+        name: airship_ssh_public_key
         path: .
     - dest:
         path: .repositories.main_archive
@@ -33,14 +33,14 @@ metadata:
         name: software-versions
         path: .packages.repositories.main_archive
     # Second key example
-    #- dest:
-    #    # Increment the list index
-    #    path: .authorized_keys[1]
-    #  src:
-    #    schema: deckhand/PublicKey/v1
-    #    # your ssh key
-    #    name: MY_USER_ssh_public_key
-    #    path: .
+    - dest:
+        # Increment the list index
+        path: .authorized_keys[1]
+      src:
+        schema: deckhand/PublicKey/v1
+        # your ssh key
+        name: localadmin_ssh_public_key
+        path: .
 data:
   tag_definitions: []
   # This is the list of SSH keys which MaaS will register for the built-in

@@ -67,6 +67,7 @@ else
   cd $YAML_BUILDS
 fi
 
+(
 echo "# Collecting config files in $AIRSHIP_TREASUREMAP/site/$SITE"
 cd $AIRSHIP_TREASUREMAP
 rm -rf $AIRSHIP_TREASUREMAP/${SITE}_collected

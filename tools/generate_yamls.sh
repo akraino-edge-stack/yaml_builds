@@ -37,9 +37,9 @@ echo "#######################################"
 sed -E 's/(^.*password:).*/\1 ###PASSWORD REMOVED####/g' ${YAML_BUILDS}/${SITE}.yaml
 echo "#######################################"
 
-echo "# NOTE: root ssh key will be used for genesis_ssh_public_key if no key is provided"
+echo "# NOTE: root ssh key will be used for genesis_ssh_public_key if no key in yaml"
 RCKEY=$(cat ~/.ssh/id_rsa.pub | sed -e 's/[\/&]/\\&/g')
-sed -i -e "s/genesis_ssh_public_key\: */genesis_ssh_public_key: \'$RCKEY\'/" $SITE.yaml
+sed -i -e "s/genesis_ssh_public_key\:\s*$/genesis_ssh_public_key: \'$RCKEY\'/" $SITE.yaml
 
 python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools/env_$SITE.sh
 source ./tools/env_$SITE.sh

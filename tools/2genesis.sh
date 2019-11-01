@@ -53,22 +53,17 @@ scp $YAML_BUILDS/tars/promenade-bundle-$SITE.tar $GENESIS_HOST:/tmp/
 ssh $GENESIS_HOST << EOF
   # TODO avoid following hard coding$
   route add -net 192.168.41.0/24 gw 192.168.2.1 bond0.41
-  mkdir -p /root/akraino/configs/promenade-bundle
-  mv /tmp/promenade-bundle-$SITE.tar /root/akraino/
+  mkdir -p /root/akraino
   cd /root/akraino/
+  cp /tmp/promenade-bundle-$SITE.tar .
   tar -xmf promenade-bundle-$SITE.tar
-  # MOVE TO LOCATION EXPECTED BY WORKFLOW
-  mv genesis.sh /root/akraino/configs/promenade-bundle/
+  mv configs/promenade-bundle/deploy_site.sh .
 EOF
 
 # Update BIOS settings on master and worker nodes
-python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
+#python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
 
 echo "#######################################"
 echo "# $0 finished"
 echo "#######################################"
-
-exec 2>&-
-exec 1>&-
-exit 0
-
+pkill -9 $$ && exit 0

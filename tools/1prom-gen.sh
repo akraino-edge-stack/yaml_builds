@@ -67,59 +67,6 @@ else
   cd $YAML_BUILDS
 fi
 
-create_directories() {
-   mkdir -p ./tars/$SITE/configs/promenade
-   mkdir -p ./tars/$SITE/configs/promenade-bundle
-}
-
-get_site_config(){
-   $YAML_BUILDS/tools/pegleg.sh site -p /site -a /global collect ${SITE} -s /site/tars/$SITE/configs/promenade
-}
-
-gen_certs() {
-   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade generate-certs -o /target/tars/$SITE/configs/promenade /target/tars/$SITE/configs/promenade/*.yaml
-}
-
-gen_bundle(){
-   docker run --env http_proxy=$http_proxy  --env https_proxy=$https_proxy --user 0 --rm -t -w /target -v $(pwd):/target ${PROMENADE_IMAGE} promenade build-all --validators -o /target/tars/$SITE/configs/promenade-bundle /target/tars/$SITE/configs/promenade/*.yaml
-}
-
-create_scripts() {
-  KEYSTONE_IMAGE=$(grep "keystone_db_sync: docker.io" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
-  SHIPYARD_IMAGE=$(grep "shipyard_db_sync" $AIRSHIP_TREASUREMAP/global/v4.0/software/config/versions.yaml | uniq | awk '{print $2}')
-
-  DRYDOCK_PASSWORD=$(grep "^data:" $YAML_BUILDS/site/$SITE/secrets/passphrases/ucp_drydock_keystone_password.yaml | awk '{print $2}')
-  SHIPYARD_PASSWORD=$(grep "^data:" $YAML_BUILDS/site/$SITE/secrets/passphrases/ucp_shipyard_keystone_password.yaml | awk '{print $2}')
-  REGION_NAME=$SITE
-
-  cp $YAML_BUILDS/tools/deploy_site.sh $YAML_BUILDS/tars/$SITE/
-  sed -i -e "s,KEYSTONE_IMAGE=,KEYSTONE_IMAGE=$KEYSTONE_IMAGE,g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
-  sed -i -e "s,SHIPYARD_IMAGE=,SHIPYARD_IMAGE=$SHIPYARD_IMAGE,g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
-  sed -i -e "s/DRYDOCK_PASSWORD=/DRYDOCK_PASSWORD=$DRYDOCK_PASSWORD/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
-  sed -i -e "s/SHIPYARD_PASSWORD=/SHIPYARD_PASSWORD=$SHIPYARD_PASSWORD/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
-  sed -i -e "s/REGION_NAME=/REGION_NAME=$REGION_NAME/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
-  sed -i -e "s/{{yaml.genesis.host}}/$GENESIS_HOST/g" $YAML_BUILDS/tars/$SITE/deploy_site.sh
-
-  cp $YAML_BUILDS/tools/update_iptables.sh $YAML_BUILDS/tars/$SITE/
-  sed -i -e "s,HOST_INTERFACE=,HOST_INTERFACE=$HOST_INTERFACE,g" $YAML_BUILDS/tars/$SITE/update_iptables.sh
-  sed -i -e "s,PXE_INTERFACE=,PXE_INTERFACE=$PXE_INTERFACE,g" $YAML_BUILDS/tars/$SITE/update_iptables.sh
-
-  cp $YAML_BUILDS/tools/cleanup.sh $YAML_BUILDS/tars/$SITE/
-}
-
-prepare_tar(){
-   rm -f ./tars/promenade-bundle-$SITE.tar
-   tar cvf ./tars/promenade-bundle-$SITE.tar -C ./tars/$SITE .
-}
-
-#create_directories
-#get_site_config
-#gen_certs
-#gen_bundle
-#create_scripts
-#prepare_tar
-
-(
 echo "# Collecting config files in $AIRSHIP_TREASUREMAP/site/$SITE"
 cd $AIRSHIP_TREASUREMAP
 rm -rf $AIRSHIP_TREASUREMAP/${SITE}_collected
@@ -166,21 +113,17 @@ $AIRSHIP_TREASUREMAP/tools/airship promenade build-all --validators -o /target/$
 
 (
 echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
-  #KEYSTONE_IMAGE=$(grep "keystone_db_sync: docker.io" $AIRSHIP_TREASUREMAP/global/software/config/versions.yaml | uniq | awk '{print $2}')
-  SHIPYARD_IMAGE=$(grep "shipyard_db_sync" $AIRSHIP_TREASUREMAP/global/software/config/versions.yaml | uniq | awk '{print $2}')
-
-  DRYDOCK_PASSWORD=$(grep "^data:" $AIRSHIP_TREASUREMAP/site/$SITE/secrets/passphrases/ucp_drydock_keystone_password.yaml | awk '{print $2}')
   SHIPYARD_PASSWORD=$(grep "^data:" $AIRSHIP_TREASUREMAP/site/$SITE/secrets/passphrases/ucp_shipyard_keystone_password.yaml | awk '{print $2}')
+  AUTH_DOMAIN=$(grep "ingress_domain:" $AIRSHIP_TREASUREMAP/site/$SITE/networks/common-addresses.yaml | awk '{print $2}')
+  AUTH_URL="http:\/\/iam-sw.${AUTH_DOMAIN}:80\/v3"
   REGION_NAME=$SITE
 
   DEPLOY_SCRIPT=$AIRSHIP_TREASUREMAP/${SITE}_bundle/deploy_site.sh
   IPTABLES_SCRIPT=$AIRSHIP_TREASUREMAP/${SITE}_bundle/update_iptables.sh
 
   cp $YAML_BUILDS/tools/deploy_site.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
-  sed -i -e "s,KEYSTONE_IMAGE=,KEYSTONE_IMAGE=$KEYSTONE_IMAGE,g" $DEPLOY_SCRIPT
-  sed -i -e "s,SHIPYARD_IMAGE=,SHIPYARD_IMAGE=$SHIPYARD_IMAGE,g" $DEPLOY_SCRIPT
-  sed -i -e "s/DRYDOCK_PASSWORD=/DRYDOCK_PASSWORD=$DRYDOCK_PASSWORD/g" $DEPLOY_SCRIPT
-  sed -i -e "s/SHIPYARD_PASSWORD=/SHIPYARD_PASSWORD=$SHIPYARD_PASSWORD/g" $DEPLOY_SCRIPT
+  sed -i -e "s|OS_AUTH_URL=|OS_AUTH_URL=\"${AUTH_URL}\"|g" $DEPLOY_SCRIPT
+  sed -i -e "s/OS_PASSWORD=/OS_PASSWORD=$SHIPYARD_PASSWORD/g" $DEPLOY_SCRIPT
   sed -i -e "s/REGION_NAME=/REGION_NAME=$REGION_NAME/g" $DEPLOY_SCRIPT
   sed -i -e "s/{{yaml.genesis.host}}/$GENESIS_HOST/g" $DEPLOY_SCRIPT
 
@@ -195,14 +138,13 @@ echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
     echo "# Generating Promenade tar bundle $YAML_BUILDS/tars/promenade-bundle-$SITE.tar"
     mkdir -p $YAML_BUILDS/tars
     rm -f $YAML_BUILDS/tars/promenade-bundle-$SITE.tar
-    tar cvf $YAML_BUILDS/tars/promenade-bundle-$SITE.tar -C $AIRSHIP_TREASUREMAP/${SITE}_bundle .
+    tar cvf $YAML_BUILDS/tars/promenade-bundle-$SITE.tar --transform 's,^,configs/promenade-bundle/,' -C $AIRSHIP_TREASUREMAP/${SITE}_bundle .
+    tar rvf $YAML_BUILDS/tars/promenade-bundle-$SITE.tar --transform 's,^,configs/promenade/,' -C $AIRSHIP_TREASUREMAP/${SITE}_collected  .
+    tar rvf $YAML_BUILDS/tars/promenade-bundle-$SITE.tar -C $AIRSHIP_TREASUREMAP tools global
 )
 
 echo "#######################################"
 echo "# $0 finished"
 echo "#######################################"
 
-exec 2>&-
-exec 1>&-
-exit 0
-
+pkill -9 $$ && exit 0

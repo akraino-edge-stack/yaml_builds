@@ -43,6 +43,8 @@ networks:
     vlan: 41
     interface: bond0.41
     cidr: 192.168.2.0/24
+    ingress_vip: 192.168.2.49
+    maas_vip: 192.168.2.48
     routes:
        gateway: 192.168.2.200
     ranges:
@@ -116,10 +118,11 @@ networks:
 dns:
   upstream_servers:
     - 192.168.2.85
-    - 8.8.8.8
-    - 8.8.4.4
-  ingress_domain: dellgen10.akraino.org
-  domain: lab.akraino.org
+    - 192.168.1.85
+    #- 8.8.8.8
+    #- 8.8.4.4
+  ingress_domain: dellgen10.lab.akraino.org
+  domain: dellgen10.lab.akraino.org
 gpu:
   alias:
     - name: "P4"
@@ -307,12 +310,12 @@ disks_compute:
       - name: nova
         size: 99%
         mountpoint: /var/lib/nova
-genesis_ssh_public_key: 
+genesis_ssh_public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMhRiQWY9a/P3CGss4tSO3ZFFV+bR3UTR3f6am960t5jbmUq6T8W7v5CEEPuEwUW+8T8Jqh/tcu/bbdM/pyWJqDB0sJ0qzdC2rUQKnTuvjc+RATeaOd4xOrRMs5y/ZLxHjaCFOfxxTn5/1xlyzfkzTdlc03B9p8UWRUBx2YoL/TWmswu0om/3mZvPZxSuCyekvO2S1IXFy0wKw7p1Nb+wGaQihromWg73wgwH+o9dEWgZP6UaOKGPF+Qz8qS7k0zcqeTaupINQDcsVKFVS0BphfqQfl0fZNKbZ6TP5C3snLcUOprZsVTQtPLSxI5mnntp5Y8mRERxeHUj8k1Fenm9X root@aknode44'
 kubernetes:
   api_service_ip: 10.96.0.1
   etcd_service_ip: 10.96.0.2
   pod_cidr: 10.98.0.0/16
-  service_cidr: 10.96.0.0/15
+  service_cidr: 10.96.0.0/16
 regional_server:
   ip: 135.16.101.85
 ...

@@ -38,8 +38,8 @@ data:
 {% endfor %}
 {% endif %}
   vip:
-    ingress_vip: '{{yaml.networks.host.ranges.static.end}}/32'
-    maas_vip: '{{yaml.networks.host.ranges.static.end}}/32'
+    ingress_vip: '{{yaml.networks.host.ingress_vip}}/32'
+    maas_vip: '{{yaml.networks.host.maas_vip}}/32'
 
   dns:
     # Kubernetes cluster domain. Do not change. This is internal to the cluster.

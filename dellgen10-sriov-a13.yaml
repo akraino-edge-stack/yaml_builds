@@ -43,6 +43,8 @@ networks:
     vlan: 41
     interface: bond0.41
     cidr: 192.168.2.0/24
+    ingress_vip: 192.168.2.49
+    maas_vip: 192.168.2.48
     routes:
        gateway: 192.168.2.200
     ranges:
@@ -116,10 +118,11 @@ networks:
 dns:
   upstream_servers:
     - 192.168.2.85
-    - 8.8.8.8
-    - 8.8.4.4
-  ingress_domain: dellgen10.akraino.org
-  domain: lab.akraino.org
+    - 192.168.1.85
+    #- 8.8.8.8
+    #- 8.8.4.4
+  ingress_domain: dellgen10.lab.akraino.org
+  domain: dellgen10.lab.akraino.org
 gpu:
   alias:
     - name: "P4"
@@ -312,7 +315,7 @@ kubernetes:
   api_service_ip: 10.96.0.1
   etcd_service_ip: 10.96.0.2
   pod_cidr: 10.98.0.0/16
-  service_cidr: 10.96.0.0/15
+  service_cidr: 10.96.0.0/16
 regional_server:
   ip: 135.16.101.85
 ...

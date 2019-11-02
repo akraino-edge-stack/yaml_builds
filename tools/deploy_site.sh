@@ -28,6 +28,8 @@ export OS_AUTH_URL=
 export OS_USERNAME=shipyard
 export OS_PASSWORD=
 REGION_NAME=
+MAAS_URL=
+AIRFLOW_URL=
 
 sleep 900
 
@@ -46,10 +48,9 @@ tools/airship shipyard describe $SHIPYARD_ACTION
 echo "## Airship deployment has been started..."
 echo "##"
 echo "## To monitor progress check:"
-echo "## MaaS GUI    -> http://{{yaml.genesis.host}}:30001/MAAS/#/nodes"
-echo "## Airflow GUI -> http://{{yaml.genesis.host}}:30004/admin/taskinstance/"
+echo "## MaaS GUI    -> $MAAS_URL"
+echo "## Airflow GUI -> $AIRFLOW_URL"
 
 exec 2>&-
 exec 1>&-
 exit 0
-

@@ -19,6 +19,7 @@
 # re-generate prom config
 
 set -xe
+
 LOGDIR="/var/log/akraino"
 mkdir -p $LOGDIR
 LOGFILE="$LOGDIR/${1}_$(date +"%Y%m%d%H%M%z")_$(basename $0|cut -d. -f1)"
@@ -115,8 +116,10 @@ $AIRSHIP_TREASUREMAP/tools/airship promenade build-all --validators -o /target/$
 (
 echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
   SHIPYARD_PASSWORD=$(grep "^data:" $AIRSHIP_TREASUREMAP/site/$SITE/secrets/passphrases/ucp_shipyard_keystone_password.yaml | awk '{print $2}')
-  AUTH_DOMAIN=$(grep "ingress_domain:" $AIRSHIP_TREASUREMAP/site/$SITE/networks/common-addresses.yaml | awk '{print $2}')
-  AUTH_URL="http:\/\/iam-sw.${AUTH_DOMAIN}:80\/v3"
+  INGRESS_DOMAIN=$(grep "ingress_domain:" $AIRSHIP_TREASUREMAP/site/$SITE/networks/common-addresses.yaml | awk '{print $2}')
+  AUTH_URL="http://iam-sw.${INGRESS_DOMAIN}:80/v3"
+  MAAS_URL="http://maas-sw.${INGRESS_DOMAIN}:80/MAAS/#/dashboard"
+  AIRFLOW_URL=
   REGION_NAME=$SITE
 
   DEPLOY_SCRIPT=$AIRSHIP_TREASUREMAP/${SITE}_bundle/deploy_site.sh
@@ -126,7 +129,8 @@ echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
   sed -i -e "s|OS_AUTH_URL=|OS_AUTH_URL=\"${AUTH_URL}\"|g" $DEPLOY_SCRIPT
   sed -i -e "s/OS_PASSWORD=/OS_PASSWORD=$SHIPYARD_PASSWORD/g" $DEPLOY_SCRIPT
   sed -i -e "s/REGION_NAME=/REGION_NAME=$REGION_NAME/g" $DEPLOY_SCRIPT
-  sed -i -e "s/{{yaml.genesis.host}}/$GENESIS_HOST/g" $DEPLOY_SCRIPT
+  sed -i -e "s|MAAS_URL=|MAAS_URL=${MAAS_URL}|g" $DEPLOY_SCRIPT
+  sed -i -e "s|AIRFLOW_URL=|AIRFLOW_URL=${AIRFLOW_URL}|g" $DEPLOY_SCRIPT
 
   cp $YAML_BUILDS/tools/update_iptables.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
   sed -i -e "s,HOST_INTERFACE=,HOST_INTERFACE=$HOST_INTERFACE,g" $IPTABLES_SCRIPT

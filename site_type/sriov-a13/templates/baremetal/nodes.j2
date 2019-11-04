@@ -143,7 +143,11 @@ data:
     - network: calico
       address: {{server.ksn}}
   # NEWSITE-CHANGEME: The next node's host profile
+{% if loop.index < 3 %}
   host_profile: cp_r720-primary
+{% else %}
+  host_profile: cp_r720-secondary
+{% endif %}
   metadata:
     # NEWSITE-CHANGEME: The next node's rack designation
     rack: cab23

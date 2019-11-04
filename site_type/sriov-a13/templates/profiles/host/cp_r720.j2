@@ -86,7 +86,66 @@ data:
 
   metadata:
     owner_data:
-      openstack-l3-agent: enabled
+      control-plane: enabled
+      ucp-control-plane: enabled
+      openstack-control-plane: enabled
+      openstack-heat: enabled
+      openstack-keystone: enabled
+      openstack-rabbitmq: enabled
+      openstack-dns-helper: enabled
+      openstack-mariadb: enabled
+      openstack-nova-control: enabled
+      # openstack-etcd: enabled
+      openstack-mistral: enabled
+      openstack-memcached: enabled
+      openstack-glance: enabled
+      openstack-horizon: enabled
+      openstack-cinder-control: enabled
+      openstack-cinder-volume: control
+      openstack-neutron: enabled
+      openvswitch: enabled
+      ucp-barbican: enabled
+      ceph-mon: enabled
+      ceph-mgr: enabled
+      ceph-osd: enabled
+      ceph-mds: enabled
+      ceph-rgw: enabled
+      ucp-maas: enabled
+      kube-dns: enabled
+      tenant-ceph-control-plane: enabled
+      tenant-ceph-mon: enabled
+      tenant-ceph-osd: enabled
+      tenant-ceph-rgw: enabled
+      tenant-ceph-mgr: enabled
+      kubernetes-apiserver: enabled
+      kubernetes-controller-manager: enabled
+      kubernetes-etcd: enabled
+      kubernetes-scheduler: enabled
+      tiller-helm: enabled
+      kube-etcd: enabled
+      calico-policy: enabled
+      calico-node: enabled
+      calico-etcd: enabled
+      ucp-armada: enabled
+      ucp-drydock: enabled
+      ucp-deckhand: enabled
+      ucp-shipyard: enabled
+      IAM: enabled
+      ucp-promenade: enabled
+      prometheus-server: enabled
+      prometheus-client: enabled
+      fluentd: enabled
+      fluentbit: enabled
+      influxdb: enabled
+      kibana: enabled
+      elasticsearch-client: enabled
+      elasticsearch-master: enabled
+      elasticsearch-data: enabled
+      postgresql: enabled
+      kube-ingress: enabled
+      beta.kubernetes.io/fluentd-ds-ready: 'true'
+      node-exporter: enabled
+      sriov: enabled
 ...
 ---
 schema: drydock/HostProfile/v1
@@ -174,61 +233,10 @@ data:
 
   metadata:
     owner_data:
-      control-plane: enabled
-      ucp-control-plane: enabled
-      openstack-control-plane: enabled
-      openstack-heat: enabled
-      openstack-keystone: enabled
-      openstack-rabbitmq: enabled
-      openstack-dns-helper: enabled
-      openstack-mariadb: enabled
-      openstack-nova-control: enabled
-      # openstack-etcd: enabled
-      openstack-mistral: enabled
-      openstack-memcached: enabled
-      openstack-glance: enabled
-      openstack-horizon: enabled
-      openstack-cinder-control: enabled
-      openstack-cinder-volume: control
-      openstack-neutron: enabled
+      openstack-nova-compute: enabled
       openvswitch: enabled
-      ucp-barbican: enabled
-      # ceph-mon: enabled
-      ceph-mgr: enabled
-      ceph-osd: enabled
-      ceph-mds: enabled
-      ceph-rgw: enabled
-      ucp-maas: enabled
-      kube-dns: enabled
-      tenant-ceph-control-plane: enabled
-      # tenant-ceph-mon: enabled
-      tenant-ceph-rgw: enabled
-      tenant-ceph-mgr: enabled
-      kubernetes-apiserver: enabled
-      kubernetes-controller-manager: enabled
-      # kubernetes-etcd: enabled
-      kubernetes-scheduler: enabled
-      tiller-helm: enabled
-      # kube-etcd: enabled
-      calico-policy: enabled
-      calico-node: enabled
-      # calico-etcd: enabled
-      ucp-armada: enabled
-      ucp-drydock: enabled
-      ucp-deckhand: enabled
-      ucp-shipyard: enabled
-      IAM: enabled
-      ucp-promenade: enabled
-      prometheus-server: enabled
-      prometheus-client: enabled
-      fluentd: enabled
-      influxdb: enabled
-      kibana: enabled
-      elasticsearch-client: enabled
-      elasticsearch-master: enabled
-      elasticsearch-data: enabled
-      postgresql: enabled
-      kube-ingress: enabled
+      tenant-ceph-osd: enabled
+      openstack-libvirt: kernel
+      sriov: enabled
       beta.kubernetes.io/fluentd-ds-ready: 'true'
-      node-exporter: enabled
 ...

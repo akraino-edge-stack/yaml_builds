@@ -51,7 +51,7 @@ echo "## MaaS GUI    -> $MAAS_URL"
 echo "## Shipyard cli-> $SHIPYARD_CLI"
 #echo "## Airflow GUI -> $AIRFLOW_URL"
 
-while ( ! $SHIPYARD_CLI | grep -qe '^Lifecycle.*Complete' && ! $SHIPYARD_CLI | grep -qe '^step.*failed'); do
+while ( ! $SHIPYARD_CLI | grep -qe '^Lifecycle.*Complete' && ! $SHIPYARD_CLI | grep -qe '^step.*failed' && ! $SHIPYARD_CLI | grep -qe '^Usage:' ); do
   $SHIPYARD_CLI
   echo "## Sleeping for 10 mins"
   sleep 600
@@ -60,4 +60,5 @@ $SHIPYARD_CLI
 
 exec 2>&-
 exec 1>&-
-$SHIPYARD_CLI | grep -qe '^step.*failed'
+$SHIPYARD_CLI 2>&1 | grep -qPe 'failed|Usage:'
+exit $((! $?))

@@ -44,11 +44,16 @@ fi
 source $(dirname $0)/env_$SITE.sh
 
 cd $YAML_BUILDS
-# Install OS on Genesis
+
+FILENAME=$(mktemp)
+echo "# Updating BIOS settings on master and worker nodes in background [$FILENAME]"
+python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml >$FILENAME &
+
+echo "# Install OS on Genesis"
 python $YAML_BUILDS/scripts/jcopy.py $SITE.yaml $YAML_BUILDS/tools/j2/serverrc.j2 $YAML_BUILDS/tools/"$GENESIS_NAME"rc
 /opt/akraino/redfish/install_server_os.sh --rc /opt/akraino/yaml_builds/tools/"$GENESIS_NAME"rc --skip-confirm
 
-# Stage Airship files on Genesis
+echo "# Stage Airship files on Genesis"
 scp $YAML_BUILDS/tars/promenade-bundle-$SITE.tar $GENESIS_HOST:/tmp/
 ssh $GENESIS_HOST << EOF
   # TODO avoid following hard coding$
@@ -60,10 +65,14 @@ ssh $GENESIS_HOST << EOF
   mv configs/promenade-bundle/deploy_site.sh .
 EOF
 
-# Update BIOS settings on master and worker nodes
-python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
+echo "# Waiting for BIOS updates to finish on master and worker nodes"
+wait
+# Show output from BIOS updates on master and worker nodes
+cat $FILENAME
+rm $FILENAME
 
 echo "#######################################"
 echo "# $0 finished"
 echo "#######################################"
 #pkill -9 $$ && exit 0
+

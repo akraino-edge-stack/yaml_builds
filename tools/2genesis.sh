@@ -45,6 +45,9 @@ source $(dirname $0)/env_$SITE.sh
 
 cd $YAML_BUILDS
 
+echo "# Setup redfish tools to avoid race condition"
+/opt/akraino/redfish/setup_tools.sh
+
 FILENAME=$(mktemp)
 echo "# Updating BIOS settings on master and worker nodes in background [$FILENAME]"
 python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml >$FILENAME &

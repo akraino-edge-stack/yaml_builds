@@ -32,6 +32,9 @@ def create_node_rcfile(nodes, defaults, j2template, rcfile_suffix):
   if type(nodes) is list:
     for node in nodes:
       newnode = dict( defaults.items() + node.items() )
+      if not "bios_template" in newnode or not newnode["bios_template"]:
+        print 'Skipping host {} because of missing or empty key [bios_template]'.format(newnode['name'])
+        continue
       data = template.render(yaml=newnode)
       rcfile = "server-config/"+newnode['name']+rcfile_suffix
       print rcfile

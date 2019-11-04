@@ -61,7 +61,7 @@ ssh $GENESIS_HOST << EOF
 EOF
 
 # Update BIOS settings on master and worker nodes
-#python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
+python $YAML_BUILDS/scripts/update_bios_settings.py $SITE.yaml
 
 echo "#######################################"
 echo "# $0 finished"

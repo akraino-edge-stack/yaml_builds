@@ -42,15 +42,22 @@ tools/airship shipyard create action deploy_site
 tools/airship shipyard get actions
 
 SHIPYARD_ACTION=$(tools/airship shipyard get actions | awk '/deploy_site/ {print $2};')
-
-tools/airship shipyard describe $SHIPYARD_ACTION
+SHIPYARD_CLI="tools/airship shipyard describe $SHIPYARD_ACTION"
 
 echo "## Airship deployment has been started..."
 echo "##"
 echo "## To monitor progress check:"
 echo "## MaaS GUI    -> $MAAS_URL"
-echo "## Airflow GUI -> $AIRFLOW_URL"
+echo "## Shipyard cli-> $SHIPYARD_CLI"
+#echo "## Airflow GUI -> $AIRFLOW_URL"
+
+while ( ! $SHIPYARD_CLI | grep -qe '^Lifecycle.*Complete' && ! $SHIPYARD_CLI | grep -qe '^step.*failed'); do
+  $SHIPYARD_CLI
+  echo "## Sleeping for 10 mins"
+  sleep 600
+done
+$SHIPYARD_CLI
 
 exec 2>&-
 exec 1>&-
-exit 0
+$SHIPYARD_CLI | grep -qe '^step.*failed'

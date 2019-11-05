@@ -41,6 +41,18 @@ data:
         - storage
         - overlay
         - calico
+    p1p1:
+      slaves:
+        - 'sriov_nic01'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
+    p3p2:
+      slaves:
+        - 'sriov_nic02'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
 
   storage:
     physical_devices:
@@ -145,6 +157,8 @@ data:
       kube-ingress: enabled
       beta.kubernetes.io/fluentd-ds-ready: 'true'
       node-exporter: enabled
+      openstack-nova-compute: enabled
+      openstack-libvirt: kernel
       sriov: enabled
 ...
 ---
@@ -188,6 +202,18 @@ data:
         - storage
         - overlay
         - calico
+    p1p1:
+      slaves:
+        - 'sriov_nic01'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
+    p3p2:
+      slaves:
+        - 'sriov_nic02'
+      sriov:
+        vf_count: 32 # Currently ignored
+        trustedmode: false
 
   storage:
     physical_devices:

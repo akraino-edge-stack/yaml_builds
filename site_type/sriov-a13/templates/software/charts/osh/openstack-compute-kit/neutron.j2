@@ -50,13 +50,15 @@ data:
         - openvswitch
         - sriov
       interface:
-        tunnel_device: '{{yaml.networks.neutron.interface}}'
+        #tunnel_device: '{{yaml.networks.neutron.interface}}'
         sriov:
 {% for sriovnet in yaml.sriov.nets %}
           - device: {{sriovnet.interface}}
             num_vfs: 32
             promisc: false
 {% endfor %}
+      auto_bridge_add:
+        br-bond0: {{yaml.networks.neutron.interface}}
     conf:
       plugins:
         openvswitch_agent:

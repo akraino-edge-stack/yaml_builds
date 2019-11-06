@@ -46,6 +46,30 @@
       "revId": "365a00a62fcc8f6904eec6178fa910522b987bc5",
       "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f06483d9_1463e0f7",
+        "filename": "tools/generate_yamls.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 212
+      },
+      "writtenOn": "2019-11-06T21:52:58Z",
+      "side": 1,
+      "message": "this could work except for versions.yaml. This seems to be a global only file and creating a template for it seems to result in an error due to a duplicate document. What is the design philosophy here regarding different versions for multiple sites? Maybe I am just getting this wrong.",
+      "parentUuid": "04c57d63_2c16f717",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 10
+      },
+      "revId": "365a00a62fcc8f6904eec6178fa910522b987bc5",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
     }
   ]
 }

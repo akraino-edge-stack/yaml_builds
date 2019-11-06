@@ -44,7 +44,11 @@ sed -i -e "s/genesis_ssh_public_key\:\s*$/genesis_ssh_public_key: \'$RCKEY\'/" $
 python ./scripts/jcopy.py $SITE.yaml ./tools/j2/set_site_env.sh ./tools/env_$SITE.sh
 source ./tools/env_$SITE.sh
 
-if [ ! -d "$AIRSHIP_TREASUREMAP" ] && [ -f "${AIRSHIP_TREASUREMAP}.tgz" ]; then
+if [ -f "${AIRSHIP_TREASUREMAP}.tgz" ]; then
+  if [ -d "$AIRSHIP_TREASUREMAP" ]; then
+    echo "Cleaning old treasuremap in $AIRSHIP_TREASUREMAP".
+    rm -rf "$AIRSHIP_TREASUREMAP"
+  fi
   echo "Expanding [${AIRSHIP_TREASUREMAP}.tgz] to directory [$AIRSHIP_TREASUREMAP]."
   mkdir -p "$AIRSHIP_TREASUREMAP"
   tar xzvf "${AIRSHIP_TREASUREMAP}.tgz" --strip-components=1 -C "$AIRSHIP_TREASUREMAP"

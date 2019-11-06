@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa7593c0_39ce5fdb",
+        "filename": "tools/generate_yamls.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 60
+      },
+      "writtenOn": "2019-11-06T20:32:51Z",
+      "side": 1,
+      "message": "Is this still needed now that all custom files have been removed from treasuremap.tgz?  If so, it will require a more complex change.\n\nCurrently, the generated files for each site are created in treasuremap/$SITE_* and treasuremap/site/$SITE.  All installs of that site type share the same treasuremap directory.  If two installs are running at the same time, the second one will break the first one when the treasuremap directory (and generated files) are removed when the second site starts.  \n\nWe could move the generated files to a different location, but that would create some issues with the airship tool.  That is why they are located in treasuremap now.\n\nWe could overlay the treasuremap.tgz every time to make sure that all files are current, but that would only update files included in the treasuremap.tgz but not remove obsolete files.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 10
+      },
+      "revId": "365a00a62fcc8f6904eec6178fa910522b987bc5",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    }
+  ]
+}

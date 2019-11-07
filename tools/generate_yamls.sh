@@ -72,7 +72,7 @@ mkdir -p $AIRSHIP_TREASUREMAP/site/$SITE
 echo "#   Copying seaworth config files"
 cp -r $AIRSHIP_TREASUREMAP/site/seaworthy/* $AIRSHIP_TREASUREMAP/site/$SITE
 echo "#   Removing seaworthy example certificate files"
-rm -f $AIRSHIP_TREASUREMAP/site/$SITE/secrets/certificates/
+rm -rf $AIRSHIP_TREASUREMAP/site/$SITE/secrets/certificates/
 echo "#   Overlaying [$SITE] specific config files"
 cp -r $YAML_BUILDS/site/$SITE/* $AIRSHIP_TREASUREMAP/site/$SITE
 

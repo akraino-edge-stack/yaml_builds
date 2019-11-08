@@ -118,7 +118,7 @@ networks:
 dns:
   upstream_servers:
     - 192.168.2.85
-    - 192.168.1.85
+    - 192.168.2.85
     #- 8.8.8.8
     #- 8.8.4.4
   ingress_domain: dellgen10.lab.akraino.org
@@ -222,7 +222,7 @@ masters:
 platform:
   vcpu_pin_set: "4-21,26-43,48-65,72-87"
   kernel_params:
-    kernel_package: 'linux-image-4.15.0-66-generic'
+#    kernel_package: 'linux-image-4.15.0-66-generic'
     hugepagesz: '1G'
     hugepages: 32
 #    default_hugepagesz: '1G'
@@ -236,7 +236,7 @@ hardware:
   generation: '10'
   hw_version: '3'
   bios_version: '2.8'
-  bios_template: 
+  bios_template: dell_r740_g14_uefi_base.xml.template
   boot_template: dell_r740_g14_uefi_httpboot.xml.template
   http_boot_device: NIC.Slot.2-1-1
   device_aliases:

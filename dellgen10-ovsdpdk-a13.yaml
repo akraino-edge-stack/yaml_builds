@@ -1,0 +1,360 @@
+---
+##############################################################################
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.        #
+#                                                                            #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may    #
+# not use this file except in compliance with the License.                   #
+#                                                                            #
+# You may obtain a copy of the License at                                    #
+#       http://www.apache.org/licenses/LICENSE-2.0                           #
+#                                                                            #
+# Unless required by applicable law or agreed to in writing, software        #
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT  #
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.           #
+# See the License for the specific language governing permissions and        #
+# limitations under the License.                                             #
+##############################################################################
+
+site_name: akraino-ki20
+site_type: ovsdpdk-a13
+ipmi_admin:
+  username: root
+  password: calvin
+networks:
+  bonded: yes
+  primary: bond0
+  slaves:
+    - name: enp95s0f0
+    - name: enp95s0f1
+  oob:
+    vlan: 400
+    interface:
+    cidr: 10.51.35.128/27
+    netmask: 255.255.255.224
+    routes:
+      gateway: 10.51.35.129
+    ranges:
+      reserved:
+        start: 10.51.35.153
+        end: 10.51.35.158
+      static:
+        start: 10.51.35.132
+        end: 10.51.35.152
+  host:
+    vlan: 408
+    interface: bond0.408
+    cidr: 10.51.34.224/27
+    subnet: 10.51.34.224
+    netmask: 255.255.255.224
+    ingress_vip: 10.51.34.236
+    maas_vip: 10.51.34.235
+    routes:
+       gateway: 10.51.34.225
+    ranges:
+      reserved:
+        start: 10.51.34.226
+        end: 10.51.34.228
+      static:
+        start: 10.51.34.229
+        end: 10.51.34.236
+  storage:
+    vlan: 23
+    interface: bond0.23
+    cidr: 10.224.174.0/24
+    #netmask: 255.255.255.0 - Not Used
+    ranges:
+      reserved:
+        start: 10.224.174.1
+        end: 10.224.174.10
+      static:
+        start: 10.224.174.11
+        end: 10.224.174.254
+  pxe:
+    vlan: 407
+    interface: eno3
+    cidr: 10.224.168.0/24
+    #netmask: 255.255.255.0 - Not Used
+    gateway: 10.224.168.1
+    routes:
+      gateway: 10.224.168.11 #This address is the PXE of the Genesis Node.
+    ranges:
+      reserved:
+        start: 10.224.168.1
+        end:  10.224.168.10
+      static:
+        start: 10.224.168.11
+        end: 10.224.168.200
+      dhcp:
+        start: 10.224.168.201
+        end: 10.224.168.254
+  ksn:
+    vlan: 22
+    interface: bond0.22
+    cidr: 10.224.160.0/24
+    #netmask: 255.255.255.0 - Not Used
+    gateway: 10.224.160.1
+    local_asnumber: 65531
+    ranges:
+      reserved:
+        start: 10.224.160.1
+        end:  10.224.160.10
+      static:
+        start: 10.224.160.134
+        end: 10.224.160.254
+    additional_cidrs:
+      -  10.224.160.200/29
+    ingress_vip: 10.224.160.201/32
+#    peers:
+#    - ip: 10.224.160.129 #Old QFX VC VIP
+#    - ip: 10.224.160.131
+#    - ip: 10.224.160.130
+#      scope: global
+#      asnumber: 65001
+
+#    peers:
+#    - ip: 10.224.160.129 #Old QFX VC VIP
+#    - ip: 10.224.160.131
+#    - ip: 10.224.160.130
+#      scope: global
+#      asnumber: 65001
+
+#    peers:
+#    - ip: 10.224.160.129 #Old QFX VC VIP
+#    - ip: 10.224.160.131
+#    - ip: 10.224.160.130
+#      scope: global
+#      asnumber: 65001
+    vrrp_ip: 10.224.160.129 # keep peers ip address in case of only peer.
+  neutron:
+    vlan: 24
+    interface: bond0.24
+    cidr: 10.224.171.0/24
+    #netmask: 255.255.255.0 - Not Used
+    ranges:
+      reserved:
+        start: 10.224.171.1
+        end: 10.224.171.10
+      static:
+        start: 10.224.171.11
+        end: 10.224.171.254
+  vxlan:
+    vlan: 1
+    interface: enp134s0f0
+    cidr: 10.224.169.0/24
+    #netmask: 255.255.255.0 - Not Used
+    ranges:
+      reserved:
+        start: 10.224.169.1
+        end: 10.224.169.10
+      static:
+        start: 10.224.169.11
+        end: 10.224.169.254
+dns:
+  upstream_servers:
+    - 10.51.34.231
+    - 8.8.8.8
+  ingress_domain: vran.k2.ericsson.se
+  domain: vran.k2.ericsson.se
+#gpu:
+#  alias:
+#    - name: "P4"
+#      product_id: "1bb2"
+#      vendor_id: "10de"
+#    - name: "P40"
+#      product_id: "1b38"
+#      vendor_id: "10de"
+#    - name: "P100"
+#      product_id: "15f8"
+#      vendor_id: "10de"
+#    - name: "V100"
+#      product_id: "1db4"
+#      vendor_id: "10de"
+dpdk:
+  nics:
+  - name: dpdk0
+    pci_id: '0000:86:00.0'
+    bridge: br-phy
+    migrate_ip: true
+storage:
+  osds:
+    - data: /dev/sda
+      journal: /dev/sdh1
+    - data: /dev/sdb
+      journal: /dev/sdh2
+    - data: /dev/sdc
+      journal: /dev/sdh3
+  osd_count: 3
+  total_osd_count: 9
+tenant_storage:
+  osds:
+    - data: /dev/sdd
+      journal: /dev/sdh4
+    - data: /dev/sde
+      journal: /dev/sdh5
+    - data: /dev/sdf
+      journal: /dev/sdh6
+  osd_count: 3
+genesis:
+  name : aknode25
+  oob: 10.51.35.144
+  host: 10.51.34.232
+  storage: 10.224.174.11
+  pxe: 10.224.168.11
+  ksn: 10.224.160.134
+  neutron: 10.224.171.11
+  vxlan: 10.224.169.11
+  root_password: akraino,d
+#  bios_template: dell_r740_g14_uefi_base.xml.template
+#  boot_template: dell_r740_g14_uefi_httpboot.xml.template
+#  http_boot_device: NIC.Slot.2-1-1
+masters:
+  - name: aknode31
+    oob: 10.51.35.147
+    host: 10.51.34.229
+    storage: 10.224.174.13
+    pxe: 10.224.168.13
+    ksn: 10.224.160.136
+    neutron: 10.224.171.13
+    vxlan: 10.224.169.13
+    oob_user: root
+    oob_password: calvin
+  - name : aknode23
+    oob: 10.51.35.143
+    host: 10.51.34.233
+    storage: 10.224.174.12
+    pxe: 10.224.168.12
+    ksn: 10.224.160.135
+    neutron: 10.224.171.12
+    vxlan: 10.224.169.12
+    oob_user: root
+    oob_password: calvin
+  - name : aknode29
+    oob: 10.51.35.146
+    host: 10.51.34.230
+    storage: 10.224.174.14
+    pxe: 10.224.168.14
+    ksn: 10.224.160.137
+    neutron: 10.224.171.14
+    vxlan: 10.224.169.14
+    oob_user: root
+    oob_password: calvin
+#workers:
+#  - name : aknode43
+#    oob: 192.168.41.43
+#    host: 192.168.2.43
+#    storage: 172.31.2.43
+#    pxe: 172.30.2.43
+#    ksn: 172.29.1.43
+#    neutron: 10.0.102.43
+platform:
+#  vcpu_pin_set: "4-21,26-43,48-65,72-87"
+  kernel_params:
+    kernel_package: 'linux-image-4.15.0-66-generic'
+    hugepagesz: '1G'
+    hugepages: 32
+#    default_hugepagesz: '1G'
+#    transparent_hugepage: 'never'
+    iommu: 'pt'
+    intel_iommu: 'on'
+#    amd_iommu: 'on'
+#    console: 'ttyS1,115200n8'
+hardware:
+  vendor: DELL
+  generation: '10'
+  hw_version: '3'
+  bios_version: '2.8'
+  bios_template:
+  boot_template: dell_r740_g14_uefi_httpboot.xml.template
+  http_boot_device: NIC.Slot.2-1-1
+  device_aliases:
+    ## network
+    - name: eno3
+      key: pxe_nic01
+      address: '0000:01:00.0'
+      dev_type: 'I350 Gigabit Network Connection'
+      bus_type: 'pci'
+    - name: enp95s0f0
+      key: data_nic01
+      address: '0000:5f:00.0'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    - name: enp95s0f1
+      key: data_nic02
+      address: '0000:5f:00.1'
+      dev_type: 'Ethernet 10G 2P X520 Adapter'
+      bus_type: 'pci'
+    - name: enp134s0f0
+      key: dpdk_nic01
+      address: '0000:86:00.0'
+      dev_type: 'Ethernet Controller XXV710'
+      bus_type: 'pci'
+    ## storage  - use "dmesg | grep -Pe 'sd \d:\d'" to find address of drives
+    - name: /dev/sdg
+      key: bootdisk
+      address: '0:2.0.0'
+      dev_type: 'PERC H730P'
+      bus_type: 'scsi'
+    - name: /dev/sdh
+      key: cephjournal1
+      address: '0:2.1.0'
+      dev_type: 'PERC H730P'
+      bus_type: 'scsi'
+#    - name: /dev/sdi
+#      key: cephjournal2
+#      address: '0:2.2.0'
+#      dev_type: 'PERC H730P'
+#      bus_type: 'scsi'
+#    - name: /dev/sdj
+#      key: ephemeral
+#      address: '0:2.3.0'
+#      dev_type: 'PERC H730P'
+#      bus_type: 'scsi'
+disks:
+#  - name : sdg
+  - name : bootdisk
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 30g
+        bootable: true
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var
+        size: '300g'
+        mountpoint: /var
+disks_compute:
+#  - name : sdg
+  - name : bootdisk
+    labels:
+      bootdrive: 'true'
+    partitions:
+      - name: root
+        size: 30g
+        bootable: true
+        mountpoint: /
+      - name: boot
+        size: 1g
+        mountpoint: /boot
+      - name: var_log
+        size: '100g'
+        mountpoint: /var/log
+      - name: var
+        size: '>100g'
+        mountpoint: /var
+  - name : ephemeral
+    partitions:
+      - name: nova
+        size: 99%
+        mountpoint: /var/lib/nova
+genesis_ssh_public_key: 
+kubernetes:
+  api_service_ip: 10.96.0.1
+  etcd_service_ip: 10.96.0.2
+  pod_cidr: 10.98.0.0/16
+  service_cidr: 10.96.0.0/15
+regional_server:
+  ip: 10.51.34.231
+...

@@ -53,4 +53,9 @@ data:
           device: none
           type: hugetlbfs
           options: 'mode=775,pagesize=1G'
+      exec:
+        001-script1.sh:
+          data: |
+            #!/bin/bash
+            modprobe vfio-pci
 ...

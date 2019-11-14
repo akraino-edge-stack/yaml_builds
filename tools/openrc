@@ -1,0 +1,8 @@
+OS_AUTH_URL='http://keystone.openstack.svc.cluster.local:80/v3'
+OS_PROJECT_DOMAIN_NAME=default
+OS_USER_DOMAIN_NAME=default
+OS_PROJECT_NAME=admin
+OS_REGION_NAME=RegionOne
+OS_USERNAME=admin
+OS_IDENTITY_API_VERSION=3
+OS_PASSWORD=password123

@@ -142,6 +142,10 @@ data:
       address: {{server.neutron}}
     - network: calico
       address: {{server.ksn}}
+{% if 'dpdk' in yaml %}
+    - network: dpdk
+      address: {{server.vxlan}}
+{% endif %}
   # NEWSITE-CHANGEME: The next node's host profile
 {% if loop.index < 3 %}
   host_profile: cp_r720-primary
@@ -192,6 +196,10 @@ data:
       address: {{server.neutron}}
     - network: calico
       address: {{server.ksn}}
+{% if 'dpdk' in yaml %}
+    - network: dpdk
+      address: {{server.vxlan}}
+{% endif %}
   # NEWSITE-CHANGEME: The next node's host profile
   # This is the third "primary" control plane profile after genesis
   host_profile: dp_r720

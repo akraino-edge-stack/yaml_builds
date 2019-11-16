@@ -40,7 +40,14 @@ data:
         - storage
         - overlay
         - calico
-
+{% if 'dpdk' in yaml %}
+    dpdk:
+      device_link: dpdk
+      slaves:
+        - dpdk_nic01
+      networks:
+        - dpdk
+{% endif %}
   storage:
     physical_devices:
 {% for disk in yaml.disks %}

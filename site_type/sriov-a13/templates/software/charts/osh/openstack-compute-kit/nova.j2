@@ -44,7 +44,9 @@ data:
     network:
       backend:
         - openvswitch
+{% if 'sriov' in yaml %}
         - sriov
+{% endif %}
     conf:
       nova:
         filter_scheduler:

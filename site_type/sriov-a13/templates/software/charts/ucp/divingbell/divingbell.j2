@@ -47,4 +47,10 @@ data:
           - user_name: localadmin
             user_sudo: true
             user_sshkeys: []
+      mounts:
+        mnt1:
+          mnt_tgt: /dev/hugepages_1G
+          device: none
+          type: hugetlbfs
+          options: 'mode=775,pagesize=1G'
 ...

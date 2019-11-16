@@ -306,3 +306,45 @@ data:
       start: {{yaml.networks.ksn.ranges.static.start}}
       end: {{yaml.networks.ksn.ranges.static.end}}
 ...
+{% if 'dpdk' in yaml %}
+---
+schema: 'drydock/NetworkLink/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: dpdk
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  bonding:
+    mode: disabled
+  mtu: 1500
+  linkspeed: auto
+  trunking:
+    mode: disabled
+    default_network: dpdk
+  allowed_networks:
+    - dpdk
+...
+---
+schema: 'drydock/Network/v1'
+metadata:
+  schema: 'metadata/Document/v1'
+  name: dpdk
+  layeringDefinition:
+    abstract: false
+    layer: site
+  storagePolicy: cleartext
+data:
+  mtu: 1500
+  cidr: {{yaml.networks.vxlan.cidr}}
+  ranges:
+    - type: reserved
+      start: {{yaml.networks.vxlan.ranges.reserved.start}}
+      end: {{yaml.networks.vxlan.ranges.reserved.end}}
+    - type: static
+      start: {{yaml.networks.vxlan.ranges.static.start}}
+      end: {{yaml.networks.vxlan.ranges.static.end}}
+...
+{% endif %}

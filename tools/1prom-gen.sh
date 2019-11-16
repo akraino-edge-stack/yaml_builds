@@ -123,6 +123,7 @@ echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
   REGION_NAME=$SITE
 
   DEPLOY_SCRIPT=$AIRSHIP_TREASUREMAP/${SITE}_bundle/deploy_site.sh
+  UPDATE_SCRIPT=$AIRSHIP_TREASUREMAP/${SITE}_bundle/update_software.sh
   IPTABLES_SCRIPT=$AIRSHIP_TREASUREMAP/${SITE}_bundle/update_iptables.sh
 
   cp $YAML_BUILDS/tools/deploy_site.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
@@ -132,11 +133,18 @@ echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
   sed -i -e "s|MAAS_URL=|MAAS_URL=${MAAS_URL}|g" $DEPLOY_SCRIPT
   sed -i -e "s|AIRFLOW_URL=|AIRFLOW_URL=${AIRFLOW_URL}|g" $DEPLOY_SCRIPT
 
+  cp $YAML_BUILDS/tools/update_software.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
+  sed -i -e "s|OS_AUTH_URL=|OS_AUTH_URL=\"${AUTH_URL}\"|g" $UPDATE_SCRIPT
+  sed -i -e "s/OS_PASSWORD=/OS_PASSWORD=$SHIPYARD_PASSWORD/g" $UPDATE_SCRIPT
+  sed -i -e "s/REGION_NAME=/REGION_NAME=$REGION_NAME/g" $UPDATE_SCRIPT
+
   cp $YAML_BUILDS/tools/update_iptables.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
   sed -i -e "s,HOST_INTERFACE=,HOST_INTERFACE=$HOST_INTERFACE,g" $IPTABLES_SCRIPT
   sed -i -e "s,PXE_INTERFACE=,PXE_INTERFACE=$PXE_INTERFACE,g" $IPTABLES_SCRIPT
 
   cp $YAML_BUILDS/tools/cleanup.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
+
+  cp $YAML_BUILDS/tools/openrc $AIRSHIP_TREASUREMAP/${SITE}_bundle
 )
 
 (

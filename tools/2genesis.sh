@@ -66,6 +66,8 @@ ssh $GENESIS_HOST << EOF
   cp /tmp/promenade-bundle-$SITE.tar .
   tar -xmf promenade-bundle-$SITE.tar
   mv configs/promenade-bundle/deploy_site.sh .
+  mv configs/promenade-bundle/update_software.sh .
+  mv configs/promenade-bundle/openrc .
 EOF
 
 echo "# Waiting for BIOS updates to finish on master and worker nodes"

@@ -68,6 +68,7 @@ ssh $GENESIS_HOST << EOF
   mv configs/promenade-bundle/deploy_site.sh .
   mv configs/promenade-bundle/update_software.sh .
   mv configs/promenade-bundle/openrc .
+  cp configs/run_openstack_cli.sh /usr/local/bin/openstack
 EOF
 
 echo "# Waiting for BIOS updates to finish on master and worker nodes"

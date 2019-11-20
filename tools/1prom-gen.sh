@@ -145,6 +145,8 @@ echo "# Copying scripts to $AIRSHIP_TREASUREMAP/${SITE}_bundle"
   cp $YAML_BUILDS/tools/cleanup.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
 
   cp $YAML_BUILDS/tools/openrc $AIRSHIP_TREASUREMAP/${SITE}_bundle
+
+  cp $YAML_BUILDS/tools/run_openstack_cli.sh $AIRSHIP_TREASUREMAP/${SITE}_bundle
 )
 
 (

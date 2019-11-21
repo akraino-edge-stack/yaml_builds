@@ -59,6 +59,9 @@ python $YAML_BUILDS/scripts/jcopy.py $SITE.yaml $YAML_BUILDS/tools/j2/serverrc.j
 echo "# Stage Airship files on Genesis"
 scp $YAML_BUILDS/tars/promenade-bundle-$SITE.tar $GENESIS_HOST:/tmp/
 ssh $GENESIS_HOST << EOF
+  echo "#########################################"
+  echo "# Setup deployment files on genesis host"
+  echo "#########################################"
   # TODO avoid following hard coding$
   route add -net 192.168.41.0/24 gw 192.168.2.1 bond0.41
   mkdir -p /root/akraino
@@ -68,7 +71,8 @@ ssh $GENESIS_HOST << EOF
   mv configs/promenade-bundle/deploy_site.sh .
   mv configs/promenade-bundle/update_software.sh .
   mv configs/promenade-bundle/openrc .
-  cp configs/run_openstack_cli.sh /usr/local/bin/openstack
+  cp configs/promenade-bundle/run_openstack_cli.sh /usr/local/bin/openstack
+  find . -type f -not -path "./tools/*" -not -path "./global/*"
 EOF
 
 echo "# Waiting for BIOS updates to finish on master and worker nodes"

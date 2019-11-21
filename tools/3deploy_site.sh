@@ -42,7 +42,7 @@ ssh $GENESIS_HOST << EOF
   echo "#######################################################"
   echo "# Running genesis.sh script "
   echo "#######################################################"
-  bash genesis.sh
+  bash ./configs/promenade-bundle/genesis.sh
   # Shipyard takes time to really come up and start responding.
   date
   sleep 900
@@ -55,7 +55,7 @@ ssh $GENESIS_HOST << EOF
   echo "#######################################################"
   echo "# Running deploy_site.sh script "
   echo "#######################################################"
-  #bash deploy_site.sh
+  bash deploy_site.sh
 EOF
 
 exec 2>&-

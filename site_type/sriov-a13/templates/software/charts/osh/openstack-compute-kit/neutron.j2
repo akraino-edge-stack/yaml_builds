@@ -21,10 +21,14 @@
 # 1. logical network interface names
 # 2. physical device mappigns
 # TODO: Should move to global layer and become tied to the hardware profile
+
 schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
-  name: neutron-fixme
+  name: neutron
+  replacement: true
+  labels:
+    component: neutron
   layeringDefinition:
     abstract: false
     layer: site
@@ -34,61 +38,87 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
-data: {}
-#data:
-#  values:
-#    labels:
-#      agent:
-#        sriov:
-#          node_selector_key: sriov
-#          node_selector_value: enabled
-#    network:
-#      backend:
-#        - openvswitch
-#        - sriov
-#      interface:
-#        tunnel_device: '{{yaml.networks.neutron.interface}}'
-#      sriov:
-#{% for sriovnet in yaml.sriov.nets %}
-#        - device: {{sriovnet.interface}}
-#          num_vfs: 32
-#          mtu: 9000
-#          promisc: false
-#{% endfor %}
-#      # auto_bridge_add:
-#      #   br-ex: {{yaml.networks.neutron.interface}}
-#    conf:
-#      plugins:
-#        openvswitch_agent:
-#          ovs:
-#            bridge_mappings: "bond0:br-ex"
-#        sriov_agent:
-#          securitygroup:
-#            firewall_driver: neutron.agent.firewall.NoopFirewallDriver
-#          sriov_nic:
-#            exclude_devices: ""
-#            physical_device_mappings: '
-#{%- for sriovnet in yaml.sriov.nets -%}
-#{%- if loop.index > 1 -%},{%- endif -%}
-#{{sriovnet.physical}}:{{sriovnet.interface}}
-#{%- endfor -%}'
-#        ml2_conf:
-#          ml2:
-#            mechanism_drivers: openvswitch,l2population,sriovnicswitch
-#            # type_drivers: flat,vlan
-#            # tenant_network_types: vlan
-#          ml2_type_vlan:
-#            network_vlan_ranges: bond0:46:300
-#{%- for sriovnet in yaml.sriov.nets -%}
-#,{{sriovnet.physical}}:{{sriovnet.vlan_start}}:{{sriovnet.vlan_end}}
-#{%- endfor %}
-#
-#          # ml2_type_flat:
-#          #  flat_networks: public
-#        ml2_conf_sriov: null
-#      paste:
-#        app:neutronversions:
-#          paste.app_factory: neutron.pecan_wsgi.app:versions_factory
-#  dependencies:
-#    - openstack-neutron-helm-toolkit
+
+data:
+  values:
+    labels:
+      agent:
+        sriov:
+          node_selector_key: sriov
+          node_selector_value: enabled
+    network:
+      auto_bridge_add: {br-ex: bond0}
+      backend:
+        - openvswitch
+        - sriov
+      interface:
+        tunnel_device: '{{yaml.networks.neutron.interface}}'
+      sriov:
+{% for sriovnet in yaml.sriov.nets %}
+        - device: {{sriovnet.interface}}
+          num_vfs: 32
+          mtu: 9000
+          promisc: false
+{% endfor %}
+    conf:
+      # auto_bridge_add:
+      #   br-ex: {{yaml.networks.neutron.interface}}
+      dhcp_lease_duration: = 86400
+      plugins:
+        openvswitch_agent:
+          agent:
+            tunnel_types: vxlan
+          ovs:
+            bridge_mappings: "bond0:br-ex"
+        sriov_agent:
+          securitygroup:
+            firewall_driver: neutron.agent.firewall.NoopFirewallDriver
+          sriov_nic:
+            exclude_devices: ""
+            physical_device_mappings: '
+{%- for sriovnet in yaml.sriov.nets -%}
+{%- if loop.index > 1 -%},{%- endif -%}
+{{sriovnet.physical}}:{{sriovnet.interface}}
+{%- endfor -%}'
+        ml2_conf:
+          ml2:
+            mechanism_drivers: openvswitch,l2population,sriovnicswitch
+            # type_drivers: flat,vlan
+            # tenant_network_types: vlan
+          ml2_type_vlan:
+            network_vlan_ranges: bond0:46:300
+{%- for sriovnet in yaml.sriov.nets -%}
+,{{sriovnet.physical}}:{{sriovnet.vlan_start}}:{{sriovnet.vlan_end}}
+{%- endfor %}
+
+          # ml2_type_flat:
+          #  flat_networks: public
+        ml2_conf_sriov: null
+      paste:
+        app:neutronversions:
+          paste.app_factory: neutron.pecan_wsgi.app:versions_factory
+  dependencies:
+    - openstack-neutron-helm-toolkit
+---
+schema: armada/Chart/v1
+metadata:
+  schema: metadata/Document/v1
+  name: openstack-neutron-helm-toolkit
+  layeringDefinition:
+    abstract: false
+    layer: global
+  storagePolicy: cleartext
+  substitutions:
+    - src:
+        schema: pegleg/SoftwareVersions/v1
+        name: software-versions
+        path: .charts.osh.neutron-htk
+      dest:
+        path: .source
+data:
+  chart_name: openstack-neutron-helm-toolkit
+  release: openstack-neutron-helm-toolkit
+  namespace: helm-toolkit
+  values: {}
+  dependencies: []
 ...

@@ -28,6 +28,8 @@ schema: armada/Chart/v1
 metadata:
   schema: metadata/Document/v1
   name: nova
+  labels:
+    component: nova
   layeringDefinition:
     abstract: false
     layer: site
@@ -37,49 +39,45 @@ metadata:
       - method: merge
         path: .
   storagePolicy: cleartext
-data: {}
-#data:
-#  values:
-#    network:
-#      backend:
-#        - openvswitch
-#{% if 'sriov' in yaml %}
-#        - sriov
-#{% endif %}
-#    conf:
-#      nova:
-#        filter_scheduler:
-#          enabled_filters: "RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ComputeCapabilitiesFilter, ImagePropertiesFilter, ServerGroupAntiAffinityFilter, ServerGroupAffinityFilter, PciPassthroughFilter, NUMATopologyFilter, DifferentHostFilter, SameHostFilter"
-#        libvirt:
-#          virt_type: kvm
-#        DEFAULT:
-#          vcpu_pin_set: {% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}"{{yaml.platform.vcpu_pin_set}}"
-#{% else %}"4-21,26-43,48-65,72-87"
-#{% endif %}
-#          vif_plugging_is_fatal: False
-#          vif_plugging_timeout: 30
-#        pci:
-#{% if 'gpu' in yaml or 'sriov' in yaml %}
-#          alias: |
-#  {% if 'sriov' in yaml and 'alias' in yaml.sriov %}
-#  {% for alias in yaml.sriov.alias %}
-#            '{"name": "{{alias.name}}", "vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}", "capability_type": "pci", "device_type": "type-PCI", "numa_policy": "required"}'
-#  {% endfor %}
-#  {% endif %}
-#  {% if 'gpu' in yaml and 'alias' in yaml.gpu %}
-#  {% for alias in yaml.gpu.alias %}
-#            '{"name":"{{alias.name}}", "vendor_id":"{{alias.vendor_id}}", "product_id":"{{alias.product_id}}", "device_type":"type-PCI"}'
-#  {% endfor %}
-#  {% endif %}
-#          passthrough_whitelist: |
-#            [
-#  {%- if 'sriov' in yaml and 'nets' in yaml.sriov %}
-#  {% for sriovnet in yaml.sriov.nets %}
-#    {%- for vf in sriovnet.whitelists -%}{"address":"{{vf["address"]}}","physical_network":"{{sriovnet.physical}}"}{{',' if not loop.last else ''}}{% endfor %}{{',' if not loop.last else '' -}}
-#  {%- endfor -%}
-#  {%- if 'gpu' in yaml and 'sriov' in yaml %},{% endif -%}
-#  {%- for alias in yaml.gpu.alias %}{"vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}"}{{',' if not loop.last else ''}}{% endfor -%}
-#            ]
-#  {% endif %}
-#{% endif %}
+#data: {}
+data:
+  values:
+    network:
+      backend:
+        - openvswitch
+{% if 'sriov' in yaml %}
+        - sriov
+{% endif %}
+    conf:
+      nova:
+        filter_scheduler:
+          enabled_filters: "RetryFilter, AvailabilityZoneFilter, RamFilter, ComputeFilter, ComputeCapabilitiesFilter, ImagePropertiesFilter, ServerGroupAntiAffinityFilter, ServerGroupAffinityFilter, PciPassthroughFilter, NUMATopologyFilter, DifferentHostFilter, SameHostFilter"
+        DEFAULT:
+          vcpu_pin_set: {% if 'platform' in yaml and 'vcpu_pin_set' in yaml.platform %}"{{yaml.platform.vcpu_pin_set}}"
+{% else %}"4-21,26-43,48-65,72-87"
+{% endif %}
+        pci:
+{% if 'gpu' in yaml or 'sriov' in yaml %}
+          alias: |
+  {% if 'sriov' in yaml and 'alias' in yaml.sriov %}
+  {% for alias in yaml.sriov.alias %}
+            '{"name": "{{alias.name}}", "vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}", "capability_type": "pci", "device_type": "type-PCI", "numa_policy": "required"}'
+  {% endfor %}
+  {% endif %}
+  {% if 'gpu' in yaml and 'alias' in yaml.gpu %}
+  {% for alias in yaml.gpu.alias %}
+            '{"name":"{{alias.name}}", "vendor_id":"{{alias.vendor_id}}", "product_id":"{{alias.product_id}}", "device_type":"type-PCI"}'
+  {% endfor %}
+  {% endif %}
+          passthrough_whitelist: |
+            [
+  {%- if 'sriov' in yaml and 'nets' in yaml.sriov %}
+  {% for sriovnet in yaml.sriov.nets %}
+    {%- for vf in sriovnet.whitelists -%}{"address":"{{vf["address"]}}","physical_network":"{{sriovnet.physical}}"}{{',' if not loop.last else ''}}{% endfor %}{{',' if not loop.last else '' -}}
+  {%- endfor -%}
+  {%- if 'gpu' in yaml and 'sriov' in yaml %},{% endif -%}
+  {%- for alias in yaml.gpu.alias %}{"vendor_id": "{{alias.vendor_id}}", "product_id": "{{alias.product_id}}"}{{',' if not loop.last else ''}}{% endfor -%}
+            ]
+  {% endif %}
+{% endif %}
 ...

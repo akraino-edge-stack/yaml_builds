@@ -1,4 +1,5 @@
 # UUID                                                                         	Group Name
 #
 0706f97cf3b2243094a8f24452092769b1065db0                                       	GitHub Replication
+0e03c5681b97e883e3dd336ad3b0bfe1fa570300                                       	saml/akraino-gerrit-yaml_builds-committers
 ldap:cn=akraino-gerrit-yaml_builds-committers,ou=Groups,dc=freestandards,dc=org	ldap/akraino-gerrit-yaml_builds-committers
